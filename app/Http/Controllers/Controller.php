@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by BocWeb.
- * Author: Walker  QQ:120007700
- * Date  : 2017/10/12
- * Time  : 11:17
- */
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
