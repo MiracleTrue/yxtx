@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Routing\Router;
 
 //php artisan route:list

@@ -34,14 +34,20 @@ class MatchController extends Controller
                 ['text' => '比赛地图']
             );
 
-            $form = new \Encore\Admin\Widgets\Form();
-
-            $form->disablePjax();
-
-            $form->email('email')->default('qwe@aweq.com');
-            $form->map('lat', 'lng');
-
-            $content->body($form->render());
+            $match = new Match();
+            $match_info = $match->getMatchInfo($match_id);
+            $content->body(
+                Admin::form(MatchList::class, function (Form $form) use ($match_info)
+                {
+                    $form->tools(function (Form\Tools $tools)
+                    {
+                        // 去掉跳转列表按钮
+                        $tools->disableListButton();
+                    });
+                    $form->display('address_name', '比赛地址');
+                    $form->map((string)$match_info->address_coordinate['lat'], (string)$match_info->address_coordinate['lng'], '比赛地图');
+                })->view($match_id)
+            );
         });
     }
 
@@ -298,7 +304,7 @@ class MatchController extends Controller
                 $text = '';
                 foreach ($data as $value)
                 {
-                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" . Users::find($value['user_id'])->nick_name . "($value[match_number])"  . "</a>";
+                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" . Users::find($value['user_id'])->nick_name . "($value[match_number])" . "</a>";
                 }
                 return $text;
             });

@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\Transaction;
 
 /**
  * 首页控制器
@@ -19,6 +20,14 @@ class IndexController extends Controller
 
         dd(11);
         return view('index', $this->ViewData);
+    }
+
+    public function Login()
+    {
+
+        $a  = new Transaction();
+        $a->agreeWithdrawDeposit(2);
+        
     }
 
 }

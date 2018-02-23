@@ -48,7 +48,7 @@ class Transaction extends Model
         } catch (\Exception $e)
         {
             $this->errors['code'] = 1;
-            $this->errors['messages'] = '提现申请失败';
+            $this->errors['messages'] = $e->getMessage();
             return false;
         }
         return true;

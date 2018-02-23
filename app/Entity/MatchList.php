@@ -32,18 +32,33 @@ class MatchList extends Entity
         });
     }
 
-    /*修改器:相册json转换*/
+    /*修改器:相册json转换array*/
     public function setMatchPhotosAttribute($photos)
     {
         if (is_array($photos))
         {
-            $this->attributes['pictures'] = json_encode($photos);
+            $this->attributes['match_photos'] = json_encode($photos);
         }
     }
 
     public function getMatchPhotosAttribute($photos)
     {
         return json_decode($photos, true);
+    }
+
+    /*修改器:地图坐标json转换array*/
+    public function setAddressCoordinateAttribute($address)
+    {
+        //$address = ['lat'=> 10.123321,'lng'=>30.456654];
+        if (is_array($address) && isset($address['lat']) && isset($address['lng']))
+        {
+            $this->attributes['address_coordinate'] = json_encode($address);
+        }
+    }
+
+    public function getAddressCoordinateAttribute($address)
+    {
+        return json_decode($address, true);
     }
 
     /**
