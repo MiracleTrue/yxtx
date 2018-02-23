@@ -1,4 +1,7 @@
 <?php
+
+Route::any('/wechat', 'WeChatController@serve');
+
 //
 //Route::get('test', 'TestController@Index');
 //Route::get('test/add', 'TestController@T_add');
@@ -8,7 +11,7 @@
 //Route::get('test/table', 'TestController@T_table');
 
 /*不需要登录的请求*/
-Route::get('login', 'IndexController@Login');/*登录页面 | login */
+//Route::get('login', 'IndexController@Login');/*登录页面 | login */
 //Route::any('login/submit', 'IndexController@LoginSubmit');/*登录提交 */
 //
 ///*需要登录的请求*/
