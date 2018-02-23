@@ -55,12 +55,6 @@ return [
             'url'  => env('APP_URL').'/temp',
         ],
 
-        'admin' => [
-            'driver' => 'local',
-            'root' => public_path('uploads/admin'),
-            'url'  => env('APP_URL').'/uploads/admin',
-        ],
-
 //        'public' => [
 //            'driver' => 'local',
 //            'root' => storage_path('app/public'),
