@@ -57,6 +57,5 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'WebLoginAndPrivilege' => \App\Http\Middleware\WebLoginAndPrivilege::class,//用户登录session验证与权限检测的中间件
     ];
 }
