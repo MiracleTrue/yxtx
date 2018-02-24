@@ -1,12 +1,9 @@
 <?php
-
 namespace App\Models;
 
 use App\Entity\Users;
 use App\Entity\WithdrawDeposit;
-use App\Exceptions\NetworkBusyException;
 use Illuminate\Support\Facades\DB;
-
 
 /**
  * Class Transaction 交易相关模型

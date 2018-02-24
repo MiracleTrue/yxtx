@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 
 /**
  * Class Registration 报名相关模型

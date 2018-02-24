@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Mini\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,11 +25,13 @@ class Controller extends BaseController
         /*全局创建时间统一*/
         $GLOBALS['create_time'] = now();
 
-//        /*初始化分页大小 10条*/
-//        if (empty($_COOKIE['PaginationSize']) || is_numeric($_COOKIE['PaginationSize']) == false)
-//        {
-//            $_COOKIE['PaginationSize'] = 10;
-//        }
+
+        /*小程序*/
+//        yuxunxiaochengxu@163.com
+//        yuan789789
+//        AppID:wx4fb1d591de1f9329
+//        AppSecret:ea0d8d601e6c09f433b256e15fd18219
+
 
         /*阿里大鱼*/
         // 军民融合生活保障中心

@@ -1,7 +1,7 @@
 <?php
 
-Route::any('/wechat', 'WeChatController@serve');
-
+//Route::any('wechat', 'WeChatController@serve');
+//
 //
 //Route::get('test', 'TestController@Index');
 //Route::get('test/add', 'TestController@T_add');
@@ -19,10 +19,6 @@ Route::any('/wechat', 'WeChatController@serve');
 //{
 //    Route::get('/', 'IndexController@Index');
 //});
-
-
-
-
 
 ///*规格*/
 //Route::any('product/spec/add', 'ProductController@ProductSpecAdd')->name('新增商品规格');/*新增商品规格*/

@@ -18,7 +18,6 @@ use Intervention\Image\Facades\Image;
  */
 class MyFile extends Model
 {
-
     private $thumb_width = 240;/*缩略图宽度*/
     private $thumb_height = 240;/*缩略图高度*/
 
