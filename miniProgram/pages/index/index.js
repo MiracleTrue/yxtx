@@ -23,8 +23,9 @@ Page({
           //发起网络请求
           wx.request({
             url: 'https://mini.qdjrykj.com/login',
+            method:'POST',
             data: {
-              code: res.code
+              jsCode: res.code
             }
           })
         } else {

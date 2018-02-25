@@ -15,6 +15,9 @@ class LoginController extends Controller
         /*初始化*/
         $app = app('wechat.mini_program');
 
+        $session = $app->auth->session($request->input('jsCode'));
+
+        dd($session);
 
         dd($request->all(),$app);
 
