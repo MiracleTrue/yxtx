@@ -3,7 +3,7 @@
 项目安装:
 必须Linux系统  PHP版本7.0以上 (拥有Laravel框架的插件支持)  安装:PHP Composer , MySql数据库 , Git客户端 , crond服务
 
-1.git clone ssh://git@47.92.90.154:22/git/jmrh.git
+1.git clone ssh://git@47.92.90.154:22/git/yxtx.git
 
 2.composer install
 
