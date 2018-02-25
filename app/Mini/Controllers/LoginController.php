@@ -16,6 +16,7 @@ class LoginController extends Controller
         $app = app('wechat.mini_program');
 
 
+        dd($request->all(),$app);
 
     }
 }

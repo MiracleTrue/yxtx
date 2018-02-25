@@ -22,7 +22,7 @@ Page({
         if (res.code) {
           //发起网络请求
           wx.request({
-            url: 'https://mini.qdjrykj.com/',
+            url: 'https://mini.qdjrykj.com/login',
             data: {
               code: res.code
             }
