@@ -40,6 +40,7 @@ class User extends Model
             });
         } catch (\Exception $e)
         {
+            dd($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = '注册失败';
             return false;
