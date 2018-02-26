@@ -5,6 +5,7 @@ namespace App\Mini\Controllers;
 use App\Models\User;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * 登录 控制器
@@ -24,8 +25,17 @@ class LoginController extends Controller
 
         try
         {
-            $session = $app->auth->session($request->input('jsCode'));
+            /*验证*/
+            $rules = [
+                'jsCode' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails())
+            {
+                throw new \Exception('数据验证失败');
+            }
 
+            $session = $app->auth->session($request->input('jsCode'));
             if ($e_wx_openid = $user->wxCheckOpenid($session['openid']))
             {
                 $e_users = $e_wx_openid->user_info;
@@ -52,7 +62,6 @@ class LoginController extends Controller
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
         }
-
         return $m3result->toJson();
     }
 
@@ -65,6 +74,17 @@ class LoginController extends Controller
 
         try
         {
+            /*验证*/
+            $rules = [
+                'jsCode' => 'required',
+                'iv' => 'required',
+                'encryptedData' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails())
+            {
+                throw new \Exception('数据验证失败');
+            }
             $session = $app->auth->session($request->input('jsCode'));
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
@@ -89,7 +109,6 @@ class LoginController extends Controller
             }
         } catch (\Exception $e)
         {
-            dd($e);
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
         }
