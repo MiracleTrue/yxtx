@@ -20,6 +20,8 @@ class User extends Model
 
     public function wxRegister($decryptData)
     {
+        return false;
+
         /*事物*/
         try
         {
@@ -40,7 +42,6 @@ class User extends Model
             });
         } catch (\Exception $e)
         {
-            dd($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = '注册失败';
             return false;

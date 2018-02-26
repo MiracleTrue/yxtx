@@ -49,9 +49,8 @@ class LoginController extends Controller
             }
         } catch (\Exception $e)
         {
-            dd($e);
             $m3result->code = 1;
-            $m3result->messages = '登录失败';
+            $m3result->messages = '数据验证失败';
         }
 
         return $m3result->toJson();
@@ -64,11 +63,34 @@ class LoginController extends Controller
         $user = new User();
         $m3result = new M3Result();
 
-        $session = $app->auth->session($request->input('jsCode'));
-        $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
-        if ($user->wxRegister($decryptData))
+        try
         {
+            $session = $app->auth->session($request->input('jsCode'));
+            $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
+            if ($user->wxCheckOpenid($session['openid']))
+            {
+                if ($user->wxRegister($decryptData))
+                {
+
+                }
+                else
+                {
+                    throw new \Exception($user->messages());
+                }
+            }
+            else
+            {
+                $m3result->code = 2;
+                $m3result->messages = '用户已注册';
+            }
+        } catch (\Exception $e)
+        {
+            dd($e);
+            $m3result->code = 1;
+            $m3result->messages = '数据验证失败';
         }
+
+        return $m3result->toJson();
     }
 }
