@@ -26,6 +26,7 @@ class User extends Model
     {
         $e_wx_openid = WxOpenid::find($openid);
 
+        dd($e_wx_openid);
         if ($e_wx_openid->isEmpty())
         {
             return false;
