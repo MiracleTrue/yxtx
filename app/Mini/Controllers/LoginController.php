@@ -72,7 +72,10 @@ class LoginController extends Controller
             {
                 if ($user->wxRegister($decryptData))
                 {
-
+                    $m3result->code = 0;
+                    $m3result->messages = '注册并登录成功';
+//                    $m3result->data['open_id'] = $session['openid'];
+//                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
                 }
                 else
                 {

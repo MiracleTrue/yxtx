@@ -20,8 +20,6 @@ class User extends Model
 
     public function wxRegister($decryptData)
     {
-        return false;
-
         /*事物*/
         try
         {
