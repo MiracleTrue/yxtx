@@ -76,7 +76,7 @@ class LoginController extends Controller
                 }
                 else
                 {
-                    throw new \Exception($user->messages());
+                    throw new \Exception($user->messages()['messages']);
                 }
             }
             else
