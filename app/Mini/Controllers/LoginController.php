@@ -32,7 +32,7 @@ class LoginController extends Controller
                 if ($e_users->is_disable == $user::IS_DISABLE)
                 {
                     $m3result->code = 3;
-                    $m3result->messages = '用户已被禁用';
+                    $m3result->messages = '用户被禁用';
                 }
                 else
                 {
@@ -49,6 +49,7 @@ class LoginController extends Controller
             }
         } catch (\Exception $e)
         {
+            dd($e);
             $m3result->code = 1;
             $m3result->messages = '登录失败';
         }
