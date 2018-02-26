@@ -65,12 +65,14 @@ class User extends Model
     public function wxAppkey($openid, $session_key)
     {
         $e_wx_appkey = new WxAppkey();
-        $e_wx_appkey->app_key = Crypt::encryptString($session_key);
+        $app_key = Crypt::encryptString($session_key);
+        $e_wx_appkey->app_key = $app_key;
         $e_wx_appkey->session_key = $session_key;
         $e_wx_appkey->openid = $openid;
         $e_wx_appkey->valid_time = now()->addHours(2);
         $e_wx_appkey->save();
-        return $e_wx_appkey->app_key;
+
+        return $app_key;
     }
 
 
