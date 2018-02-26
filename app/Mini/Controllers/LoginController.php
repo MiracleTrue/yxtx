@@ -68,14 +68,14 @@ class LoginController extends Controller
             $session = $app->auth->session($request->input('jsCode'));
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
-            if ($user->wxCheckOpenid($session['openid']))
+            if (!$user->wxCheckOpenid($session['openid']))
             {
                 if ($user->wxRegister($decryptData))
                 {
                     $m3result->code = 0;
                     $m3result->messages = '注册并登录成功';
-//                    $m3result->data['open_id'] = $session['openid'];
-//                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
+                    $m3result->data['open_id'] = $session['openid'];
+                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
                 }
                 else
                 {

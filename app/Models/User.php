@@ -40,7 +40,6 @@ class User extends Model
             });
         } catch (\Exception $e)
         {
-            dd($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = '注册失败';
             return false;
@@ -52,8 +51,6 @@ class User extends Model
     public function wxCheckOpenid($openid)
     {
         $e_wx_openid = WxOpenid::find($openid);
-
-        dd($e_wx_openid,$openid);
 
         if ($e_wx_openid == null)
         {
@@ -74,27 +71,6 @@ class User extends Model
         $e_wx_appkey->valid_time = now()->addHours(2);
         $e_wx_appkey->save();
         return $e_wx_appkey;
-    }
-
-    public function wxLogin($openid, $session_key)
-    {
-        if ($e_wx_openid = self::wxCheckOpenid($openid))
-        {
-            $e_users = $e_wx_openid->user_info;
-            if ($e_users->is_disable == self::IS_DISABLE)
-            {
-                return false;
-            }
-            else
-            {
-                return self::wxAppkey($openid, $session_key);
-            }
-        }
-        else
-        {
-            self::wxRegister();
-            return self::wxAppkey($openid, $session_key);
-        }
     }
 
 
