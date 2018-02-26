@@ -57,6 +57,52 @@ class Match extends Model
     }
 
     /**
+     * 发布一场比赛
+     * @param $arr
+     * @return bool
+     */
+    public function releaseMatch($arr)
+    {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($arr)
+            {
+                /*初始化*/
+                $session_user = session('User');
+                $e_match_list = new MatchList();
+
+                /*添加*/
+                $e_match_list->user_id = $session_user->user_id;
+                $e_match_list->status = self::STATUS_SIGN_UP;
+                $e_match_list->title = $arr['title'];
+                $e_match_list->need_money = $arr['need_money'];
+                $e_match_list->address_name = $arr['address_name'];
+                $e_match_list->address_coordinate = ['lat' => $arr['address_coordinate_lat'], 'lng' => $arr['address_coordinate_lng']];
+                $e_match_list->match_start_time = $arr['match_start_time'];
+                $e_match_list->match_end_time = $arr['match_end_time'];
+                $e_match_list->match_start_number = $arr['match_start_number'];
+                $e_match_list->match_end_number = $arr['match_end_number'];
+                $e_match_list->match_sum_number = bcadd(bcsub($arr['match_end_number'], $arr['match_start_number']), 1);
+                $e_match_list->match_content = $arr['match_content'];
+                $e_match_list->match_service = $arr['match_service'];
+                $e_match_list->match_photos = explode(',', $arr['title']);
+                $e_match_list->fish_number = $arr['fish_number'];
+                $e_match_list->is_delete = self::NO_DELETE;
+                $e_match_list->create_time = now();
+
+                $e_match_list->save();
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '比赛发布失败';
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 删除一场比赛(伪删除)
      * @param $id
      * @return bool

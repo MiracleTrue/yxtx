@@ -35,6 +35,7 @@ class MatchList extends Entity
     /*修改器:相册json转换array*/
     public function setMatchPhotosAttribute($photos)
     {
+        //['xxx.jpg','aaa.jpg']
         if (is_array($photos))
         {
             $this->attributes['match_photos'] = json_encode($photos);

@@ -28,7 +28,7 @@ class WxAppKeyCheck
             if ($e_wx_appkey != null)
             {
                 /*加入session*/
-                $user = $e_wx_appkey->wxOpenid->user_info;
+                $user = $e_wx_appkey->user_info;
                 $user->app_key = $e_wx_appkey;
                 session(['User' => $user]);
                 return $next($request);
