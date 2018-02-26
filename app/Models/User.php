@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Entity\Users;
 use App\Entity\WxAppkey;
 use App\Entity\WxOpenid;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class User 用户相关模型
@@ -16,9 +18,33 @@ class User extends Model
     const IS_DISABLE = 1;
     const NO_DISABLE = 0;
 
-    public function wxRegister()
+    public function wxRegister($decryptData)
     {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($decryptData)
+            {
+                $e_wx_openid = new WxOpenid();
+                $e_users = new Users();
+                $e_users->nick_name = $decryptData['nickName'];
+                $e_users->avatar = $decryptData['avatarUrl'];
+                $e_users->user_money = 0;
+                $e_users->freeze_money = 0;
+                $e_users->create_time = now();
+                $e_users->save();
 
+                $e_wx_openid->openid = $decryptData['openId'];
+                $e_wx_openid->user_id = $e_users->user_id;
+                $e_wx_openid->save();
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '注册失败';
+            return false;
+        }
+        return true;
     }
 
 

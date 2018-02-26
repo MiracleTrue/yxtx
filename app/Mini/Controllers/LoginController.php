@@ -65,7 +65,10 @@ class LoginController extends Controller
         $m3result = new M3Result();
 
         $session = $app->auth->session($request->input('jsCode'));
-        $data = $app->encryptor->decryptData($session['session_key'],$request->input('iv'),$request->input('encryptedData'));
-        dd($data);
+        $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
+        if ($user->wxRegister($decryptData))
+        {
+
+        }
     }
 }
