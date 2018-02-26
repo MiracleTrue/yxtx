@@ -25,6 +25,12 @@ class Controller extends BaseController
         /*全局创建时间统一*/
         $GLOBALS['create_time'] = now();
 
+        /*初始化分页大小 10条*/
+        if (empty($_COOKIE['PaginationSize']) || is_numeric($_COOKIE['PaginationSize']) == false)
+        {
+            $_COOKIE['PaginationSize'] = 10;
+        }
+
 
         /*小程序*/
 //        yuxunxiaochengxu@163.com

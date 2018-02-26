@@ -26,7 +26,6 @@ class Model
         return $time . str_pad(mt_rand(1, 99999), 6, '0', STR_PAD_LEFT);
     }
 
-
     /**
      * 根据请求方式,返回不同的"没有"权限的信息
      * @param $request

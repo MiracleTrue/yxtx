@@ -9,14 +9,17 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * 登录 控制器
- * Class LoginController
+ * 用户 控制器
+ * Class UserController
  * @package App\Mini\Controllers
  */
-class LoginController extends Controller
+class UserController extends Controller
 {
-
-
+    /**
+     * Api 登录请求
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function login(Request $request)
     {
         /*初始化*/
@@ -37,9 +40,8 @@ class LoginController extends Controller
             }
 
             $session = $app->auth->session($request->input('jsCode'));
-            if ($e_wx_openid = $user->wxCheckOpenid($session['openid']))
+            if ($e_users = $user->wxCheckOpenid($session['openid']))
             {
-                $e_users = $e_wx_openid->user_info;
                 if ($e_users->is_disable == $user::IS_DISABLE)
                 {
                     $m3result->code = 3;
@@ -66,6 +68,11 @@ class LoginController extends Controller
         return $m3result->toJson();
     }
 
+    /**
+     * Api 注册请求
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function register(Request $request)
     {
         /*初始化*/

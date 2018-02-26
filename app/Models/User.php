@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Entity\Users;
 use App\Entity\WxAppkey;
-use App\Entity\WxOpenid;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +17,11 @@ class User extends Model
     const IS_DISABLE = 1;
     const NO_DISABLE = 0;
 
+    /**
+     * 微信用户注册
+     * @param $decryptData
+     * @return bool
+     */
     public function wxRegister($decryptData)
     {
         /*事物*/
@@ -25,18 +29,14 @@ class User extends Model
         {
             DB::transaction(function () use ($decryptData)
             {
-                $e_wx_openid = new WxOpenid();
                 $e_users = new Users();
+                $e_users->openid = $decryptData['openId'];
                 $e_users->nick_name = $decryptData['nickName'];
                 $e_users->avatar = $decryptData['avatarUrl'];
                 $e_users->user_money = 0;
                 $e_users->freeze_money = 0;
                 $e_users->create_time = now();
                 $e_users->save();
-
-                $e_wx_openid->openid = $decryptData['openId'];
-                $e_wx_openid->user_id = $e_users->user_id;
-                $e_wx_openid->save();
             });
         } catch (\Exception $e)
         {
@@ -47,21 +47,31 @@ class User extends Model
         return true;
     }
 
-
+    /**
+     * 检测微信openid是否已存在
+     * @param $openid
+     * @return bool
+     */
     public function wxCheckOpenid($openid)
     {
-        $e_wx_openid = WxOpenid::find($openid);
+        $e_users = Users::where('openid', $openid)->first();
 
-        if ($e_wx_openid == null)
+        if ($e_users == null)
         {
             return false;
         }
         else
         {
-            return $e_wx_openid;
+            return $e_users;
         }
     }
 
+    /**
+     * 生成微信用户凭证key
+     * @param $openid
+     * @param $session_key
+     * @return string
+     */
     public function wxAppkey($openid, $session_key)
     {
         $e_wx_appkey = new WxAppkey();
@@ -74,7 +84,6 @@ class User extends Model
 
         return $app_key;
     }
-
 
     /**
      * 返回用户禁用状态 的文本名称

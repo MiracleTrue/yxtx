@@ -15,9 +15,34 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP    = 0;
+    const STATUS_SIGN_UP = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END        = 200;
+    const STATUS_END = 200;
+
+    public function getMatchList($where = array(), $orderBy = array(['match_list.create_time', 'desc']), $is_paginate = true)
+    {
+        /*初始化*/
+        $e_match_list = new MatchList();
+
+        /*预加载ORM对象*/
+        $e_match_list = $e_match_list->where($where);
+        foreach ($orderBy as $value)
+        {
+            $e_match_list->orderBy($value[0], $value[1]);
+        }
+
+        /*是否需要分页*/
+        if ($is_paginate === true)
+        {
+            $match_list = $e_match_list->paginate($_COOKIE['PaginationSize']);
+        }
+        else
+        {
+            $match_list = $e_match_list->get();
+        }
+
+        return $match_list;
+    }
 
     /**
      * 获取单个比赛详情
