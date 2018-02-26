@@ -25,9 +25,8 @@ class LoginController extends Controller
         try
         {
             $session = $app->auth->session($request->input('jsCode'));
-
-            dd($session);
-            if ($e_wx_openid = $user->wxCheckOpenid($session['open_id']))
+            
+            if ($e_wx_openid = $user->wxCheckOpenid($session['openid']))
             {
                 $e_users = $e_wx_openid->user_info;
                 if ($e_users->is_disable == $user::IS_DISABLE)
@@ -39,8 +38,8 @@ class LoginController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '登录成功';
-                    $m3result->data['open_id'] = $session['open_id'];
-                    $m3result->data['app_key'] = $user->wxAppkey($session['open_id'], $session['session_key']);
+                    $m3result->data['open_id'] = $session['openid'];
+                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
                 }
             }
             else
