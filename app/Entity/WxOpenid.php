@@ -20,7 +20,7 @@ class WxOpenid extends Entity
      * 可以通过 $primaryKey 属性，重新定义主键字段
      * @var string
      */
-    protected $primaryKey = 'open_id';
+    protected $primaryKey = 'openid';
 
     /**
      * 默认情况下，Eloquent预计数据表中有 "created_at" & "updated_at" 字段。

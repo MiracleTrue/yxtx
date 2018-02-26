@@ -25,7 +25,7 @@ class LoginController extends Controller
         try
         {
             $session = $app->auth->session($request->input('jsCode'));
-            
+
             if ($e_wx_openid = $user->wxCheckOpenid($session['openid']))
             {
                 $e_users = $e_wx_openid->user_info;
