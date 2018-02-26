@@ -5,6 +5,7 @@ namespace App\Mini\Controllers;
 use App\Models\User;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 /**

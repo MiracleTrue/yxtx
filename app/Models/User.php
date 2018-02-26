@@ -70,7 +70,7 @@ class User extends Model
         $e_wx_appkey->openid = $openid;
         $e_wx_appkey->valid_time = now()->addHours(2);
         $e_wx_appkey->save();
-        return $e_wx_appkey;
+        return $e_wx_appkey->app_key;
     }
 
 
