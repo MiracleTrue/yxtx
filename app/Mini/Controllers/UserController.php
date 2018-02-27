@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -79,6 +80,8 @@ class UserController extends Controller
         $app = app('wechat.mini_program');
         $user = new User();
         $m3result = new M3Result();
+
+        Log::info($request->all());
 
         try
         {

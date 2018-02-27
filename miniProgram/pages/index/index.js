@@ -41,42 +41,42 @@ Page({
     //   }
     // });
 
-    // wx.login({
-    //   success: function (res) {
-    //     if (res.code) {
-    //       //发起网络请求
-    //       wx.getSetting({
-    //         success: (res2) => {
+    wx.login({
+      success: function (res) {
+        if (res.code) {
+          //发起网络请求
+          wx.getSetting({
+            success: (res2) => {
               
-    //            res2.authSetting = {
-    //              "scope.userInfo": true,
-    //             "scope.userLocation": true
-    //            }
+               res2.authSetting = {
+                 "scope.userInfo": true,
+                "scope.userLocation": true
+               }
                
-    //           wx.getUserInfo({
-    //             withCredentials:true,
-    //             success: function (res3) {
-    //               wx.request({
-    //                 url: 'https://mini.qdjrykj.com/register',
-    //                 method: 'POST',
-    //                 data: {
-    //                   jsCode: res.code,
-    //                   iv: res3.iv,
-    //                   encryptedData: res3.encryptedData,
-    //                 },
-    //                 success: function (r66) {
-    //                   console.log(r66.data)
-    //                 }
-    //               });
-    //             }
-    //           })
-    //         }
-    //       })
-    //     } else {
-    //       console.log('获取用户登录态失败！' + res.errMsg)
-    //     }
-    //   }
-    // });
+              wx.getUserInfo({
+                withCredentials:true,
+                success: function (res3) {
+                  wx.request({
+                    url: 'https://mini.qdjrykj.com/register',
+                    method: 'POST',
+                    data: {
+                      jsCode: res.code,
+                      iv: res3.iv,
+                      encryptedData: res3.encryptedData,
+                    },
+                    success: function (r66) {
+                      console.log(r66.data)
+                    }
+                  });
+                }
+              })
+            }
+          })
+        } else {
+          console.log('获取用户登录态失败！' + res.errMsg)
+        }
+      }
+    });
 
     // if (app.globalData.userInfo) {
     //   this.setData({

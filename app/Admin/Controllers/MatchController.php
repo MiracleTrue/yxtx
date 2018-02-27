@@ -45,7 +45,10 @@ class MatchController extends Controller
                         $tools->disableListButton();
                     });
                     $form->display('address_name', '比赛地址');
-                    $form->map((string)$match_info->address_coordinate['lat'], (string)$match_info->address_coordinate['lng'], '比赛地图');
+//                    dd((string)$match_info->address_coordinate['lat']);
+//                    $form->map('39.7916', '116.564');
+
+                    $form->tencent_map((string)$match_info->address_coordinate['lat'], (string)$match_info->address_coordinate['lng'], '比赛地图');
                 })->view($match_id)
             );
         });
