@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace app\Http\Middleware;
 
 use App\Entity\WxAppkey;
 use App\Tools\M3Result;
