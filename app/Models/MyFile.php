@@ -21,11 +21,8 @@ class MyFile extends Model
     private $thumb_width = 240;/*缩略图宽度*/
     private $thumb_height = 240;/*缩略图高度*/
 
-    private $brand_width = 120;/*品牌图宽度*/
-    private $brand_height = 40;/*品牌图高度*/
-
-    private $attr_width = 60;/*属性小图宽度*/
-    private $attr_height = 60;/*属性小图高度*/
+    private $match_width = 600;/*比赛图宽度*/
+    private $match_height = 600;/*比赛图高度*/
 
     private $clear_temp_odds = 1000;/*清空temp目录的几率 1000分之1*/
 
@@ -111,36 +108,18 @@ class MyFile extends Model
      * @param $file & 表单的file对象
      * @return mixed  返回需要入数据库的文件路径
      */
-//    public function uploadBrand($file)
-//    {
-//        $date = Carbon::now();
-//        $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
-//        $child_path = 'brand/'.date('Ym',$date->timestamp).'/'.$date->weekOfMonth;/*存储文件格式为 201706 下 1文件夹内  201706代表年月 1代表当前月的第几个星期*/
-//
-//        $path = Storage::disk('local')->putFile($child_path,$file);
-//
-//        Image::make($prefix_path.$path)->resize($this->brand_width, $this->brand_height)->save(null,100);
-//
-//        return $path;
-//    }
+    public function uploadMatch($file)
+    {
+        $date = Carbon::now();
+        $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
+        $child_path = 'match/'.date('Ym',$date->timestamp).'/'.$date->weekOfMonth;/*存储文件格式为 201706 下 1文件夹内  201706代表年月 1代表当前月的第几个星期*/
 
-    /**
-     * 上传一张属性小图到attr目录
-     * @param $file & 表单的file对象
-     * @return mixed  返回需要入数据库的文件路径
-     */
-//    public function uploadAttr($file)
-//    {
-//        $date = Carbon::now();
-//        $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
-//        $child_path = 'attr/'.date('Ym',$date->timestamp).'/'.$date->weekOfMonth;/*存储文件格式为 201706 下 1文件夹内  201706代表年月 1代表当前月的第几个星期*/
-//
-//        $path = Storage::disk('local')->putFile($child_path,$file);
-//
-//        Image::make($prefix_path.$path)->resize($this->attr_width, $this->attr_height)->save(null,100);
-//
-//        return $path;
-//    }
+        $path = Storage::disk('local')->putFile($child_path,$file);
+
+        Image::make($prefix_path.$path)->resize($this->match_width, $this->match_height)->save(null,100);
+
+        return $path;
+    }
 
     /**
      * 上传一个临时文件到temp目录

@@ -66,17 +66,29 @@ class Match extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($arr)
+            $address = new Address();
+            $address_res = $address->tencent_coordinateAddressResolution($arr['address_coordinate_lat'], $arr['address_coordinate_lng']);
+
+            DB::transaction(function () use ($arr, $address, $address_res)
             {
                 /*初始化*/
                 $session_user = session('User');
                 $e_match_list = new MatchList();
+                $e_match_address = $address->getMatchAddressFromCity($address_res['result']['address_component']['city']);
+
+                /*如地址不存在新增地址*/
+                if ($e_match_address == null)
+                {
+                    $e_match_address = $address->addMatchAddress($address_res['result']['address_component']['province'], $address_res['result']['address_component']['city'], $address_res['result']['address_component']['district']);
+                }
 
                 /*添加*/
                 $e_match_list->user_id = $session_user->user_id;
                 $e_match_list->status = self::STATUS_SIGN_UP;
                 $e_match_list->title = $arr['title'];
                 $e_match_list->need_money = $arr['need_money'];
+                $e_match_list->hotline = $arr['hotline'];
+                $e_match_list->address_id = $e_match_address->address_id;
                 $e_match_list->address_name = $arr['address_name'];
                 $e_match_list->address_coordinate = ['lat' => $arr['address_coordinate_lat'], 'lng' => $arr['address_coordinate_lng']];
                 $e_match_list->match_start_time = $arr['match_start_time'];
@@ -86,7 +98,7 @@ class Match extends Model
                 $e_match_list->match_sum_number = bcadd(bcsub($arr['match_end_number'], $arr['match_start_number']), 1);
                 $e_match_list->match_content = $arr['match_content'];
                 $e_match_list->match_service = $arr['match_service'];
-                $e_match_list->match_photos = explode(',', $arr['title']);
+                $e_match_list->match_photos = explode(',', $arr['match_photos']);
                 $e_match_list->fish_number = $arr['fish_number'];
                 $e_match_list->is_delete = self::NO_DELETE;
                 $e_match_list->create_time = now();

@@ -2,6 +2,7 @@
 namespace App\Mini\Controllers;
 
 use App\Models\Match;
+use App\Models\MyFile;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,13 +14,16 @@ use Illuminate\Support\Facades\Validator;
  */
 class MatchController extends Controller
 {
-
+    /**
+     * Api 比赛发布
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function release(Request $request)
     {
         /*初始化*/
         $m3result = new M3Result();
         $match = new Match();
-
 
         /*验证*/
         $rules = [
@@ -49,7 +53,45 @@ class MatchController extends Controller
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
+            $m3result->data = $validator->messages();
         }
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 比赛图片上传
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function uploadPhoto(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $my_file = new MyFile();
+
+        /*验证*/
+        $rules = [
+            'image' => 'required|image|mimes:jpeg,gif,png',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $path = $my_file->uploadMatch($request->file('image'));
+
+            $m3result->code = 0;
+            $m3result->messages = '比赛图片上传成功';
+            $m3result->data['file_path'] = $path;
+            $m3result->data['url_path'] = $my_file->makeUrl($path);
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '图片格式不正确或大小超出限制';
+        }
+
+        return $m3result->toJson();
     }
 
 }

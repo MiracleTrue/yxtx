@@ -19,6 +19,11 @@ class WxAppKeyCheck
      */
     public function handle($request, Closure $next)
     {
+//        $arr = array(
+//            'app_key' => 'eyJpdiI6ImRGRWxOZzh6VE56Tmo4MGd2eUgwWWc9PSIsInZhbHVlIjoiWVV1YlwvN3JPc0pFSVBQRUIrR0RrbHZ3WTNISkplZ1NhcWp5UzZNVVNuSVk9IiwibWFjIjoiODczMjE2NjNmOGFmMDQzMDljNGEwZTIzNzk4MWI1NjE3ZDdmOWQwZjVmNmNiZDYwNzUwZWZmOGViYTQ1MzY1ZSJ9',
+//        );
+//        $request->merge($arr);
+
         $m3result = new M3Result();
         $app_key = $request->input('app_key');
 
