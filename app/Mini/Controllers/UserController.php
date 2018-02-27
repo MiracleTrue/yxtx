@@ -33,61 +33,6 @@ class UserController extends Controller
             /*验证*/
             $rules = [
                 'jsCode' => 'required',
-            ];
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails())
-            {
-                throw new \Exception('数据验证失败');
-            }
-
-            $session = $app->auth->session($request->input('jsCode'));
-            if ($e_users = $user->wxCheckOpenid($session['openid']))
-            {
-                if ($e_users->is_disable == $user::IS_DISABLE)
-                {
-                    $m3result->code = 3;
-                    $m3result->messages = '用户被禁用';
-                }
-                else
-                {
-                    $m3result->code = 0;
-                    $m3result->messages = '登录成功';
-                    $m3result->data['open_id'] = $session['openid'];
-                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
-                }
-            }
-            else
-            {
-                $m3result->code = 2;
-                $m3result->messages = '用户未注册';
-            }
-        } catch (\Exception $e)
-        {
-            $m3result->code = 1;
-            $m3result->messages = '数据验证失败';
-        }
-        return $m3result->toJson();
-    }
-
-    /**
-     * Api 注册请求
-     * @param Request $request
-     * @return \App\Tools\json
-     */
-    public function register(Request $request)
-    {
-        /*初始化*/
-        $app = app('wechat.mini_program');
-        $user = new User();
-        $m3result = new M3Result();
-
-        Log::info($request->all());
-
-        try
-        {
-            /*验证*/
-            $rules = [
-                'jsCode' => 'required',
                 'iv' => 'required',
                 'encryptedData' => 'required',
             ];
@@ -101,10 +46,11 @@ class UserController extends Controller
 
             if (!$user->wxCheckOpenid($session['openid']))
             {
+                /*注册*/
                 if ($user->wxRegister($decryptData))
                 {
                     $m3result->code = 0;
-                    $m3result->messages = '注册并登录成功';
+                    $m3result->messages = '注册成功';
                     $m3result->data['open_id'] = $session['openid'];
                     $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
                 }
@@ -115,8 +61,11 @@ class UserController extends Controller
             }
             else
             {
-                $m3result->code = 2;
-                $m3result->messages = '用户已注册';
+                /*登录*/
+                $m3result->code = 0;
+                $m3result->messages = '登录成功';
+                $m3result->data['open_id'] = $session['openid'];
+                $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
             }
         } catch (\Exception $e)
         {
