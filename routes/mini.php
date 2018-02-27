@@ -1,5 +1,5 @@
 <?php
-use App\Http\Middleware\WxAppKeyCheck;
+use app\Http\Middleware\WxAppKeyCheck;
 
 Route::any('login', 'UserController@login');/*登录*/
 
