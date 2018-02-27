@@ -57,7 +57,7 @@ Page({
                 withCredentials:true,
                 success: function (res3) {
                   wx.request({
-                    url: 'https://mini.qdjrykj.com/register',
+                    url: 'https://mini.qdjrykj.com/login',
                     method: 'POST',
                     data: {
                       jsCode: res.code,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entity\SmsCode;
 use App\Entity\Users;
 use App\Entity\WxAppkey;
 use Illuminate\Support\Facades\Crypt;
@@ -16,6 +17,71 @@ class User extends Model
     /*禁用状态:  1.禁用  0.启用*/
     const IS_DISABLE = 1;
     const NO_DISABLE = 0;
+
+
+    /**
+     * 生成短信验证码
+     * @param $phone
+     * @param null $valid_date
+     * @return int
+     */
+    public function makeSmsCode($phone, $valid_date = null)
+    {
+        $date = $valid_date == null ? now()->addMinutes(5) : $valid_date;
+
+        $code = mt_rand(100000, 999999);
+        SmsCode::where('phone', $phone)->delete();
+
+        $e_sms_code = new SmsCode();
+        $e_sms_code->phone = $phone;
+        $e_sms_code->sms_code = $code;
+        $e_sms_code->valid_date = $date;
+        $e_sms_code->save();
+
+        return $code;
+    }
+
+    /**
+     * 检测短信验证码是否有效
+     * @param $phone
+     * @param $code
+     * @return bool
+     */
+    public function checkSmsCode($phone, $code)
+    {
+        $e_sms_code = SmsCode::where('phone', $phone)->where('code', $code)->where('valid_date', '>', now())->first();
+
+        if ($e_sms_code == null)
+        {
+            return false;
+        }
+        else
+        {
+            $e_sms_code->delete();
+            return true;
+        }
+    }
+
+    /**
+     * 给一个用户绑定手机号码
+     * @param $user_id
+     * @param $phone
+     * @return bool
+     */
+    public function bindPhone($user_id, $phone)
+    {
+        $e_users = Users::find($user_id);
+        if ($e_users == null)
+        {
+            return false;
+        }
+        else
+        {
+            $e_users->phone = $phone;
+            $e_users->save();
+            return true;
+        }
+    }
 
     /**
      * 微信用户注册

@@ -2,6 +2,7 @@
 
 namespace App\Mini\Controllers;
 
+use App\Models\Sms;
 use App\Models\User;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
@@ -44,13 +45,13 @@ class UserController extends Controller
             $session = $app->auth->session($request->input('jsCode'));
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
-            if (!$user->wxCheckOpenid($session['openid']))
+            if ($user_info = $user->wxCheckOpenid($session['openid']))
             {
                 /*注册*/
                 if ($user->wxRegister($decryptData))
                 {
-                    $m3result->code = 0;
-                    $m3result->messages = '注册成功';
+                    $m3result->code = -20;
+                    $m3result->messages = '请绑定手机号';
                     $m3result->data['open_id'] = $session['openid'];
                     $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
                 }
@@ -61,11 +62,27 @@ class UserController extends Controller
             }
             else
             {
-                /*登录*/
-                $m3result->code = 0;
-                $m3result->messages = '登录成功';
-                $m3result->data['open_id'] = $session['openid'];
-                $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
+                if ($user_info->is_disable == $user::IS_DISABLE)
+                {
+                    $m3result->code = 2;
+                    $m3result->messages = '该用户被禁用';
+                }
+                elseif (empty($user_info->phone))
+                {
+                    /*需绑定手机*/
+                    $m3result->code = -20;
+                    $m3result->messages = '请绑定手机号';
+                    $m3result->data['open_id'] = $session['openid'];
+                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
+                }
+                else
+                {
+                    /*登录*/
+                    $m3result->code = 0;
+                    $m3result->messages = '登录成功';
+                    $m3result->data['open_id'] = $session['openid'];
+                    $m3result->data['app_key'] = $user->wxAppkey($session['openid'], $session['session_key']);
+                }
             }
         } catch (\Exception $e)
         {
@@ -74,5 +91,87 @@ class UserController extends Controller
         }
 
         return $m3result->toJson();
+    }
+
+    /**
+     * 绑定手机
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function bindPhone(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+        $user = new User();
+
+        $rules = [
+            'phone' => [
+                'required',
+                'numeric',
+                'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
+            ],
+            'code' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            if ($user->checkSmsCode($request->input('phone'), $request->input('code')))
+            {
+                $user->bindPhone($session_user->user_id, $request->input('phone'));
+                $m3result->code = 0;
+                $m3result->messages = '绑定成功';
+            }
+            else
+            {
+                $m3result->code = 1;
+                $m3result->messages = '验证码不正确';
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '验证码不正确';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * 获取手机验证码
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function smsCode(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $sms = new Sms();
+        $user = new User();
+
+        /*验证*/
+        $rules = [
+            'phone' => [
+                'required',
+                'numeric',
+                'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
+            ]
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $sms->sendSms(Sms::SMS_SIGNATURE_1, Sms::USER_BIND_PHONE_CODE, $request->input('phone'), ['code' => $user->makeSmsCode($request->input('phone'))]);
+            $m3result->code = 0;
+            $m3result->messages = '短信验证码已发送至手机';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '手机号码不合法';
+        }
+
+        return $m3result->toJson();
+
     }
 }

@@ -20,32 +20,8 @@ class Sms extends Model
     /*短信签名_1*/
     const SMS_SIGNATURE_1 = '青岛军民融合生活保障中心';
 
-    /*军方发布提醒的模板Code*/
-    const ARMY_RELEASE_CODE = 'SMS_123736619';
-
-    /*供货商收到订单的模板Code*/
-    const SUPPLIER_RECEIVE_OFFER_CODE = 'SMS_123797223';
-
-    /*供货商同意供货的模板Code*/
-    const SUPPLIER_SUBMIT_OFFER_CODE = 'SMS_123671806';
-
-    /*供货商拒绝供货的模板Code*/
-    const SUPPLIER_DENY_OFFER_CODE = 'SMS_123671805';
-
-    /*供货商逾期提醒的模板Code*/
-    const SUPPLIER_OVERDUE_CODE = 'SMS_123671803';
-
-    /*平台确认订单提醒的模板Code*/
-    const PLATFORM_CONFIRM_ORDER_CODE = 'SMS_123671798';
-
-    /*供货商已发货的模板Code*/
-    const SUPPLIER_SEND_CODE = 'SMS_123671808';
-
-    /*平台确认收货的模板Code*/
-    const PLATFORM_CONFIRM_RECEIVE_CODE = 'SMS_123666836';
-
-    /*供货商到货时间预警的模板Code*/
-    const SUPPLIER_WARNING_CODE = 'SMS_123672512';
+    /*用户绑定手机的模板Code*/
+    const USER_BIND_PHONE_CODE = 'SMS_126355337';
 
     static $acsClient = null;
 
