@@ -58,6 +58,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'WxAppKeyCheck' => \App\Http\Middleware\WxAppKeyCheck::class,
-        'UserBindPhoneCheck'=>\App\Http\Middleware\UserBindPhoneCheck::class,
+        'UserBindPhoneCheck' => \App\Http\Middleware\UserBindPhoneCheck::class,
     ];
 }
