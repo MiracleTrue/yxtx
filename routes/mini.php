@@ -7,7 +7,7 @@ Route::any('index/banner', 'IndexController@banner');/*首页banner图*/
 //Route::any('index/match', 'IndexController@match');/*首页比赛列表*/
 
 /*需要登录的请求*/
-Route::group(['middleware' => ['WxAppKeyCheck']], function ()
+Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 {
     Route::any('user/bindPhone', 'UserController@bindPhone');/*绑定phone*/
     Route::any('user/smsCode', 'UserController@smsCode');/*获取短信验证码*/
