@@ -18,6 +18,36 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
+     * Api 用户更改服务城市
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function locationSet(Request $request)
+    {
+        $user = new User();
+        $m3result = new M3Result();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'city' => 'required|exists:match_address,city',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes() && $user->locationSet($session_user->user_id, $request->input('city')))
+        {
+            $m3result->code = 0;
+            $m3result->messages = '更改服务城市成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '该城市未开通服务';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
      * Api 登录请求
      * @param Request $request
      * @return \App\Tools\json
@@ -94,7 +124,7 @@ class UserController extends Controller
     }
 
     /**
-     * 绑定手机
+     * Api 绑定手机 请求处理
      * @param Request $request
      * @return \App\Tools\json
      */
@@ -138,7 +168,7 @@ class UserController extends Controller
     }
 
     /**
-     * 获取手机验证码
+     * Api 获取手机验证码
      * @param Request $request
      * @return \App\Tools\json
      */

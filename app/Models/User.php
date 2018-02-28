@@ -18,6 +18,21 @@ class User extends Model
     const IS_DISABLE = 1;
     const NO_DISABLE = 0;
 
+    /**
+     * 用户设置使用位置
+     * @param $user_id
+     * @param $city
+     * @return mixed
+     */
+    public function locationSet($user_id, $city)
+    {
+        $e_users = Users::find($user_id);
+
+        $e_users->location = $city;
+        $e_users->save();
+        return $e_users;
+    }
+
 
     /**
      * 生成短信验证码

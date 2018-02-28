@@ -66,7 +66,7 @@ class Match extends Model
         /*事物*/
         try
         {
-            $address = new Address();
+            $address = new Location();
             $address_res = $address->tencent_coordinateAddressResolution($arr['address_coordinate_lat'], $arr['address_coordinate_lng']);
 
             DB::transaction(function () use ($arr, $address, $address_res)
