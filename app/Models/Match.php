@@ -67,8 +67,19 @@ class Match extends Model
      */
     public function getMatchInfo($match_id)
     {
+        /*初始化*/
         $e_match_list = MatchList::findOrFail($match_id);
+        $url_photos = array();
 
+        /*数据过滤*/
+        $e_match_list->need_money = MyHelper::money_format($e_match_list->need_money);
+        $e_match_list->status_text = self::statusTransformText($e_match_list->status);
+
+        foreach ($e_match_list->match_photos as $key => $value)
+        {
+            $url_photos[] = MyFile::makeUrl($value);
+        }
+        $e_match_list->url_photos = $url_photos;
         return $e_match_list;
     }
 

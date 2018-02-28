@@ -14,6 +14,34 @@ use Illuminate\Support\Facades\Validator;
  */
 class MatchController extends Controller
 {
+
+    public function info(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+
+        /*验证*/
+        $rules = [
+            'match_id' => 'required|exists:match_list,match_id',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $info = $match->getMatchInfo($request->input('match_id'));
+            $m3result->code = 0;
+            $m3result->messages = '获取比赛详情';
+            $m3result->data = $info;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
     /**
      * Api 比赛发布
      * @param Request $request

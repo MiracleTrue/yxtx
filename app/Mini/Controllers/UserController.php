@@ -17,6 +17,28 @@ use Illuminate\Support\Facades\Validator;
  */
 class UserController extends Controller
 {
+
+    public function info(Request $request)
+    {
+        /*初始化*/
+        $session_user = session('User');
+        $m3result = new M3Result();
+        $user = new User();
+
+        if ($session_user != null)
+        {
+            $m3result->code = 0;
+            $m3result->messages = '获取用户详情成功';
+            $m3result->data = $user->getUserInfo($session_user->user_id);
+        }
+        else
+        {
+            $m3result->code = -10;
+            $m3result->messages = '请登录';
+        }
+        return $m3result->toJson();
+    }
+
     /**
      * Api 用户更改服务城市
      * @param Request $request
@@ -24,6 +46,7 @@ class UserController extends Controller
      */
     public function locationSet(Request $request)
     {
+        /*初始化*/
         $user = new User();
         $m3result = new M3Result();
         $session_user = session('User');

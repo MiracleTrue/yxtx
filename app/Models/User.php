@@ -18,6 +18,15 @@ class User extends Model
     const IS_DISABLE = 1;
     const NO_DISABLE = 0;
 
+    public function getUserInfo($user_id)
+    {
+        $location = new Location();
+        $e_users = Users::find($user_id);
+        $e_users->location_simple = $location->CityToSimple($e_users->location);
+
+        return $e_users;
+    }
+
     /**
      * 用户设置使用位置
      * @param $user_id
