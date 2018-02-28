@@ -18,7 +18,7 @@ class Sms extends Model
     const SEND_STATUS = true;
 
     /*短信签名_1*/
-    const SMS_SIGNATURE_1 = '青岛军民融合生活保障中心';
+    const SMS_SIGNATURE_1 = '渔讯天下';
 
     /*用户绑定手机的模板Code*/
     const USER_BIND_PHONE_CODE = 'SMS_126355337';

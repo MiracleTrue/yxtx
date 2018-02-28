@@ -49,7 +49,7 @@ class User extends Model
      */
     public function checkSmsCode($phone, $code)
     {
-        $e_sms_code = SmsCode::where('phone', $phone)->where('code', $code)->where('valid_date', '>', now())->first();
+        $e_sms_code = SmsCode::where('phone', $phone)->where('sms_code', $code)->where('valid_date', '>', now())->first();
 
         if ($e_sms_code == null)
         {
