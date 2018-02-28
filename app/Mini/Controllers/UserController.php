@@ -45,7 +45,7 @@ class UserController extends Controller
             $session = $app->auth->session($request->input('jsCode'));
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
-            if ($user_info = $user->wxCheckOpenid($session['openid']))
+            if (!$user_info = $user->wxCheckOpenid($session['openid']))
             {
                 /*注册*/
                 if ($user->wxRegister($decryptData))
