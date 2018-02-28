@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Validator;
 class MatchController extends Controller
 {
 
+    /**
+     * Api 获取比赛详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function info(Request $request)
     {
         /*初始化*/
@@ -31,7 +36,7 @@ class MatchController extends Controller
         {
             $info = $match->getMatchInfo($request->input('match_id'));
             $m3result->code = 0;
-            $m3result->messages = '获取比赛详情';
+            $m3result->messages = '获取比赛详情成功';
             $m3result->data = $info;
         }
         else

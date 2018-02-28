@@ -98,9 +98,17 @@ class IndexController extends Controller
         $my_file = new MyFile();
 
         /*位置筛选*/
-        if ($session_user != null)
+        if ($session_user != null && !empty($session_user->location))
         {
-            $location_id = MatchAddress::where('city', $session_user->location)->firstOrFail()->address_id;
+            $e_match_address = MatchAddress::where('city', $session_user->location)->first();
+            if ($e_match_address != null)
+            {
+                $location_id = $e_match_address->address_id;
+            }
+            else
+            {
+                $location_id = MatchAddress::where('city', '青岛市')->first()->address_id;
+            }
         }
         else
         {

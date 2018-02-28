@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
 
+    /**
+     * Api 获取当前用户详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function info(Request $request)
     {
         /*初始化*/
