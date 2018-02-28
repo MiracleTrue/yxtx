@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use App\Entity\MatchList;
+use App\Tools\MyHelper;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -19,6 +20,13 @@ class Match extends Model
     const STATUS_GET_NUMBER = 100;
     const STATUS_END = 200;
 
+    /**
+     * 获取所有订单列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * @param array $where
+     * @param array $orderBy
+     * @param bool $is_paginate
+     * @return mixed
+     */
     public function getMatchList($where = array(), $orderBy = array(['match_list.create_time', 'desc']), $is_paginate = true)
     {
         /*初始化*/
@@ -40,6 +48,14 @@ class Match extends Model
         {
             $match_list = $e_match_list->get();
         }
+
+        /*数据过滤*/
+        $match_list->transform(function ($item)
+        {
+            $item->need_money = MyHelper::money_format($item->need_money);
+            $item->status_text = self::statusTransformText($item->status);
+            return $item;
+        });
 
         return $match_list;
     }

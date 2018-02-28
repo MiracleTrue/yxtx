@@ -6,6 +6,7 @@ use App\Models\Match;
 use App\Models\MyFile;
 use App\Models\User;
 use App\Tools\M3Result;
+use App\Tools\MyHelper;
 use Illuminate\Http\Request;
 
 
@@ -14,6 +15,9 @@ class TestController extends Controller
 
     public function test()
     {
+        dd(MyHelper::money_format(20.01));
+
+
         $user = new User();
         $session['openid'] = '';
 

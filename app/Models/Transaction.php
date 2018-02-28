@@ -52,7 +52,7 @@ class Transaction extends Model
     }
 
     /**
-     * 返回报名状态 的文本名称
+     * 返回提现状态 的文本名称
      * @param $status
      * @return string
      */

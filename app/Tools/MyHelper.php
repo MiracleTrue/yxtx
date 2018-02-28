@@ -21,4 +21,23 @@ class MyHelper
         }
         else return false;
     }
+
+    /**
+     * 判断是否该保留xx金额后的.00
+     * @param $money
+     * @return int
+     */
+    public static function money_format($money)
+    {
+        $int_money = intval($money);
+
+        if($int_money == $money)
+        {
+            return $int_money;
+        }
+        else
+        {
+            return $money;
+        }
+    }
 }
