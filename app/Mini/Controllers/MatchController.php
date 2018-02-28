@@ -35,6 +35,7 @@ class MatchController extends Controller
         if ($validator->passes())
         {
             $info = $match->getMatchInfo($request->input('match_id'));
+            dd($info);
             $m3result->code = 0;
             $m3result->messages = '获取比赛详情成功';
             $m3result->data = $info;
@@ -51,6 +52,7 @@ class MatchController extends Controller
      * Api 比赛发布
      * @param Request $request
      * @return \App\Tools\json
+     * @throws \Throwable
      */
     public function release(Request $request)
     {

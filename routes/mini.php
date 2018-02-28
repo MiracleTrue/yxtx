@@ -28,6 +28,10 @@ Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]]
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/
     Route::any('user/locationSet', 'UserController@locationSet');/*更改服务城市*/
     Route::any('user/info', 'UserController@info');/*获取当前用户详情*/
+    Route::any('user/myMatch', 'UserController@myMatch');/*我发布的比赛*/
+    Route::any('user/myRegistration', 'UserController@myRegistration');/*我报名的比赛*/
 });
 
 Route::any('wechat', 'WeChatController@serve');
+
+

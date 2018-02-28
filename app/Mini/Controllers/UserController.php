@@ -2,6 +2,10 @@
 
 namespace App\Mini\Controllers;
 
+use App\Entity\MatchRegistration;
+use App\Models\Match;
+use App\Models\MyFile;
+use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\User;
 use App\Tools\M3Result;
@@ -17,6 +21,63 @@ use Illuminate\Support\Facades\Validator;
  */
 class UserController extends Controller
 {
+    //我报名的比赛
+    public function myRegistration(Request $request)
+    {
+        /*初始化*/
+        $registration = new Registration();
+        $my_file = new MyFile();
+        $session_user = session('User');
+        $m3result = new M3Result();
+
+        //查询出报名过的比赛id
+        $match_ids = MatchRegistration::where('user_id', $session_user->user_id)->get()->pluck('match_id')->all();
+
+        $list = $registration->getRegistrationList([['user_id', $session_user->user_id]]);
+        /*数据过滤*/
+        $list->transform(function ($item) use ($my_file)
+        {
+            $arr = $item->match_info->only('match_id', 'title', 'status', 'status_text', 'address_name', 'match_start_time', 'match_end_time', 'match_sum_number', 'fish_number', 'need_money', 'first_photo');
+            unset($item->match_info);
+            $item->match_info = $arr;
+            return $item;
+        });
+        $m3result->code = 0;
+        $m3result->messages = '报名比赛列表获取成功';
+        $m3result->data = $list;
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 我发布的比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function myMatch(Request $request)
+    {
+        /*初始化*/
+        $match = new Match();
+        $my_file = new MyFile();
+        $session_user = session('User');
+        $m3result = new M3Result();
+
+
+        $list = $match->getMatchList([['user_id', $session_user->user_id]]);
+        /*数据过滤*/
+        $list->transform(function ($item) use ($my_file)
+        {
+            $item->first_photo = $item->match_photos[0] != null ? $my_file->makeUrl($item->match_photos[0]) : null;
+            $item = $item->only('match_id', 'title', 'status', 'status_text', 'address_name', 'match_start_time', 'match_end_time', 'match_sum_number', 'fish_number', 'need_money', 'first_photo');
+            return $item;
+        });
+
+        $m3result->code = 0;
+        $m3result->messages = '发布比赛列表获取成功';
+        $m3result->data = $list;
+
+        return $m3result->toJson();
+    }
 
     /**
      * Api 获取当前用户详情
@@ -32,9 +93,12 @@ class UserController extends Controller
 
         if ($session_user != null)
         {
+            $e_users = $user->getUserInfo($session_user->user_id);
+            $e_users->release_count = $e_users->match_list()->count();
+            $e_users->registration_count = $e_users->registration_list()->count();
             $m3result->code = 0;
             $m3result->messages = '获取用户详情成功';
-            $m3result->data = $user->getUserInfo($session_user->user_id);
+            $m3result->data = $e_users;
         }
         else
         {

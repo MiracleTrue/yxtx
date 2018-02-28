@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Entity\MatchList;
@@ -16,18 +17,20 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP = 0;
+    const STATUS_SIGN_UP    = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END = 200;
+    const STATUS_END        = 200;
 
     /**
      * 获取所有订单列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
      * @param array $where
      * @param array $orderBy
      * @param bool $is_paginate
+     * @param bool $is_whereIn
+     * @param null $whereIn
      * @return mixed
      */
-    public function getMatchList($where = array(), $orderBy = array(['match_list.create_time', 'desc']), $is_paginate = true)
+    public function getMatchList($where = array(), $orderBy = array(['match_list.create_time', 'desc']), $is_paginate = true, $is_whereIn = false, $whereIn = null)
     {
         /*初始化*/
         $e_match_list = new MatchList();
@@ -37,6 +40,11 @@ class Match extends Model
         foreach ($orderBy as $value)
         {
             $e_match_list->orderBy($value[0], $value[1]);
+        }
+        /*是否使用whereIn*/
+        if ($is_whereIn === true)
+        {
+            $e_match_list->whereIn($whereIn[0], $whereIn[1]);
         }
 
         /*是否需要分页*/
@@ -74,6 +82,7 @@ class Match extends Model
         /*数据过滤*/
         $e_match_list->need_money = MyHelper::money_format($e_match_list->need_money);
         $e_match_list->status_text = self::statusTransformText($e_match_list->status);
+        $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
 
         foreach ($e_match_list->match_photos as $key => $value)
         {
@@ -87,6 +96,7 @@ class Match extends Model
      * 发布一场比赛
      * @param $arr
      * @return bool
+     * @throws \Throwable
      */
     public function releaseMatch($arr)
     {
