@@ -116,6 +116,7 @@ class User extends Model
                 $e_users->avatar = $decryptData['avatarUrl'];
                 $e_users->user_money = 0;
                 $e_users->freeze_money = 0;
+                $e_users->location = '青岛市';
                 $e_users->create_time = now();
                 $e_users->save();
             });
