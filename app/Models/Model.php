@@ -23,7 +23,7 @@ class Model
         $time = isset($time[1]) ? $time[1] : 0;
         $time = date('YmdHis') + $time;
 
-        return $time . str_pad(mt_rand(1, 99999), 6, '0', STR_PAD_LEFT);
+        return $time . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
     }
 
     /**

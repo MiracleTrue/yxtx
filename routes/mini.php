@@ -24,6 +24,7 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 /*需要登录并绑定手机的请求*/
 Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]], function ()
 {
+    Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/
     Route::any('match/release', 'MatchController@release');/*比赛发布*/
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/
     Route::any('user/locationSet', 'UserController@locationSet');/*更改服务城市*/
@@ -32,6 +33,6 @@ Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]]
     Route::any('user/myRegistration', 'UserController@myRegistration');/*我报名的比赛*/
 });
 
-Route::any('wechat', 'WeChatController@serve');
+Route::any('wxPayment/registrationMatch', 'WeChatController@registrationMatchPaymentSuccess');
 
 

@@ -22,7 +22,7 @@ class Match extends Model
     const STATUS_END        = 200;
 
     /**
-     * 获取所有订单列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
      * @param array $where
      * @param array $orderBy
      * @param bool $is_paginate

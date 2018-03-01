@@ -4,10 +4,12 @@ namespace App\Mini\Controllers;
 use App\Entity\BannerList;
 use App\Models\Match;
 use App\Models\MyFile;
+use App\Models\Registration;
 use App\Models\User;
 use App\Tools\M3Result;
 use App\Tools\MyHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 
 class TestController extends Controller
@@ -15,7 +17,16 @@ class TestController extends Controller
 
     public function test()
     {
-        dd(MyHelper::money_format(20.01));
+//        $a = collect(['user_id'=>'78813','match_id'=>'156489']);
+//
+//        $b = Crypt::encryptString($a);
+//
+//        dd($b);
+//
+//        $a = new Registration();
+//        dd($a->makeOrderSn());
+//
+//        dd(MyHelper::money_format(20.01));
 
 
         $user = new User();

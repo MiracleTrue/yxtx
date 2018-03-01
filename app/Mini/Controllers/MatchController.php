@@ -1,11 +1,16 @@
 <?php
 namespace App\Mini\Controllers;
 
+use App\Entity\MatchList;
+use App\Entity\MatchRegistration;
 use App\Models\Match;
 use App\Models\MyFile;
+use App\Models\Registration;
+use App\Models\Transaction;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /**
  * 比赛 控制器
@@ -14,6 +19,74 @@ use Illuminate\Support\Facades\Validator;
  */
 class MatchController extends Controller
 {
+
+    //报名参加比赛
+    public function registration(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', '!=', $session_user->user_id)->where('status', Match::STATUS_SIGN_UP)->where('match_start_time', '>=', now());
+                }),
+            ],
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->first();
+            $match_info = $match->getMatchInfo($request->input('match_id'));
+
+            /*未报名过*/
+            if ($is_registration == null)
+            {
+                if ($e_reg = $registration->registrationMatch($session_user->user_id, $request->input('match_id')))
+                {
+                    $m3result->code = 0;
+                    $m3result->messages = '比赛报名成功';
+                    $m3result->data['order_sn'] = $e_reg->order_sn;
+                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+                    $m3result->data['match_info'] = $match_info;
+                }
+                else
+                {
+                    $m3result->code = 2;
+                    $m3result->messages = '报名人数已满';
+                }
+            }
+            else
+            {
+                if ($is_registration->status == Registration::STATUS_WAIT_PAYMENT)
+                {
+                    $m3result->code = 0;
+                    $m3result->messages = '比赛报名成功';
+                    $m3result->data['order_sn'] = $is_registration->order_sn;
+                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+                    $m3result->data['match_info'] = $match_info;
+                }
+                else
+                {
+                    $m3result->code = 3;
+                    $m3result->messages = '已经报名,等待抽号';
+                }
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '该比赛已撤销或已过报名时间';
+        }
+        return $m3result->toJson();
+    }
 
     /**
      * Api 获取比赛详情
@@ -35,7 +108,6 @@ class MatchController extends Controller
         if ($validator->passes())
         {
             $info = $match->getMatchInfo($request->input('match_id'));
-            dd($info);
             $m3result->code = 0;
             $m3result->messages = '获取比赛详情成功';
             $m3result->data = $info;
@@ -68,8 +140,8 @@ class MatchController extends Controller
             'address_name' => 'required',
             'address_coordinate_lat' => 'required|numeric',
             'address_coordinate_lng' => 'required|numeric',
-            'match_start_time' => 'required|date',
-            'match_end_time' => 'required|date',
+            'match_start_time' => 'required|date|after:now',
+            'match_end_time' => 'required|date|after:now',
             'match_start_number' => 'required|integer|min:0',
             'match_end_number' => 'required|integer|min:' . bcadd($request->input('match_start_number'), 1),
             'match_content' => 'required',

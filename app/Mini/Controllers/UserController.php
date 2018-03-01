@@ -21,7 +21,11 @@ use Illuminate\Support\Facades\Validator;
  */
 class UserController extends Controller
 {
-    //我报名的比赛
+    /**
+     * 我报名的比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function myRegistration(Request $request)
     {
         /*初始化*/

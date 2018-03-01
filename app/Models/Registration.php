@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
+use App\Exceptions\NetworkBusyException;
 use App\Tools\MyHelper;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Registration 报名相关模型
@@ -11,12 +14,64 @@ use App\Tools\MyHelper;
  */
 class Registration extends Model
 {
-    /*报名状态:  10.未抽号  20.已抽号*/
-    const STATUS_WAIT_NUMBER    = 10;
+    /*报名状态: 0.待支付  10.未抽号  20.已抽号*/
+    const STATUS_WAIT_PAYMENT = 0;
+    const STATUS_WAIT_NUMBER = 10;
     const STATUS_ALREADY_NUMBER = 20;
 
     /**
-     * 获取所有订单列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * 单个用户报名参加一场比赛
+     * @param $user_id
+     * @param $match_id
+     * @return bool|null
+     */
+    public function registrationMatch($user_id, $match_id)
+    {
+        /*初始化*/
+        $return_entity = null;
+
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($match_id, $user_id, &$return_entity)
+            {
+                $e_match_list = MatchList::where('match_id', $match_id)->where('status', Match::STATUS_SIGN_UP)->where('match_start_time', '>=', now())->lockForUpdate()->first();
+                $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
+
+                if ($e_match_list == null)
+                {
+                    throw new NetworkBusyException();
+                }
+
+                if ($e_match_list->registration_sum_number < $e_match_list->match_sum_number)
+                {
+                    $e_match_registration = new MatchRegistration();
+                    $e_match_registration->user_id = $user_id;
+                    $e_match_registration->match_id = $e_match_list->match_id;
+                    $e_match_registration->order_sn = $this->makeOrderSn();
+                    $e_match_registration->status = self::STATUS_WAIT_PAYMENT;
+                    $e_match_registration->match_number = null;
+                    $e_match_registration->create_time = now();
+                    $e_match_registration->save();
+
+                    $return_entity = $e_match_registration;
+                }
+                else
+                {
+                    throw new \Exception('该比赛报名人数已满');
+                }
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '该比赛报名人数已满';
+            return false;
+        }
+        return $return_entity;
+    }
+
+    /**
+     * 获取所有报名列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
      * @param array $where
      * @param array $orderBy
      * @param bool $is_paginate
