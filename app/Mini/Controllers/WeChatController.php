@@ -1,7 +1,6 @@
 <?php
 namespace App\Mini\Controllers;
 
-use Spatie\ArrayToXml\ArrayToXml;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -12,8 +11,6 @@ use Illuminate\Support\Facades\Log;
  */
 class WeChatController extends Controller
 {
-
-
     /**
      * 微信支付异步回调 (报名参赛)
      * @param Request $request
