@@ -9,7 +9,7 @@
 
 3.修改.env全局配置文件,生成APP_KEY  (php artisan key:generate)
 
-4.还原数据库,项目根目录下的sql_model.mwb
+4.还原数据库,项目根目录下的sql_data.sql
 
 5.将Http访问目录设置为,项目根目录下的 /public/index.php
 
@@ -17,7 +17,9 @@
   * * * * * php /var/www/jmrh/artisan schedule:run >> /dev/null 2>&1    保存
   crontab -u root -l   查看
 
-7.IDE-高亮提示助手
+开发环境额外配置:
+
+1.IDE-高亮提示助手
   php artisan ide-helper:generate
 
 备注:
@@ -25,7 +27,6 @@ Linux问题:
 1.将项目目录所有人和所有组设置为apache 或者 storage 目录和 bootstrap/cache 目录应该允许 Web 服务器写入 (权限问题)
 2.关闭selinux
 3.防火墙问题
-
 
 项目目录结构:
 ｜–　app 包含Controller、Model、路由等在内的应用目录，大部分业务将在该目录下进行
@@ -91,7 +92,54 @@ Linux问题:
 ｜–　phpunit.xml phpunit（一种PHP测试框架）配置文件
 ｜–　server.php PHP内置的Web服务器将把这个文件作为入口。以public/index.php为入口的可以忽略掉该文件
 
-APP_ENV设置值:   开发: local    测试: testing    预上线: staging    正式环境: production
 
-更换APP_KEY
-php artisan key:generate
+.env文件详解
+APP_NAME=                                     //项目名称
+APP_ENV=                                      //开发: local    测试: testing    预上线: staging    正式环境: production
+APP_KEY=                                      //php artisan key:generate 生成
+APP_DEBUG=                                    //开启Debug:true   关闭Debug:false 生产环境必须关闭
+APP_LOG_LEVEL=                                //日志记录的等级默认记录全部 debug 生成环境应该为:error
+APP_URL=                                      //项目的Url地址  http://www.xxx.com
+DEBUGBAR_DEBUG=                               //插件: 开启Debug显示框:true   关闭Debug显示框:false
+CONFIG_ADMIN_SECURE=                          //插件: Laravel-admin  是否启用Https 启用:true 不启用false
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_DRIVER=sync
+
+WECHAT_MINI_PROGRAM_APPID=                     //微信小程序app_id
+WECHAT_MINI_PROGRAM_SECRET=                    //微信小程序secret
+WECHAT_MINI_PROGRAM_TOKEN=                     //微信小程序token
+WECHAT_MINI_PROGRAM_AES_KEY=                   //微信小程序aes_key
+
+WECHAT_PAYMENT_APPID=                          //微信支付应用的 app_id
+WECHAT_PAYMENT_MCH_ID=                         //微信支付的商户号
+WECHAT_PAYMENT_KEY=                            //微信支付设置的key
+WECHAT_PAYMENT_CERT_PATH=                      //微信支付证书 cert.pem !绝对路径
+WECHAT_PAYMENT_KEY_PATH=                       //微信支付证书 key.pem  !绝对路径
+
+ALI_ACCESS_KEY_ID=yourAccessKeyId              //阿里云短信 应用id
+ALI_ACCESS_KEY_SECRET=yourAccessKeySecret      //阿里云短信 应用Secret
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
