@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class WeChatController extends Controller
 {
     /**
-     * 微信支付异步回调 (报名参赛)
+     * (报名参赛) 微信支付异步回调
      * @param Request $request
      * @return string
      */
