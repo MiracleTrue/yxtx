@@ -6,6 +6,7 @@ use App\Entity\MatchRegistration;
 use App\Entity\Users;
 use App\Entity\WithdrawDeposit;
 use Illuminate\Support\Facades\DB;
+use EasyWeChat\Factory;
 
 /**
  * Class Transaction 交易相关模型
@@ -31,13 +32,11 @@ class Transaction extends Model
         $reg_info = $registration->getRegistrationInfo($reg_id);
 
 
-//        dd($session_user, $reg_info);
 
-
+        
         $result = $app->order->unify([
             'body' => $reg_info->match_info->title,
             'out_trade_no' => $reg_info->order_sn,
-            'mch_id' => 16627296,
             'total_fee' => $reg_info->match_info->need_money,
             'notify_url' => url('wxPayment/registrationMatch'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
