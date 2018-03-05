@@ -28,6 +28,8 @@ class MatchController extends Controller
         $match = new Match();
         $registration = new Registration();
         $session_user = session('User');
+        $transaction = new Transaction();
+
 
         /*验证*/
         $rules = [
@@ -53,8 +55,8 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
-                    $m3result->data['order_sn'] = $e_reg->order_sn;
-                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+//                    $m3result->data['order_sn'] = $e_reg->order_sn;
+//                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
                     $m3result->data['match_info'] = $match_info;
                 }
                 else
@@ -69,8 +71,12 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
-                    $m3result->data['order_sn'] = $is_registration->order_sn;
-                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+
+
+                    $transaction->RegistrationMatchPaymentStart($is_registration->reg_id);
+
+//                    $m3result->data['order_sn'] = $is_registration->order_sn;
+//                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
                     $m3result->data['match_info'] = $match_info;
                 }
                 else

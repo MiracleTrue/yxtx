@@ -20,6 +20,34 @@ class Registration extends Model
     const STATUS_ALREADY_NUMBER = 20;
 
     /**
+     * 获取单个报名详情
+     * @param $reg_id
+     * @return mixed
+     */
+    public function getRegistrationInfo($reg_id)
+    {
+        /*初始化*/
+        $e_match_registration = MatchRegistration::findOrFail($reg_id);
+        $url_photos = array();
+
+        /*数据过滤*/
+        $e_match_registration->match_info = $e_match_registration->match_info;
+
+        $e_match_registration->match_info->need_money = MyHelper::money_format($e_match_registration->match_info->need_money);
+        $e_match_registration->match_info->status_text = self::statusTransformText($e_match_registration->match_info->status);
+        $e_match_registration->match_info->registration_sum_number = $e_match_registration->match_info->reg_list()->count();
+        $e_match_registration->match_info->address_info = $e_match_registration->match_info->address_info;
+
+        foreach ($e_match_registration->match_info->match_photos as $key => $value)
+        {
+            $url_photos[] = MyFile::makeUrl($value);
+        }
+        $e_match_registration->match_info->url_photos = $url_photos;
+
+        return $e_match_registration;
+    }
+
+    /**
      * 单个用户报名参加一场比赛
      * @param $user_id
      * @param $match_id

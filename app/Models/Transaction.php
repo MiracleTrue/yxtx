@@ -22,13 +22,36 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_REGISTRATION_INCOME = 20;
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
 
-    /**
-     * 支付回调地址 (报名参加比赛)
-     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
-     */
-    public static function getRegistrationMatchNotifyUrl()
+
+    public function RegistrationMatchPaymentStart($reg_id)
     {
-        return url('wxPayment/registrationMatch');
+        $app = app('wechat.payment');
+        $session_user = session('User');
+        $registration = new Registration();
+        $reg_info = $registration->getRegistrationInfo($reg_id);
+
+
+//        dd($session_user, $reg_info);
+
+
+        $result = $app->order->unify([
+            'body' => $reg_info->match_info->title,
+            'out_trade_no' => $reg_info->order_sn,
+            'mch_id' => 16627296,
+            'total_fee' => $reg_info->match_info->need_money,
+            'notify_url' => url('wxPayment/registrationMatch'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'trade_type' => 'JSAPI',
+            'openid' => $session_user->openid,
+        ]);
+
+        dd($result);
+
+        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS')
+        {
+            $prepayId = $result->prepay_id;
+            $config = $app->sdkConfig($prepayId); // 返回数组
+        }
+
     }
 
     /**
