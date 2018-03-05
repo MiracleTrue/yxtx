@@ -7,7 +7,7 @@ use App\Tools\M3Result;
 use Closure;
 use Illuminate\Support\Facades\Route;
 
-/** 
+/**
  * 检测微信用户是否登录
  * Class WxAppKeyCheck
  * @package App\Http\Middleware

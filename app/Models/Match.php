@@ -17,9 +17,9 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP    = 0;
+    const STATUS_SIGN_UP = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END        = 200;
+    const STATUS_END = 200;
 
     /**
      * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -83,6 +83,7 @@ class Match extends Model
         $e_match_list->need_money = MyHelper::money_format($e_match_list->need_money);
         $e_match_list->status_text = self::statusTransformText($e_match_list->status);
         $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
+        $e_match_list->address_info = $e_match_list->address_info;
 
         foreach ($e_match_list->match_photos as $key => $value)
         {
