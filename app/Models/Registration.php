@@ -19,6 +19,55 @@ class Registration extends Model
     const STATUS_WAIT_NUMBER = 10;
     const STATUS_ALREADY_NUMBER = 20;
 
+
+    /**
+     * 为一个报名比赛的用户,抽取比赛号码
+     * @param $user_id
+     * @param $match_id
+     * @return bool|null
+     */
+    public function getNumber($user_id, $match_id)
+    {
+        /*初始化*/
+        $return_entity = null;
+        $arr = array();
+
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($match_id, $user_id, $arr, &$return_entity)
+            {
+                $e_match_list = MatchList::where('match_id', $match_id)->where('status', Match::STATUS_GET_NUMBER)->lockForUpdate()->first();
+
+                if ($e_match_list == null)
+                {
+                    throw new NetworkBusyException();
+                }
+
+                for ($i = $e_match_list->match_start_number; $i <= $e_match_list->match_end_number; $i++)
+                {
+                    $arr[] = $i;
+                }
+                $reg_numbers = $e_match_list->reg_list->where('status', self::STATUS_ALREADY_NUMBER)->pluck('match_number');
+
+                $rd_numbers = collect($arr)->diff($reg_numbers);/*可随机的号码*/
+
+                /*抽号*/
+                $e_match_registration = MatchRegistration::where('user_id', $user_id)->where('match_id', $match_id)->first();
+                $e_match_registration->status = self::STATUS_ALREADY_NUMBER;
+                $e_match_registration->match_number = $rd_numbers->random();
+                $e_match_registration->save();
+                $return_entity = $e_match_registration;
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '网络繁忙';
+            return false;
+        }
+        return $return_entity;
+    }
+
     /**
      * 获取单个报名详情
      * @param $reg_id

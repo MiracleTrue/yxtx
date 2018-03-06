@@ -94,6 +94,63 @@ class MatchController extends Controller
     }
 
     /**
+     * Api 已报名抽取号码
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function getNumber(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('status', Match::STATUS_GET_NUMBER);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->where('status', Registration::STATUS_WAIT_NUMBER)->first();
+
+            if ($e_match_registration instanceof MatchRegistration)
+            {
+                if ($e_reg = $registration->getNumber($session_user->user_id, $request->input('match_id')))
+                {
+                    $m3result->code = 0;
+                    $m3result->messages = '抽取号码成功';
+                    $m3result->data = $e_reg;
+                }
+                else
+                {
+                    $m3result->code = 3;
+                    $m3result->messages = '网络繁忙';
+                }
+            }
+            else
+            {
+                $m3result->code = 2;
+                $m3result->messages = '未到抽号时间';
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
      * Api 比赛开启抽号
      * @param Request $request
      * @return \App\Tools\json
