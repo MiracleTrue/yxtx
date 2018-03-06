@@ -71,6 +71,22 @@ class Match extends Model
     }
 
     /**
+     * 单个比赛开启抽号
+     * @param $match_id
+     * @return bool
+     */
+    public function matchOpenNumber($match_id)
+    {
+        /*初始化*/
+        $e_match_list = MatchList::findOrFail($match_id);
+
+        $e_match_list->status = self::STATUS_GET_NUMBER;
+        $e_match_list->save();
+
+        return true;
+    }
+
+    /**
      * 获取单个比赛详情
      * @param $match_id
      * @return mixed
@@ -213,7 +229,7 @@ class Match extends Model
     {
         $session_user = session('User');
         $code = 0;/*无操作*/
-        if($session_user == null)
+        if ($session_user == null)
         {
             return $code;
         }

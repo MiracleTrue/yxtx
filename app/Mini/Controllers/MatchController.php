@@ -93,10 +93,42 @@ class MatchController extends Controller
         return $m3result->toJson();
     }
 
-    //开启抽号
-    public function openNumber()
+    /**
+     * Api 比赛开启抽号
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function openNumber(Request $request)
     {
-        
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id)->where('status', Match::STATUS_SIGN_UP);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes() && $match->matchOpenNumber($request->input('match_id')))
+        {
+            $m3result->code = 0;
+            $m3result->messages = '比赛开启抽号';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
     }
 
     /**
