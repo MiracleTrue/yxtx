@@ -212,9 +212,13 @@ class Match extends Model
     public function matchDetailOptionButton(MatchList $e_match_list)
     {
         $session_user = session('User');
-        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
         $code = 0;/*无操作*/
+        if($session_user == null)
+        {
+            return $code;
+        }
 
+        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
         if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
         {
             if ($e_match_list->status == self::STATUS_SIGN_UP)
