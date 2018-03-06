@@ -5,7 +5,6 @@ use App\Http\Middleware\UserBindPhoneCheck;
 Route::any('test', 'TestController@test');
 
 
-
 Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 {
     /*不需要登录的请求*/

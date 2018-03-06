@@ -21,8 +21,8 @@ class MyFile extends Model
     private $thumb_width = 240;/*缩略图宽度*/
     private $thumb_height = 240;/*缩略图高度*/
 
-    private $match_width = 600;/*比赛图宽度*/
-    private $match_height = 600;/*比赛图高度*/
+    private $match_width = 750;/*比赛图宽度*/
+    private $match_height = 750;/*比赛图高度*/
 
     private $clear_temp_odds = 1000;/*清空temp目录的几率 1000分之1*/
 
@@ -104,19 +104,19 @@ class MyFile extends Model
     }
 
     /**
-     * 上传一张品牌Logo到brand目录
+     * 上传一张比赛相册图片
      * @param $file & 表单的file对象
      * @return mixed  返回需要入数据库的文件路径
      */
     public function uploadMatch($file)
     {
         $date = Carbon::now();
-        $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
+//        $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
         $child_path = 'match/'.date('Ym',$date->timestamp).'/'.$date->weekOfMonth;/*存储文件格式为 201706 下 1文件夹内  201706代表年月 1代表当前月的第几个星期*/
 
         $path = Storage::disk('local')->putFile($child_path,$file);
 
-        Image::make($prefix_path.$path)->resize($this->match_width, $this->match_height)->save(null,100);
+//        Image::make($prefix_path.$path)->resize($this->match_width, $this->match_height)->save(null,100);
 
         return $path;
     }

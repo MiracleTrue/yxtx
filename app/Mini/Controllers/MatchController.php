@@ -120,9 +120,9 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->where('status', Registration::STATUS_WAIT_NUMBER)->first();
+            $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->first();
 
-            if ($e_match_registration instanceof MatchRegistration)
+            if ($e_match_registration instanceof MatchRegistration && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
             {
                 if ($e_reg = $registration->getNumber($session_user->user_id, $request->input('match_id')))
                 {
@@ -135,6 +135,12 @@ class MatchController extends Controller
                     $m3result->code = 3;
                     $m3result->messages = '网络繁忙';
                 }
+            }
+            elseif ($e_match_registration->status == Registration::STATUS_ALREADY_NUMBER)
+            {
+                $m3result->code = 0;
+                $m3result->messages = '抽取号码成功';
+                $m3result->data = $e_match_registration;
             }
             else
             {
