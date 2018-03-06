@@ -122,7 +122,13 @@ class MatchController extends Controller
         {
             $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->first();
 
-            if ($e_match_registration instanceof MatchRegistration && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+
+            if ($e_match_registration == null)
+            {
+                $m3result->code = 1;
+                $m3result->messages = '比赛不存在';
+            }
+            elseif ($e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
             {
                 if ($e_reg = $registration->getNumber($session_user->user_id, $request->input('match_id')))
                 {
@@ -145,7 +151,7 @@ class MatchController extends Controller
             else
             {
                 $m3result->code = 2;
-                $m3result->messages = '未到抽号时间';
+                $m3result->messages = '未支付';
             }
         }
         else
