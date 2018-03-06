@@ -28,7 +28,7 @@ class Controller extends BaseController
         /*初始化分页大小 10条*/
         if (empty($_COOKIE['PaginationSize']) || is_numeric($_COOKIE['PaginationSize']) == false)
         {
-            $_COOKIE['PaginationSize'] = 1;
+            $_COOKIE['PaginationSize'] = 10;
         }
 
 
