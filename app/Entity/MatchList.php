@@ -113,6 +113,14 @@ class MatchList extends Entity
         return $this->hasOne(MatchAddress::class, 'address_id', 'address_id');
     }
 
+    /**
+     * 一对一关联Users实体表
+     */
+    public function user_info()
+    {
+        return $this->hasOne(Users::class,'user_id','user_id');
+    }
+
     //    /**
     //     * 一对多关联ProductsCategoryManage实体表
     //     */

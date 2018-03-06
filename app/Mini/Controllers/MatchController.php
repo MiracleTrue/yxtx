@@ -30,7 +30,6 @@ class MatchController extends Controller
         $session_user = session('User');
         $transaction = new Transaction();
 
-
         /*验证*/
         $rules = [
             'match_id' => [
@@ -94,6 +93,106 @@ class MatchController extends Controller
         return $m3result->toJson();
     }
 
+    //开启抽号
+    public function openNumber()
+    {
+        
+    }
+
+    /**
+     * Api 比赛报名详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function registrationDetail(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '!=', $registration::STATUS_WAIT_PAYMENT]], [['match_registration.create_time', 'desc']], false);
+            /*数据过滤*/
+            $list->transform(function ($item)
+            {
+                $item->user_info = $item->user_info->only('nick_name', 'phone');
+                $item = $item->only('reg_id', 'status', 'status_text', 'create_time', 'user_info');
+                return $item;
+            });
+            $m3result->code = 0;
+            $m3result->messages = '获取比赛报名列表';
+            $m3result->data = $list;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 比赛抽号详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function numberDetail(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id)->whereIn('status', [Match::STATUS_GET_NUMBER, Match::STATUS_END]);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', $registration::STATUS_ALREADY_NUMBER]], [['match_registration.create_time', 'desc']], false);
+            /*数据过滤*/
+            $list->transform(function ($item)
+            {
+                $item->user_info = $item->user_info->only('nick_name', 'phone');
+                $item = $item->only('reg_id', 'status', 'status_text', 'create_time', 'match_number', 'user_info');
+                return $item;
+            });
+            $m3result->code = 0;
+            $m3result->messages = '获取比赛抽号列表';
+            $m3result->data = $list;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
     /**
      * Api 获取比赛详情
      * @param Request $request
@@ -114,6 +213,7 @@ class MatchController extends Controller
         if ($validator->passes())
         {
             $info = $match->getMatchInfo($request->input('match_id'));
+            $info['option_button'] = $match->matchDetailOptionButton($info);
             $m3result->code = 0;
             $m3result->messages = '获取比赛详情成功';
             $m3result->data = $info;

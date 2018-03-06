@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entity\MatchList;
+use App\Entity\MatchRegistration;
 use App\Tools\MyHelper;
 use Illuminate\Support\Facades\DB;
 
@@ -60,6 +61,7 @@ class Match extends Model
         /*数据过滤*/
         $match_list->transform(function ($item)
         {
+            $item->first_photo = $item->match_photos[0] != null ? MyFile::makeUrl($item->match_photos[0]) : null;
             $item->need_money = MyHelper::money_format($item->need_money);
             $item->status_text = self::statusTransformText($item->status);
             return $item;
@@ -200,6 +202,57 @@ class Match extends Model
                 break;
         }
         return $text;
+    }
+
+    /**
+     * 返回详情页 当前用户操作的代码
+     * @param MatchList $e_match_list
+     * @return int
+     */
+    public function matchDetailOptionButton(MatchList $e_match_list)
+    {
+        $session_user = session('User');
+        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
+        $code = 0;/*无操作*/
+
+        if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
+        {
+            if ($e_match_list->status == self::STATUS_SIGN_UP)
+            {
+                $code = 31;/*操作:开始抽号 , 报名详情*/
+            }
+            elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+            {
+                $code = 32;/*操作:抽号详情 , 报名详情*/
+            }
+        }
+        elseif ($e_match_registration != null && $e_match_registration->user_id == $session_user->user_id)/*已报名访客*/
+        {
+            if ($e_match_list->status == self::STATUS_SIGN_UP && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT)
+            {
+                $code = 21;/*操作:支付*/
+            }
+            elseif ($e_match_list->status == self::STATUS_SIGN_UP && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+            {
+                $code = 22;/*操作:等待抽号*/
+            }
+            elseif ($e_match_list->status == self::STATUS_GET_NUMBER && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+            {
+                $code = 23;/*操作:抽号*/
+            }
+            elseif ($e_match_list->status == self::STATUS_GET_NUMBER && $e_match_registration->status == Registration::STATUS_ALREADY_NUMBER)
+            {
+                $code = 24;/*操作:查看抽号结果*/
+            }
+        }
+        else /*未报名访客*/
+        {
+            if ($e_match_list->status == self::STATUS_SIGN_UP)
+            {
+                $code = 11;/*操作:报名*/
+            }
+        }
+        return $code;
     }
 
     /**

@@ -32,21 +32,21 @@ class Model
      */
     public static function noPrivilegePrompt($request)
     {
-        if ($request->method() == 'GET')/*页面*/
-        {
-            die('没有权限访问');
-        }
-        elseif ($request->method() == 'POST')/*Json*/
-        {
-            $m3result = new M3Result();
-            $m3result->code = -1;
-            $m3result->messages = '没有权限访问';
-            die($m3result->toJson());
-        }
-        else
-        {
-            die('没有权限访问');
-        }
+//        if ($request->method() == 'GET')/*页面*/
+//        {
+//            die('没有权限访问');
+//        }
+//        elseif ($request->method() == 'POST')/*Json*/
+//        {
+//            $m3result = new M3Result();
+//            $m3result->code = -1;
+//            $m3result->messages = '没有权限访问';
+//            die($m3result->toJson());
+//        }
+//        else
+//        {
+//            die('没有权限访问');
+//        }
     }
 
     /**

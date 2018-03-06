@@ -113,7 +113,7 @@ class Registration extends Model
         $e_match_registration = new MatchRegistration();
 
         /*预加载ORM对象*/
-        $e_match_registration = $e_match_registration->where($where)->with('match_info');
+        $e_match_registration = $e_match_registration->where($where)->with('match_info', 'user_info');
         foreach ($orderBy as $value)
         {
             $e_match_registration->orderBy($value[0], $value[1]);

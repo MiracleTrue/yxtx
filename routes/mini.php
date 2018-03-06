@@ -28,6 +28,7 @@ Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]]
     Route::any('match/info/numberDetail', 'MatchController@numberDetail');/*比赛抽号详情*/
     Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/
     Route::any('match/release', 'MatchController@release');/*比赛发布*/
+    Route::any('match/openNumber', 'MatchController@openNumber');/*比赛开启抽号*/
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/
     Route::any('user/locationSet', 'UserController@locationSet');/*更改服务城市*/
     Route::any('user/info', 'UserController@info');/*获取当前用户详情*/

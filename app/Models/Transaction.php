@@ -33,7 +33,7 @@ class Transaction extends Model
 
 
 
-        
+
         $result = $app->order->unify([
             'body' => $reg_info->match_info->title,
             'out_trade_no' => $reg_info->order_sn,

@@ -40,7 +40,6 @@ class IndexController extends Controller
             /*数据过滤*/
             $list->transform(function ($item) use ($my_file)
             {
-                $item->first_photo = $item->match_photos[0] != null ? $my_file->makeUrl($item->match_photos[0]) : null;
                 $item = $item->only('match_id', 'title', 'status', 'status_text', 'address_name', 'match_start_time', 'match_end_time', 'match_sum_number', 'fish_number', 'need_money', 'first_photo');
                 return $item;
             });
