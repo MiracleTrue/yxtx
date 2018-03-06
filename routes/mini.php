@@ -24,6 +24,8 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 /*需要登录并绑定手机的请求*/
 Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]], function ()
 {
+    Route::any('match/info/registrationDetail', 'MatchController@registrationDetail');/*比赛报名详情*/
+    Route::any('match/info/numberDetail', 'MatchController@numberDetail');/*比赛抽号详情*/
     Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/
     Route::any('match/release', 'MatchController@release');/*比赛发布*/
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/
