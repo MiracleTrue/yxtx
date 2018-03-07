@@ -72,7 +72,7 @@ class MatchController extends Controller
                     $m3result->messages = '比赛报名成功';
 
 
-                    $transaction->RegistrationMatchPaymentStart($is_registration->reg_id);
+                    $transaction->RegistrationMatchWxPayStart($is_registration->reg_id);
 
 //                    $m3result->data['order_sn'] = $is_registration->order_sn;
 //                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();

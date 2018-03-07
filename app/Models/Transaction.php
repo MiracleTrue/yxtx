@@ -24,7 +24,7 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
 
 
-    public function RegistrationMatchPaymentStart($reg_id)
+    public function RegistrationMatchWxPayStart($reg_id)
     {
         $app = app('wechat.payment');
         $session_user = session('User');
@@ -59,7 +59,7 @@ class Transaction extends Model
      * @return bool
      * @throws \Exception
      */
-    public function RegistrationMatchPaymentSuccess($order_sn)
+    public function RegistrationMatchWxPaySuccess($order_sn)
     {
         $e_match_registration = MatchRegistration::where('order_sn', $order_sn);
 
