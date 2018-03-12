@@ -50,7 +50,7 @@ class MatchController extends Controller
 
                     $lng = strval($match_info->address_coordinate['lng']);
 
-                    dd($lat, $lng);
+//                    dd($lat, $lng);
 
                     $form->tencent_map($lat, $lng, '比赛地图');
                 })->view($match_id)
