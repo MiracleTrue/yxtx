@@ -43,7 +43,7 @@ class HandleEndMatch extends Command
     public function handle()
     {
         /*初始化*/
-        MatchList::whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '<', now())
+        MatchList::whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '<', now()->subHours(12))
             ->update(['status' => Match::STATUS_END]);
     }
 }
