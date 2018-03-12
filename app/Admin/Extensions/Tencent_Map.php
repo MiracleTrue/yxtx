@@ -32,17 +32,13 @@ class Tencent_Map extends Field
 
     public function render()
     {
-//        $name = $this->formatName($this->column);
-
 
         $this->script = <<<EOT
         function initTencentMap(name) {
-            var lat = $('#{$this->id['lat']}');
-            var lng = $('#{$this->id['lng']}');
+            var lat = $('#{$this->id['lat']}').val();
+            var lng = $('#{$this->id['lng']}').val();
 
-            var center = new qq.maps.LatLng(47.26, 142.55);
-
-            console.log(center);
+            var center = new qq.maps.LatLng(lat, lng);
 
             var container = document.getElementById("map_"+name);
             var map = new qq.maps.Map(container, {
@@ -50,33 +46,26 @@ class Tencent_Map extends Field
                 zoom: 13
             });
 
-                        console.log(map);
-
             var marker = new qq.maps.Marker({
                 position: center,
                 draggable: true,
                 map: map
             });
 
-            if( ! lat.val() || ! lng.val()) {
-                var citylocation = new qq.maps.CityService({
-                    complete : function(result){
-                        map.setCenter(result.detail.latLng);
-                        marker.setPosition(result.detail.latLng);
-                    }
-                });
-
-                citylocation.searchLocalCity();
-            }
+//            if( ! lat || ! lng) {
+//                var citylocation = new qq.maps.CityService({
+//                    complete : function(result){
+//                    console.log(result);
+//                        map.setCenter(result.detail.latLng);
+//                        marker.setPosition(result.detail.latLng);
+//                    }
+//                });
+//
+//                citylocation.searchLocalCity();
+//            }
 
             qq.maps.event.addListener(map, 'click', function(event) {
                 marker.setPosition(event.latLng);
-            });
-
-            qq.maps.event.addListener(marker, 'position_changed', function(event) {
-                var position = marker.getPosition();
-                lat.val(position.getLat());
-                lng.val(position.getLng());
             });
         }
 

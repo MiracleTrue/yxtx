@@ -44,7 +44,15 @@ class MatchList extends Entity
 
     public function getMatchPhotosAttribute($photos)
     {
-        return json_decode($photos, true);
+        $arr = json_decode($photos, true);
+        if (is_array($arr))
+        {
+            return $arr;
+        }
+        else
+        {
+            return array();
+        }
     }
 
     /*修改器:地图坐标json转换array*/
@@ -118,7 +126,7 @@ class MatchList extends Entity
      */
     public function user_info()
     {
-        return $this->hasOne(Users::class,'user_id','user_id');
+        return $this->hasOne(Users::class, 'user_id', 'user_id');
     }
 
     //    /**
