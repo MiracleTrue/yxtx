@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
 class Kernel extends ConsoleKernel
@@ -21,15 +20,17 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->command('HandleOverdueOffer')->everyMinute();/*处理已过确认时间的报价,改为已超期,订单状态改为重新分配 (Artisan 计划任务)*/
-//
-//        $schedule->command('OfferWarningSendSms')->everyMinute();/*已通过的报价达到预警条件发送短信给供应商 (Artisan 计划任务)*/
-        
+        /*每半小时执行一次任务*/
+        $schedule->command('HandleEndMatch')->everyThirtyMinutes();/*处理已过结束时间的比赛,改为已结束(Artisan 计划任务)*/
+
+        /*每分钟执行一次任务*/
+        $schedule->command('NoPaymentRegistrationDelete')->everyMinute();/*未付款报名,15分钟后删除 (Artisan 计划任务)*/
+
 //        $schedule->call(function () {
 //            $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
 //
@@ -45,7 +46,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
