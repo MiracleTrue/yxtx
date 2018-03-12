@@ -18,14 +18,15 @@ class Tencent_Map extends Field
 
     public function __construct($column, $arguments)
     {
+        $this->column = array();
         $this->column['lat'] = $column;
         $this->column['lng'] = $arguments[0];
 
-    dump($arguments);
+//    dump($arguments);
 
         array_shift($arguments);
 
-        dd($arguments);
+//        dd($arguments);
 
         $this->label = $this->formatLabel($arguments);
         $this->id = $this->formatId($this->column);
