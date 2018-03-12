@@ -22,11 +22,7 @@ class Tencent_Map extends Field
         $this->column['lat'] = $column;
         $this->column['lng'] = $arguments[0];
 
-//    dump($arguments);
-
         array_shift($arguments);
-
-//        dd($arguments);
 
         $this->label = $this->formatLabel($arguments);
         $this->id = $this->formatId($this->column);
