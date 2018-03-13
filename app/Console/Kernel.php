@@ -25,11 +25,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /*每分钟执行一次任务*/
+        $schedule->command('NoPaymentRegistrationDelete')->everyMinute();/*未付款报名,15分钟后删除 (Artisan 计划任务)*/
+
         /*每半小时执行一次任务*/
         $schedule->command('HandleEndMatch')->everyThirtyMinutes();/*处理已过结束时间的比赛,改为已结束(Artisan 计划任务)*/
 
-        /*每分钟执行一次任务*/
-        $schedule->command('NoPaymentRegistrationDelete')->everyMinute();/*未付款报名,15分钟后删除 (Artisan 计划任务)*/
+        /*每天午夜执行一次任务*/
+        $schedule->command('WxAppKeyClear')->daily();/*清除过期的WxAppKey(Artisan 计划任务)*/
 
 //        $schedule->call(function () {
 //            $prefix_path = Storage::disk('local')->getAdapter()->getPathPrefix();
