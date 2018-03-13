@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use App\Entity\MatchRegistration;
 use App\Models\Registration;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * 未付款报名,15分钟后删除 (Artisan 计划任务)

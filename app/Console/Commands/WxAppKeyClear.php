@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Entity\MatchList;
 use App\Entity\WxAppkey;
-use App\Models\Match;
 use Illuminate\Console\Command;
 
 /**
