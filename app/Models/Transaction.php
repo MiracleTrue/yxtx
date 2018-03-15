@@ -28,7 +28,7 @@ class Transaction extends Model
      * @param $reg_id
      * @return string
      */
-    public function RegistrationMatchWxPayStart($reg_id)
+    public function registrationMatchWxPayStart($reg_id)
     {
         $app = app('wechat.payment');
         $session_user = session('User');
@@ -58,20 +58,30 @@ class Transaction extends Model
     }
 
     /**
-     * 报名付费 (微信支付成功)
-     * @param $order_sn
+     * 报名付费成功,改变订单状态
+     * @param $reg_id
      * @return bool
      * @throws \Exception
      */
-    public function RegistrationMatchWxPaySuccess($order_sn)
+    public function registrationMatchPaySuccess($reg_id)
     {
-        $e_match_registration = MatchRegistration::where('order_sn', $order_sn);
+        $e_match_registration = MatchRegistration::where('reg_id', $reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->first();
 
-        $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
+        if ($e_match_registration != null)
+        {
+            $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
 
-        $this->accountLogChange($e_match_registration->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE, $e_match_registration->match_info->need_money);
+            $e_match_registration->save();
 
-        return true;
+            $this->accountLogChange($e_match_registration->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE, $e_match_registration->match_info->need_money);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     /**

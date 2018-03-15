@@ -1,6 +1,9 @@
 <?php
 namespace App\Mini\Controllers;
 
+use App\Entity\MatchRegistration;
+use App\Models\Registration;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -19,20 +22,18 @@ class WeChatController extends Controller
     public function registrationMatchPaymentSuccess(Request $request)
     {
         $app = app('wechat.payment');
-        Log::debug($request->all());
 
         try
         {
             $response = $app->handlePaidNotify(function ($message, $fail)
             {
-                Log::debug($message);
-                return $fail('通信测试，请稍后再通知我');
-
+                /*初始化*/
+                $transaction = new Transaction();
 
                 // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
-                $order = 查询订单($message['out_trade_no']);
+                $e_match_registration = MatchRegistration::where('order_sn', $message['out_trade_no'])->first();
 
-                if (!$order || $order->paid_at)
+                if ($e_match_registration->status != Registration::STATUS_WAIT_PAYMENT)
                 { // 如果订单不存在 或者 订单已经支付过了
                     return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
                 }
@@ -42,23 +43,20 @@ class WeChatController extends Controller
                 if ($message['return_code'] === 'SUCCESS')
                 { // return_code 表示通信状态，不代表支付状态
                     // 用户是否支付成功
-                    if (array_get($message, 'result_code') === 'SUCCESS')
+                    if (array_get($message, 'result_code') === 'SUCCESS' && $e_match_registration->match_info->need_money == bcdiv($message['total_fee'], 100, 2) && $transaction->registrationMatchPaySuccess($e_match_registration->reg_id))
                     {
-                        $order->paid_at = time(); // 更新支付时间为当前时间
-                        $order->status = 'paid';
-
-                        // 用户支付失败
+                        return true; // 返回处理完成
                     }
-                    elseif (array_get($message, 'result_code') === 'FAIL')
+                    // 用户支付失败
+                    else
                     {
-                        $order->status = 'paid_fail';
+                        return $fail('订单金额或状态异常');
                     }
                 }
                 else
                 {
                     return $fail('通信失败，请稍后再通知我');
                 }
-                return true; // 返回处理完成
             });
 
             return $response->send(); // return $response;
@@ -68,14 +66,5 @@ class WeChatController extends Controller
         }
     }
 
-
-    //获取小程序二维码
-    private function app_code()
-    {
-        /*初始化*/
-        $app = app('wechat.mini_program');
-        $response = $app->app_code->get(public_path('uploads'));
-        $filename = $response->saveAs(public_path('uploads'), 'appcode.png');
-        dd($filename);
-    }
+    
 }
