@@ -38,12 +38,11 @@ class Transaction extends Model
         $result = $app->order->unify([
             'body' => $reg_info->match_info->title,
             'out_trade_no' => $reg_info->order_sn,
-            'total_fee' => $reg_info->match_info->need_money,
+            'total_fee' => bcmul($reg_info->match_info->need_money, 100),
             'notify_url' => url('wxPayment/registrationMatch'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
             'openid' => $session_user->openid,
         ]);
-
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS')
         {
@@ -53,7 +52,7 @@ class Transaction extends Model
         }
         else
         {
-            info('微信支付失败:' . $result);
+            info('微信支付失败:' . collect($result));
             return '';
         }
     }
