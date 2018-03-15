@@ -22,6 +22,52 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_REGISTRATION_FEE = 10;
     const ACCOUNT_LOG_TYPE_REGISTRATION_INCOME = 20;
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
+    
+    /**
+     * 获取所有账户日志列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * @param array $where
+     * @param array $orderBy
+     * @param bool $is_paginate
+     * @param bool $is_whereIn
+     * @param null $whereIn
+     * @return AccountLog
+     */
+    public function getAccountLog($where = array(), $orderBy = array(['account_log.create_time', 'desc']), $is_paginate = true, $is_whereIn = false, $whereIn = null)
+    {
+        /*初始化*/
+        $e_account_log = new AccountLog();
+
+        /*预加载ORM对象*/
+        $e_account_log = $e_account_log->where($where);
+        foreach ($orderBy as $value)
+        {
+            $e_account_log->orderBy($value[0], $value[1]);
+        }
+        /*是否使用whereIn*/
+        if ($is_whereIn === true)
+        {
+            $e_account_log->whereIn($whereIn[0], $whereIn[1]);
+        }
+
+        /*是否需要分页*/
+        if ($is_paginate === true)
+        {
+            $e_account_log = $e_account_log->paginate($_COOKIE['PaginationSize']);
+        }
+        else
+        {
+            $e_account_log = $e_account_log->get();
+        }
+
+        /*数据过滤*/
+        $e_account_log->transform(function ($item)
+        {
+            $item->type_text = self::AccountLogTypeTransformText($item->type);
+            return $item;
+        });
+
+        return $e_account_log;
+    }
 
     /**
      * 报名付费 (生成微信支付)
@@ -65,23 +111,32 @@ class Transaction extends Model
      */
     public function registrationMatchPaySuccess($reg_id)
     {
-        $e_match_registration = MatchRegistration::where('reg_id', $reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->first();
-
-        if ($e_match_registration != null)
+        /*事物*/
+        try
         {
-            $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
+            DB::transaction(function () use ($reg_id)
+            {
+                $e_match_registration = MatchRegistration::where('reg_id', $reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->firstOrFail();
 
-            $e_match_registration->save();
+                $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
 
-            $this->accountLogChange($e_match_registration->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE, $e_match_registration->match_info->need_money);
+                $e_match_registration->save();
 
-            return true;
-        }
-        else
+                $this->accountLogChange($e_match_registration->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE, bcsub(0, $e_match_registration->match_info->need_money, 2));
+
+                /*收款用户信息改变*/
+                $e_users = Users::findOrFail($e_match_registration->match_info->user_id);
+                $e_users->user_money = bcadd($e_users->user_money, $e_match_registration->match_info->need_money, 2);
+                $e_users->save();
+                $this->accountLogChange($e_users->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, $e_match_registration->match_info->need_money);
+            });
+        } catch (\Exception $e)
         {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = $e->getMessage();
             return false;
         }
-
+        return true;
     }
 
     /**
@@ -110,6 +165,41 @@ class Transaction extends Model
         {
             throw new \Exception('账户日志类型不正确');
         }
+    }
+
+    /**
+     * 用户申请提现
+     * @param $user_id
+     * @param $money
+     * @return bool
+     */
+    public function userWithdrawDeposit($user_id, $money)
+    {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($user_id, $money)
+            {
+                $e_withdraw_deposit = new WithdrawDeposit();
+
+                $e_withdraw_deposit->user_id = $user_id;
+                $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_WAIT;
+                $e_withdraw_deposit->money = $money;
+                $e_withdraw_deposit->create_time = now();
+                $e_withdraw_deposit->save();
+
+                $e_users = Users::find($user_id);
+                $e_users->user_money = bcsub($e_users->user_money, $money, 2);
+                $e_users->freeze_money = bcadd($e_users->freeze_money, $money, 2);
+                $e_users->save();
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
     }
 
     /**

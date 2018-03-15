@@ -21,7 +21,7 @@ class MatchController extends Controller
 {
 
     /**
-     * 报名参加比赛
+     * Api 报名参加比赛
      * @param Request $request
      * @return \App\Tools\json
      */

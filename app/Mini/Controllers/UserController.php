@@ -3,10 +3,12 @@
 namespace App\Mini\Controllers;
 
 use App\Entity\MatchRegistration;
+use App\Entity\Users;
 use App\Models\Match;
 use App\Models\MyFile;
 use App\Models\Registration;
 use App\Models\Sms;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
@@ -22,7 +24,58 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * 我报名的比赛
+     * Api 用户申请提现
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function withdraw(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $transaction = new Transaction();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'money' => 'required|integer|between:1,' . Users::find($session_user->user_id)->user_money,
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes() && $transaction->userWithdrawDeposit($session_user->user_id, $request->input('money')))
+        {
+            $m3result->code = 0;
+            $m3result->messages = '申请提现成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '提现金额不正确';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 用户账户流水
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function accountHistory(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+        $transaction = new Transaction();
+
+        $list = $transaction->getAccountLog([['user_id', $session_user->user_id]]);
+        $m3result->code = 0;
+        $m3result->messages = '账户流水列表获取成功';
+        $m3result->data = $list;
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 我报名的比赛
      * @param Request $request
      * @return \App\Tools\json
      */
@@ -33,9 +86,6 @@ class UserController extends Controller
         $my_file = new MyFile();
         $session_user = session('User');
         $m3result = new M3Result();
-
-        //查询出报名过的比赛id
-        $match_ids = MatchRegistration::where('user_id', $session_user->user_id)->get()->pluck('match_id')->all();
 
         $list = $registration->getRegistrationList([['user_id', $session_user->user_id]]);
         /*数据过滤*/
