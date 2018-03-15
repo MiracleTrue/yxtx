@@ -73,6 +73,10 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
+                    //更换订单号
+                    $is_registration->order_sn = $registration->makeOrderSn();
+                    $is_registration->save();
+
                     $m3result->data['wx_pay'] = $transaction->RegistrationMatchWxPayStart($is_registration->reg_id);
                     $m3result->data['match_info'] = $match_info;
                 }
