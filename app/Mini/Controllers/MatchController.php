@@ -20,7 +20,11 @@ use Illuminate\Validation\Rule;
 class MatchController extends Controller
 {
 
-    //报名参加比赛
+    /**
+     * 报名参加比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function registration(Request $request)
     {
         /*初始化*/
@@ -54,8 +58,7 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
-//                    $m3result->data['order_sn'] = $e_reg->order_sn;
-//                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+                    $m3result->data['wx_pay'] = $transaction->RegistrationMatchWxPayStart($e_reg->reg_id);
                     $m3result->data['match_info'] = $match_info;
                 }
                 else
@@ -70,12 +73,7 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
-
-
-                    $transaction->RegistrationMatchWxPayStart($is_registration->reg_id);
-
-//                    $m3result->data['order_sn'] = $is_registration->order_sn;
-//                    $m3result->data['notify_url'] = Transaction::getRegistrationMatchNotifyUrl();
+                    $m3result->data['wx_pay'] = $transaction->RegistrationMatchWxPayStart($is_registration->reg_id);
                     $m3result->data['match_info'] = $match_info;
                 }
                 else

@@ -23,16 +23,17 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_REGISTRATION_INCOME = 20;
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
 
-
+    /**
+     * 报名付费 (生成微信支付)
+     * @param $reg_id
+     * @return string
+     */
     public function RegistrationMatchWxPayStart($reg_id)
     {
         $app = app('wechat.payment');
         $session_user = session('User');
         $registration = new Registration();
         $reg_info = $registration->getRegistrationInfo($reg_id);
-
-
-
 
         $result = $app->order->unify([
             'body' => $reg_info->match_info->title,
@@ -43,18 +44,21 @@ class Transaction extends Model
             'openid' => $session_user->openid,
         ]);
 
-        dd($result);
 
-        if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS')
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS')
         {
-            $prepayId = $result->prepay_id;
-            $config = $app->sdkConfig($prepayId); // 返回数组
+            $prepayId = $result['prepay_id'];
+            $config = $app->jssdk->sdkConfig($prepayId); // 返回数组
+            return $config;
         }
-
+        else
+        {
+            return '';
+        }
     }
 
     /**
-     * 报名付费成功
+     * 报名付费 (微信支付成功)
      * @param $order_sn
      * @return bool
      * @throws \Exception
