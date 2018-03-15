@@ -49,6 +49,7 @@ class Transaction extends Model
         {
             $prepayId = $result['prepay_id'];
             $config = $app->jssdk->sdkConfig($prepayId); // 返回数组
+            dd($config);
             return $config;
         }
         else
