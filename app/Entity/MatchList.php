@@ -67,7 +67,15 @@ class MatchList extends Entity
 
     public function getAddressCoordinateAttribute($address)
     {
-        return json_decode($address, true);
+        $arr = json_decode($address, true);
+
+        if (is_array($arr) && isset($arr['lat']) && isset($arr['lng']))
+        {
+            $arr['lat'] = sprintf("%.6f", $arr['lat']);
+            $arr['lng'] = sprintf("%.6f", $arr['lng']);
+        }
+
+        return $arr;
     }
 
     /**
