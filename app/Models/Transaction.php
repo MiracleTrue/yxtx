@@ -22,7 +22,7 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_REGISTRATION_FEE = 10;
     const ACCOUNT_LOG_TYPE_REGISTRATION_INCOME = 20;
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
-    
+
     /**
      * 获取所有账户日志列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
      * @param array $where
@@ -126,9 +126,9 @@ class Transaction extends Model
 
                 /*收款用户信息改变*/
                 $e_users = Users::findOrFail($e_match_registration->match_info->user_id);
-                $e_users->user_money = bcadd($e_users->user_money, $e_match_registration->match_info->need_money, 2);
+                $e_users->user_money = bcadd($e_users->user_money, bcmul($e_match_registration->match_info->need_money, 0.01), 2);
                 $e_users->save();
-                $this->accountLogChange($e_users->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, $e_match_registration->match_info->need_money);
+                $this->accountLogChange($e_users->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, bcmul($e_match_registration->match_info->need_money, 0.01));
             });
         } catch (\Exception $e)
         {
