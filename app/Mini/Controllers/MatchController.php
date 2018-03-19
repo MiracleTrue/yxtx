@@ -344,7 +344,7 @@ class MatchController extends Controller
         /*验证*/
         $rules = [
             'title' => 'required',
-            'need_money' => 'required|numeric|min:1',
+            'need_money' => 'required|integer|min:1',
             'hotline' => 'required',
             'address_name' => 'required',
             'address_coordinate_lat' => 'required|numeric',
