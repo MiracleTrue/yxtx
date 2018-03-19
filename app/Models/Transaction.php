@@ -126,9 +126,10 @@ class Transaction extends Model
 
                 /*收款用户信息改变*/
                 $e_users = Users::findOrFail($e_match_registration->match_info->user_id);
-                $e_users->user_money = bcadd($e_users->user_money, bcmul($e_match_registration->match_info->need_money, 0.01, 2), 2);
+                $last_money = bcsub($e_match_registration->match_info->need_money, bcmul($e_match_registration->match_info->need_money, 0.01, 2), 2);
+                $e_users->user_money = bcadd($e_users->user_money, $last_money, 2);
                 $e_users->save();
-                $this->accountLogChange($e_users->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, bcmul($e_match_registration->match_info->need_money, 0.01, 2));
+                $this->accountLogChange($e_users->user_id, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, $last_money);
             });
         } catch (\Exception $e)
         {
