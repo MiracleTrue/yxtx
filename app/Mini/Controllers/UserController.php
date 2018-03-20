@@ -24,11 +24,51 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * Api 用户申请提现
+     * Api 用户提现(银联)
      * @param Request $request
      * @return \App\Tools\json
      */
-    public function withdraw(Request $request)
+    public function withdrawUnionPay(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $transaction = new Transaction();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'money' => 'required|integer|between:1,' . Users::find($session_user->user_id)->user_money,
+            'account' => 'required',
+            'name' => 'required',
+            'bank' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes() && $transaction->userWithdrawUnionPay(
+                $session_user->user_id,
+                $request->input('money'),
+                $request->input('account'),
+                $request->input('name'),
+                $request->input('bank'))
+        )
+        {
+            $m3result->code = 0;
+            $m3result->messages = '申请提现成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '提现信息不完整';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 用户提现(微信零钱)
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function withdrawWeChat(Request $request)
     {
         /*初始化*/
         $m3result = new M3Result();
@@ -41,7 +81,10 @@ class UserController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->passes() && $transaction->userWithdrawDeposit($session_user->user_id, $request->input('money')))
+        if ($validator->passes() && $transaction->userWithdrawWeChat(
+                $session_user->user_id,
+                $request->input('money'))
+        )
         {
             $m3result->code = 0;
             $m3result->messages = '申请提现成功';
@@ -49,7 +92,7 @@ class UserController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '提现金额不正确';
+            $m3result->messages = '提现信息不完整';
         }
         return $m3result->toJson();
     }

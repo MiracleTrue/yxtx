@@ -14,6 +14,10 @@ use EasyWeChat\Factory;
  */
 class Transaction extends Model
 {
+    /*提现类型:  1.微信钱包  2.银联*/
+    const WITHDRAW_DEPOSIT_TYPE_WECHAT = 1;
+    const WITHDRAW_DEPOSIT_TYPE_UNIONPAY = 2;
+
     /*提现状态:  0.待审核  1.已通过*/
     const WITHDRAW_DEPOSIT_STATUS_WAIT = 0;
     const WITHDRAW_DEPOSIT_STATUS_AGREE = 1;
@@ -169,12 +173,12 @@ class Transaction extends Model
     }
 
     /**
-     * 用户申请提现
+     * 用户申请提现(微信钱包)
      * @param $user_id
      * @param $money
      * @return bool
      */
-    public function userWithdrawDeposit($user_id, $money)
+    public function userWithdrawWeChat($user_id, $money)
     {
         /*事物*/
         try
@@ -182,10 +186,14 @@ class Transaction extends Model
             DB::transaction(function () use ($user_id, $money)
             {
                 $e_withdraw_deposit = new WithdrawDeposit();
+                $info = [
+                    'order_sn' => $this::makeOrderSn(),
+                ];
 
                 $e_withdraw_deposit->user_id = $user_id;
                 $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_WAIT;
                 $e_withdraw_deposit->money = $money;
+                $e_withdraw_deposit->info = $info;
                 $e_withdraw_deposit->create_time = now();
                 $e_withdraw_deposit->save();
 
@@ -204,12 +212,93 @@ class Transaction extends Model
     }
 
     /**
-     * 同意一个用户的提现申请
+     * 用户申请提现(银联)
+     * @param $user_id
+     * @param $money
+     * @param $account
+     * @param $name
+     * @param $bank
+     * @return bool
+     */
+    public function userWithdrawUnionPay($user_id, $money, $account, $name, $bank)
+    {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($user_id, $money, $account, $name, $bank)
+            {
+                $e_withdraw_deposit = new WithdrawDeposit();
+                $info = [
+                    'account' => $account,
+                    'name' => $name,
+                    'bank' => $bank,
+                ];
+
+                $e_withdraw_deposit->user_id = $user_id;
+                $e_withdraw_deposit->type = self::WITHDRAW_DEPOSIT_TYPE_UNIONPAY;
+                $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_WAIT;
+                $e_withdraw_deposit->money = $money;
+                $e_withdraw_deposit->info = $info;
+                $e_withdraw_deposit->create_time = now();
+                $e_withdraw_deposit->save();
+
+                $e_users = Users::find($user_id);
+                $e_users->user_money = bcsub($e_users->user_money, $money, 2);
+                $e_users->freeze_money = bcadd($e_users->freeze_money, $money, 2);
+                $e_users->save();
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 同意一个用户的提现申请(微信钱包)
      * @param $id
      * @return bool
      * @throws \Throwable
      */
-    public function agreeWithdrawDeposit($id)
+    public function agreeWithdrawWeChat($id)
+    {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($id)
+            {
+                $e_withdraw_deposit = WithdrawDeposit::lockForUpdate()->where('id', $id)->where('status', self::WITHDRAW_DEPOSIT_STATUS_WAIT)->firstOrFail();
+
+                if (bcsub($e_withdraw_deposit->user_info->freeze_money, $e_withdraw_deposit->money, 2) < 0)
+                {
+                    throw new \Exception('金额数据异常');
+                }
+                else
+                {
+                    $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_AGREE;
+                    $e_withdraw_deposit->save();
+                    Users::where('user_id', $e_withdraw_deposit->user_id)->update(['freeze_money' => bcsub($e_withdraw_deposit->user_info->freeze_money, $e_withdraw_deposit->money, 2)]);
+                    $this->accountLogChange($e_withdraw_deposit->user_id, self::ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT, bcsub(0, $e_withdraw_deposit->money, 2));
+                }
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 同意一个用户的提现申请(银联)
+     * @param $id
+     * @return bool
+     * @throws \Throwable
+     */
+    public function agreeWithdrawUnionPay($id)
     {
         /*事物*/
         try
@@ -257,6 +346,26 @@ class Transaction extends Model
                 break;
             case self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE:
                 $text = '报名付费';
+                break;
+        }
+        return $text;
+    }
+
+    /**
+     * 返回提现类型 的文本名称
+     * @param $type
+     * @return string
+     */
+    public static function withdrawDepositTypeTransformText($type)
+    {
+        $text = '';
+        switch ($type)
+        {
+            case self::WITHDRAW_DEPOSIT_TYPE_WECHAT:
+                $text = '微信钱包';
+                break;
+            case self::WITHDRAW_DEPOSIT_TYPE_UNIONPAY:
+                $text = '银联';
                 break;
         }
         return $text;

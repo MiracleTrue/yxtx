@@ -9,6 +9,22 @@ namespace App\Entity;
  */
 class WithdrawDeposit extends Entity
 {
+
+    /*修改器:预留信息json转换array*/
+    public function setInfoAttribute($arr_info)
+    {
+        if (is_array($arr_info))
+        {
+            $this->attributes['info'] = json_encode($arr_info);
+        }
+    }
+
+    public function getInfoAttribute($json_info)
+    {
+        return json_decode($json_info, true);
+    }
+
+
     /**
      * 与模型关联的数据表
      *
@@ -41,7 +57,7 @@ class WithdrawDeposit extends Entity
      */
     public function user_info()
     {
-        return $this->hasOne(Users::class,'user_id','user_id');
+        return $this->hasOne(Users::class, 'user_id', 'user_id');
     }
 
 //    /**

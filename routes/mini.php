@@ -34,9 +34,9 @@ Route::group(['middleware' => [WxAppKeyCheck::class, UserBindPhoneCheck::class]]
     Route::any('user/info', 'UserController@info');/*获取当前用户详情*/
     Route::any('user/myMatch', 'UserController@myMatch');/*我发布的比赛*/
     Route::any('user/myRegistration', 'UserController@myRegistration');/*我报名的比赛*/
-    Route::any('user/withdraw', 'UserController@withdraw');/*用户申请提现*/
+    Route::any('user/withdraw/weChat', 'UserController@withdrawWeChat');/*用户提现(微信钱包)*/
+    Route::any('user/withdraw/unionPay', 'UserController@withdrawUnionPay');/*用户提现(银联)*/
     Route::any('user/accountHistory', 'UserController@accountHistory');/*用户账户流水*/
-
 });
 
 Route::any('wxPayment/registrationMatch', 'WeChatController@registrationMatchPaymentSuccess');
