@@ -305,7 +305,6 @@ class Transaction extends Model
             });
         } catch (\Exception $e)
         {
-            dd($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = $e->getMessage();
             return false;

@@ -54,7 +54,7 @@ class WithdrawDepositController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '同意提现失败';
+            $m3result->messages = $transaction->messages()['messages'];
         }
 
         return $m3result->toJson();
