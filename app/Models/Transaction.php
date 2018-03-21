@@ -191,6 +191,7 @@ class Transaction extends Model
                 ];
 
                 $e_withdraw_deposit->user_id = $user_id;
+                $e_withdraw_deposit->type = self::WITHDRAW_DEPOSIT_TYPE_WECHAT;
                 $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_WAIT;
                 $e_withdraw_deposit->money = $money;
                 $e_withdraw_deposit->info = $info;
@@ -279,12 +280,32 @@ class Transaction extends Model
                 {
                     $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_AGREE;
                     $e_withdraw_deposit->save();
+
+                    /*微信企业付款*/
+                    $app = app('wechat.payment');
+
+                    $result  = $app->transfer->toBalance([
+                        'partner_trade_no' => $e_withdraw_deposit->info['order_sn'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
+                        'openid' => $e_withdraw_deposit->user_info->openid,
+                        'check_name' => 'NO_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
+                        're_user_name' => '', // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
+                        'amount' => bcmul($e_withdraw_deposit->money, 100), // 企业付款金额，单位为分
+                        'desc' => 'yxtx用户提取报名费', // 企业付款操作说明信息。必填
+                    ]);
+
+                    if ($result['return_code'] != 'SUCCESS' || $result['result_code'] != 'SUCCESS')
+                    {
+                        info('微信企业付款失败:' . collect($result));
+                        throw new \Exception($result['err_code_des']);
+                    }
+
                     Users::where('user_id', $e_withdraw_deposit->user_id)->update(['freeze_money' => bcsub($e_withdraw_deposit->user_info->freeze_money, $e_withdraw_deposit->money, 2)]);
                     $this->accountLogChange($e_withdraw_deposit->user_id, self::ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT, bcsub(0, $e_withdraw_deposit->money, 2));
                 }
             });
         } catch (\Exception $e)
         {
+            dd($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = $e->getMessage();
             return false;
@@ -305,7 +326,8 @@ class Transaction extends Model
         {
             DB::transaction(function () use ($id)
             {
-                $e_withdraw_deposit = WithdrawDeposit::lockForUpdate()->where('id', $id)->where('status', self::WITHDRAW_DEPOSIT_STATUS_WAIT)->firstOrFail();
+                $e_withdraw_deposit = WithdrawDeposit::lockForUpdate()->where('id', $id)->where('type', Transaction::WITHDRAW_DEPOSIT_TYPE_UNIONPAY)
+                    ->where('status', self::WITHDRAW_DEPOSIT_STATUS_WAIT)->firstOrFail();
 
                 if (bcsub($e_withdraw_deposit->user_info->freeze_money, $e_withdraw_deposit->money, 2) < 0)
                 {

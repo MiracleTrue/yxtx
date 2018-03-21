@@ -21,7 +21,16 @@ class WithdrawDeposit extends Entity
 
     public function getInfoAttribute($json_info)
     {
-        return json_decode($json_info, true);
+        $arr = json_decode($json_info, true);
+
+        if (is_array($arr))
+        {
+            return $arr;
+        }
+        else
+        {
+            return array();
+        }
     }
 
 

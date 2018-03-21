@@ -58,7 +58,7 @@ class UserController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '提现信息不完整';
+            $m3result->messages = '余额不足';
         }
         return $m3result->toJson();
     }
@@ -92,7 +92,7 @@ class UserController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '提现信息不完整';
+            $m3result->messages = '余额不足';
         }
         return $m3result->toJson();
     }

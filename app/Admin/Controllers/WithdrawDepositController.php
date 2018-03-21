@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax_DIY;
+use App\Admin\Extensions\Ajax_DIY2;
 use App\Entity\WithdrawDeposit;
 use App\Models\Transaction;
 use App\Tools\M3Result;
@@ -20,12 +21,12 @@ class WithdrawDepositController extends Controller
     use ModelForm;
 
     /**
-     * 同意提现
+     * 同意提现(微信钱包)
      * @param Request $request
      * @return \App\Tools\json
      * @throws \Throwable
      */
-    public function agree(Request $request)
+    public function weChat(Request $request)
     {
         /*初始化*/
         $m3result = new M3Result();
@@ -38,14 +39,54 @@ class WithdrawDepositController extends Controller
                 'integer',
                 Rule::exists('withdraw_deposit', 'id')->where(function ($query)
                 {
-                    $query->where('status', Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT);
+                    $query->where('status', Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT)->where('type', Transaction::WITHDRAW_DEPOSIT_TYPE_WECHAT);
                 }),
             ]
         ];
         $validator = Validator::make($request->all(), $rules);
 
         /*处理并返回*/
-        if ($validator->passes() && $transaction->agreeWithdrawDeposit($request->input('id')))
+        if ($validator->passes() && $transaction->agreeWithdrawWeChat($request->input('id')))
+        {   /*验证通过并且处理成功*/
+            $m3result->code = 0;
+            $m3result->messages = '同意提现成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '同意提现失败';
+        }
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * 同意提现(银联)
+     * @param Request $request
+     * @return \App\Tools\json
+     * @throws \Throwable
+     */
+    public function unionPay(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $transaction = new Transaction();
+
+        /*验证*/
+        $rules = [
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('withdraw_deposit', 'id')->where(function ($query)
+                {
+                    $query->where('status', Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT)->where('type', Transaction::WITHDRAW_DEPOSIT_TYPE_UNIONPAY);
+                }),
+            ]
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        /*处理并返回*/
+        if ($validator->passes() && $transaction->agreeWithdrawUnionPay($request->input('id')))
         {   /*验证通过并且处理成功*/
             $m3result->code = 0;
             $m3result->messages = '同意提现成功';
@@ -112,12 +153,29 @@ class WithdrawDepositController extends Controller
 
             $grid->id('ID');
             $grid->create_time('申请时间')->sortable();
+            $grid->create_time('提现类型')->display(function ()
+            {
+                return Transaction::withdrawDepositTypeTransformText($this->type);
+            });
             $grid->user_info()->nick_name('申请人');
             $grid->user_info()->phone('手机号码');
             $grid->money('提现金额');
             $grid->column('状态')->display(function ()
             {
                 return Transaction::withdrawDepositStatusTransformText($this->status);
+            });
+            $grid->info('预留信息')->display(function ($data)
+            {
+                if ($this->type == Transaction::WITHDRAW_DEPOSIT_TYPE_UNIONPAY)
+                {
+                    return "<span class='label label-success'>银行账号:$data[account]</span><br>" .
+                    "<span class='label label-success'>真实姓名:$data[name]</span><br>" .
+                    "<span class='label label-success'>开户银行:$data[bank]</span>";
+                }
+                else
+                {
+                    return '';
+                }
             });
 
             /*自定义操作*/
@@ -127,7 +185,14 @@ class WithdrawDepositController extends Controller
                 $actions->disableEdit();
                 if ($actions->row->status == Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT)
                 {
-                    $actions->append(new Ajax_DIY(url('admin/withdrawDeposit/agree'), array('id' => $actions->getKey()), '同意'));
+                    if ($actions->row->type == Transaction::WITHDRAW_DEPOSIT_TYPE_WECHAT)
+                    {
+                        $actions->append(new Ajax_DIY(url('admin/withdrawDeposit/weChat'), array('id' => $actions->getKey()), '同意'));
+                    }
+                    elseif ($actions->row->type == Transaction::WITHDRAW_DEPOSIT_TYPE_UNIONPAY)
+                    {
+                        $actions->append(new Ajax_DIY2(url('admin/withdrawDeposit/unionPay'), array('id' => $actions->getKey()), '同意'));
+                    }
                 }
             });
         });
