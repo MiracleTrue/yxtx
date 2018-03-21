@@ -156,14 +156,14 @@ class WithdrawDepositController extends Controller
             $grid->type('提现类型')->display(function ()
             {
                 return Transaction::withdrawDepositTypeTransformText($this->type);
-            });
+            })->sortable();
             $grid->user_info()->nick_name('申请人');
             $grid->user_info()->phone('手机号码');
             $grid->money('提现金额');
-            $grid->column('状态')->display(function ()
+            $grid->status('状态')->display(function ()
             {
                 return Transaction::withdrawDepositStatusTransformText($this->status);
-            });
+            })->sortable();
             $grid->info('预留信息')->display(function ($data)
             {
                 if ($this->type == Transaction::WITHDRAW_DEPOSIT_TYPE_UNIONPAY)
