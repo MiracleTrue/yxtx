@@ -153,7 +153,7 @@ class WithdrawDepositController extends Controller
 
             $grid->id('ID');
             $grid->create_time('申请时间')->sortable();
-            $grid->create_time('提现类型')->display(function ()
+            $grid->type('提现类型')->display(function ()
             {
                 return Transaction::withdrawDepositTypeTransformText($this->type);
             });
