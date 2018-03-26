@@ -9,6 +9,7 @@ use App\Models\Registration;
 use App\Models\Transaction;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -19,6 +20,49 @@ use Illuminate\Validation\Rule;
  */
 class MatchController extends Controller
 {
+    //删除未报名比赛
+    public function delete(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id)->where('is_delete', Match::NO_DELETE);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            if ($match->getMatchInfo($request->input('match_id'))->registration_sum_number == 0)
+            {
+                $match->deleteMatch($request->input('match_id'));
+                $m3result->code = 0;
+                $m3result->messages = '比赛删除成功';
+            }
+            else
+            {
+                $m3result->code = 2;
+                $m3result->messages = '该比赛已有人报名';
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '数据验证失败';
+        }
+
+        return $m3result->toJson();
+    }
 
     /**
      * Api 报名参加比赛
@@ -40,9 +84,10 @@ class MatchController extends Controller
                 'required',
                 Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
                 {
-                    $query->where('user_id', '!=', $session_user->user_id)->where('status', Match::STATUS_SIGN_UP)->where('match_start_time', '>=', now());
+                    $query->where('user_id', '!=', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
                 }),
             ],
+            'real_name' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -54,7 +99,7 @@ class MatchController extends Controller
             /*未报名过*/
             if ($is_registration == null)
             {
-                if ($e_reg = $registration->registrationMatch($session_user->user_id, $request->input('match_id')))
+                if ($e_reg = $registration->registrationMatch($session_user->user_id, $request->input('match_id'), $request->input('real_name')))
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';

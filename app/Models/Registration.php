@@ -100,9 +100,10 @@ class Registration extends Model
      * 单个用户报名参加一场比赛
      * @param $user_id
      * @param $match_id
+     * @param $real_name
      * @return bool|null
      */
-    public function registrationMatch($user_id, $match_id)
+    public function registrationMatch($user_id, $match_id, $real_name = '')
     {
         /*初始化*/
         $return_entity = null;
@@ -110,7 +111,7 @@ class Registration extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($match_id, $user_id, &$return_entity)
+            DB::transaction(function () use ($match_id, $user_id, $real_name, &$return_entity)
             {
                 $e_match_list = MatchList::where('match_id', $match_id)->where('status', Match::STATUS_SIGN_UP)->where('match_start_time', '>=', now())->lockForUpdate()->first();
                 $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
@@ -127,6 +128,7 @@ class Registration extends Model
                     $e_match_registration->match_id = $e_match_list->match_id;
                     $e_match_registration->order_sn = $this->makeOrderSn();
                     $e_match_registration->status = self::STATUS_WAIT_PAYMENT;
+                    $e_match_registration->real_name = $real_name;
                     $e_match_registration->match_number = null;
                     $e_match_registration->create_time = now();
                     $e_match_registration->save();
