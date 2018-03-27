@@ -9,13 +9,14 @@
 
 3.修改.env全局配置文件,生成APP_KEY  (php artisan key:generate)
 
-4.还原数据库,项目根目录下的sql_data.sql
+4.还原数据库,项目文档目录下的sql_data.sql
 
 5.将Http访问目录设置为,项目根目录下的 /public/index.php
 
 6.crontab -e 添加
   * * * * * php /var/www/jmrh/artisan schedule:run >> /dev/null 2>&1    保存
   crontab -u root -l   查看
+
 
 开发环境额外配置:
 
