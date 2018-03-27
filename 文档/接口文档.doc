@@ -1,0 +1,2999 @@
+
+        <html xmlns:v="urn:schemas-microsoft-com:vml"
+        xmlns:o="urn:schemas-microsoft-com:office:office"
+        xmlns:w="urn:schemas-microsoft-com:office:word"
+        xmlns="http://www.w3.org/TR/REC-html40">
+        <head><meta http-equiv=Content-Type content="text/html;  
+        charset=utf-8">
+        <style type="text/css">
+            table  
+            {  
+                border-collapse: collapse;
+                border: none;  
+                width: 100%;  
+            }  
+            td  
+            {  
+                border: solid #CCC 1px;  
+            }  
+            .codestyle{
+                word-break: break-all;
+                background:silver;mso-highlight:silver;
+            }
+        </style>
+        <meta name=ProgId content=Word.Document>
+        <meta name=Generator content="Microsoft Word 11">
+        <meta name=Originator content="Microsoft Word 11">
+        <xml><w:WordDocument><w:View>Print</w:View></xml></head>
+        <body><h1>1、说明</h1><div style="margin-left:20px;"><p>接口URL -  <a href="https://mini.qdjrykj.com/">https://mini.qdjrykj.com/</a> + 请求URL</p>
+<p>小程序静态资源目录     访问测试https://mini.qdjrykj.com/miniStatic/test.jpg
+FTP : 39.104.88.179 端口 21
+用户名yxtx 密码 yuan789789</p></div><h1>2、修改记录</h1><div style="margin-left:20px;"><ul>
+<li>2018年3月</li>
+</ul>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th>日期</th>
+<th>修改人</th>
+<th>涉及接口</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>27日 10点</td>
+<td>Walker</td>
+<td>用户提现(银联),用户提现(微信钱包),报名参加比赛,比赛报名详情</td>
+<td>修改接口,详情页当前操作修改,提现小数</td>
+</tr>
+<tr>
+<td>27日 10点</td>
+<td>Walker</td>
+<td>删除未报名比赛</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>20日 14点</td>
+<td>Walker</td>
+<td>用户提现(银联),用户提现(微信钱包)</td>
+<td>修改接口</td>
+</tr>
+<tr>
+<td>15日 16点</td>
+<td>Walker</td>
+<td>用户申请提现,用户账户流水</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>15日 10点</td>
+<td>Walker</td>
+<td>报名参加比赛</td>
+<td>修改支付接口</td>
+</tr>
+<tr>
+<td>6日 16点</td>
+<td>Walker</td>
+<td>已报名抽取号码</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>6日 15点</td>
+<td>Walker</td>
+<td>比赛报名详情 , 比赛抽号详情 , 比赛开启抽号</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>6日 13点</td>
+<td>Walker</td>
+<td>获取比赛详情</td>
+<td>更新接口,增加地址信息,增加option_button,详情页操作代码</td>
+</tr>
+<tr>
+<td>1日 17点</td>
+<td>Walker</td>
+<td>报名参加比赛</td>
+<td>新增接口,支付</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>2018年2月</li>
+</ul>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th>日期</th>
+<th>修改人</th>
+<th>涉及接口</th>
+<th>修改内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>28日 21点</td>
+<td>Walker</td>
+<td>我发布的比赛,我报名的比赛</td>
+<td>新增接口,已有接口优化</td>
+</tr>
+<tr>
+<td>28日 17点</td>
+<td>Walker</td>
+<td>获取比赛详情,获取当前用户详情</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>28日 15点</td>
+<td>Walker</td>
+<td>获取服务开通城市,更改服务城市,首页比赛列表,比赛搜索列表</td>
+<td>新增接口</td>
+</tr>
+<tr>
+<td>28日</td>
+<td>Walker</td>
+<td>无</td>
+<td>增加FTP</td>
+</tr>
+<tr>
+<td>27日</td>
+<td>Walker</td>
+<td>合并注册与登录,获取短信验证码,绑定手机</td>
+<td>增加用户绑定手机的全局验证</td>
+</tr>
+<tr>
+<td>27日</td>
+<td>Walker</td>
+<td>登录,注册,发布比赛,比赛图片上传</td>
+<td>1.0文档</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<h6>比赛状态码</h6>
+<p><code>0.报名中  100.抽号中  200.已结束</code></p>
+<h6>报名状态码</h6>
+<p><code>0.待支付  10.未抽号  20.已抽号</code></p>
+<h6>账户日志状态码</h6>
+<p><code>10.报名付费  20.报名收入  30.提现</code></p>
+<h6>提现状态码</h6>
+<p><code>0.待审核  1.已通过</code></p>
+<h6>详情页当前操作代码</h6>
+<p><code>0.无操作</code>
+<code>11.报名</code>
+<code>21.支付</code>
+<code>22.等待抽号</code>
+<code>23.抽号</code>
+<code>24.查看抽号结果</code>
+<code>31.开始抽号 , 报名详情</code>
+<code>32.抽号详情 , 报名详情</code>
+<code>33.开始抽号 , 报名详情 , 删除</code>
+<code>34.抽号详情 , 报名详情 , 删除</code></p></div><h1>3、全局返回code</h1><div style="margin-left:20px;"><table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th>code</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>接口调用成功</td>
+</tr>
+<tr>
+<td>-10</td>
+<td>登录过期或未登录</td>
+</tr>
+<tr>
+<td>-20</td>
+<td>请绑定手机号</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<h6>需要绑定手机的请求</h6>
+<p><code>比赛发布</code></p>
+<p><code>报名参加比赛</code></p>
+<p><code>删除未报名比赛</code></p></div><h1>4、无需登录的请求</h1><div style="margin-left:20px;"><h2>4.1、比赛搜索列表</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛搜索列表接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>index/search</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">keyword</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">String</td>
+<td>搜索关键字</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛列表获取成功&quot;,
+    &quot;data&quot;:{
+        &quot;current_page&quot;:1,
+        &quot;data&quot;:[
+            {
+                &quot;match_id&quot;:28,
+                &quot;title&quot;:&quot;123&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+                &quot;match_start_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                &quot;match_end_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                &quot;match_sum_number&quot;:2,
+                &quot;fish_number&quot;:&quot;123&quot;,
+                &quot;need_money&quot;:123,
+                &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/match/201802/4/DlxbLL5O569lNcDbyULqmD9xpaWYpBDqqzHIsoiL.png&quot;
+            },
+            {
+                &quot;match_id&quot;:27,
+                &quot;title&quot;:&quot;123&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+                &quot;match_start_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                &quot;match_end_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                &quot;match_sum_number&quot;:2,
+                &quot;fish_number&quot;:&quot;123&quot;,
+                &quot;need_money&quot;:123,
+                &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+            },
+            {
+                &quot;match_id&quot;:24,
+                &quot;title&quot;:&quot;中亚对抗赛34&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;山东省青岛市市南区 心海广场 约90米&quot;,
+                &quot;match_start_time&quot;:&quot;2018-02-03 00:00:00&quot;,
+                &quot;match_end_time&quot;:&quot;2018-02-05 00:00:00&quot;,
+                &quot;match_sum_number&quot;:10,
+                &quot;fish_number&quot;:&quot;300条&quot;,
+                &quot;need_money&quot;:20,
+                &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/xxx.jpg&quot;
+            }
+        ],
+        &quot;first_page_url&quot;:&quot;http://yxtx.gg/index/search?page=1&quot;,
+        &quot;from&quot;:1,
+        &quot;last_page&quot;:1,
+        &quot;last_page_url&quot;:&quot;http://yxtx.gg/index/search?page=1&quot;,
+        &quot;next_page_url&quot;:null,
+        &quot;path&quot;:&quot;http://yxtx.gg/index/search&quot;,
+        &quot;per_page&quot;:10,
+        &quot;prev_page_url&quot;:null,
+        &quot;to&quot;:3,
+        &quot;total&quot;:3
+    },
+    &quot;keyword&quot;:&quot;3&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛列表获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">keyword</td>
+<td style="text-align: left;">string</td>
+<td>本次搜索的关键字</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>列表数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">分页参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">next_page_url</td>
+<td style="text-align: left;">string</td>
+<td>(重要) 下一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">current_page</td>
+<td style="text-align: left;">string</td>
+<td>当前第几页</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_page_url</td>
+<td style="text-align: left;">string</td>
+<td>第一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">from</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条开始</td>
+</tr>
+<tr>
+<td style="text-align: left;">to</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">total</td>
+<td style="text-align: left;">string</td>
+<td>全部页数据总条数</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td>比赛标题</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td>状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td>状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td>地址地点</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td>参赛总人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td>放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td>参赛金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_photo</td>
+<td style="text-align: left;">string</td>
+<td>图片URL地址</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>默认单次返回10条数据</li>
+</ul></div><h2>4.2、Banner图列表</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>Banner图列表接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>index/banner</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">无</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{&quot;code&quot;:0,&quot;messages&quot;:&quot;Banner图获取成功&quot;,&quot;data&quot;:[&quot;http:\/\/yxtx.gg\/uploads\/images\/c211120eca91fa892533049b1b8a8dcf.gif&quot;,&quot;http:\/\/yxtx.gg\/uploads\/images\/ab5404b08165390b66319edeea941dfe.jpg&quot;,&quot;http:\/\/yxtx.gg\/uploads\/images\/15ab62ff6441d653bf837b57252b3313.jpg&quot;]}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.Banner图获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>banner图路径列表</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>4.3、 服务开通城市列表</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>服务开通城市列表接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>location/serviceCity</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">无</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;服务开通城市列表&quot;,
+    &quot;data&quot;:[
+        {
+            &quot;province&quot;:&quot;山东省&quot;,
+            &quot;city&quot;:&quot;青岛市&quot;,
+            &quot;city_simple&quot;:&quot;青岛&quot;
+        },
+        {
+            &quot;province&quot;:&quot;北京市&quot;,
+            &quot;city&quot;:&quot;北京市&quot;,
+            &quot;city_simple&quot;:&quot;北京&quot;
+        },
+        {
+            &quot;province&quot;:&quot;浙江省&quot;,
+            &quot;city&quot;:&quot;杭州市&quot;,
+            &quot;city_simple&quot;:&quot;杭州&quot;
+        }
+    ]
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.服务开通城市列表</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>地址列表</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>4.4、首页比赛列表</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>首页比赛列表接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>index/match</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">无</td>
+<td style="text-align: left;">无</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛列表获取成功&quot;,
+    &quot;data&quot;:{
+        &quot;current_page&quot;:2,
+        &quot;data&quot;:[
+            {
+                &quot;match_id&quot;:18,
+                &quot;title&quot;:&quot;平昌奥运会95&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;中国北京市北京市大兴区经海五路58号院&quot;,
+                &quot;match_start_time&quot;:&quot;2018-02-03 00:00:00&quot;,
+                &quot;match_end_time&quot;:&quot;2018-02-05 00:00:00&quot;,
+                &quot;match_sum_number&quot;:10,
+                &quot;fish_number&quot;:&quot;300条&quot;,
+                &quot;need_money&quot;:20,
+                &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/xxx.jpg&quot;
+            },
+            {
+                &quot;match_id&quot;:17,
+                &quot;title&quot;:&quot;平昌奥运会58&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;中国北京市北京市大兴区经海五路58号院&quot;,
+                &quot;match_start_time&quot;:&quot;2018-02-03 00:00:00&quot;,
+                &quot;match_end_time&quot;:&quot;2018-02-05 00:00:00&quot;,
+                &quot;match_sum_number&quot;:10,
+                &quot;fish_number&quot;:&quot;300条&quot;,
+                &quot;need_money&quot;:20,
+                &quot;first_photo&quot;:null
+            }
+        ],
+        &quot;first_page_url&quot;:&quot;http://yxtx.gg/index/match?page=1&quot;,
+        &quot;from&quot;:11,
+        &quot;last_page&quot;:2,
+        &quot;last_page_url&quot;:&quot;http://yxtx.gg/index/match?page=2&quot;,
+        &quot;next_page_url&quot;:null,
+        &quot;path&quot;:&quot;http://yxtx.gg/index/match&quot;,
+        &quot;per_page&quot;:10,
+        &quot;prev_page_url&quot;:&quot;http://yxtx.gg/index/match?page=1&quot;,
+        &quot;to&quot;:12,
+        &quot;total&quot;:12
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛列表获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">分页参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">next_page_url</td>
+<td style="text-align: left;">string</td>
+<td>(重要) 下一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">current_page</td>
+<td style="text-align: left;">string</td>
+<td>当前第几页</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_page_url</td>
+<td style="text-align: left;">string</td>
+<td>第一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">from</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条开始</td>
+</tr>
+<tr>
+<td style="text-align: left;">to</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">total</td>
+<td style="text-align: left;">string</td>
+<td>全部页数据总条数</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td>比赛标题</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td>状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td>状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td>地址地点</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td>参赛总人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td>放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td>参赛金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_photo</td>
+<td style="text-align: left;">string</td>
+<td>图片URL地址</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>默认单次返回10条数据</li>
+</ul></div><h2>4.5、获取比赛详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>获取比赛详情接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/info</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;获取比赛详情成功&quot;,
+    &quot;data&quot;:{
+        &quot;match_id&quot;:27,
+        &quot;user_id&quot;:26,
+        &quot;status&quot;:0,
+        &quot;title&quot;:&quot;123&quot;,
+        &quot;need_money&quot;:123,
+        &quot;hotline&quot;:&quot;13123&quot;,
+        &quot;address_id&quot;:4,
+        &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+        &quot;address_coordinate&quot;:{
+            &quot;lat&quot;:30.25961,
+            &quot;lng&quot;:120.13026
+        },
+        &quot;match_start_time&quot;:&quot;2018-03-08 09:01:00&quot;,
+        &quot;match_end_time&quot;:&quot;2018-03-08 15:01:00&quot;,
+        &quot;match_start_number&quot;:0,
+        &quot;match_end_number&quot;:9,
+        &quot;match_sum_number&quot;:10,
+        &quot;match_content&quot;:&quot;123&quot;,
+        &quot;match_service&quot;:&quot;123&quot;,
+        &quot;match_photos&quot;:[
+            &quot;match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+        ],
+        &quot;fish_number&quot;:&quot;123&quot;,
+        &quot;is_delete&quot;:0,
+        &quot;create_time&quot;:&quot;2018-02-28 10:29:33&quot;,
+        &quot;status_text&quot;:&quot;报名中&quot;,
+        &quot;registration_sum_number&quot;:1,
+        &quot;address_info&quot;:{
+            &quot;address_id&quot;:4,
+            &quot;province&quot;:&quot;浙江省&quot;,
+            &quot;city&quot;:&quot;杭州市&quot;,
+            &quot;district&quot;:&quot;西湖区&quot;,
+            &quot;in_service&quot;:1,
+            &quot;create_time&quot;:null
+        },
+        &quot;url_photos&quot;:[
+            &quot;http://yxtx.gg/uploads/match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+        ]
+    }
+}
+
+©2014 JSON.cn All ri</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.获取比赛详情成功;1.比赛不存在;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">user_id</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛发布人id</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛费用</td>
+</tr>
+<tr>
+<td style="text-align: left;">hotline</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛热线</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lat</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址坐标lat</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lng</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址坐标lng</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">钓台起始号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">钓台结束号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_content</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛介绍</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_service</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">服务协议</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">url_photos</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">图片相册</td>
+</tr>
+<tr>
+<td style="text-align: left;">registration_sum_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">已经报名的人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛总人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">option_button</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">当前操作按钮</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">address_info参数名</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">address_id</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址id</td>
+</tr>
+<tr>
+<td style="text-align: left;">province</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">省</td>
+</tr>
+<tr>
+<td style="text-align: left;">city</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">市</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div></div><h1>5、用户相关</h1><div style="margin-left:20px;"><h2>5.1、用户登录</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>用户登录接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>login</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">jsCode</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>调用wx.login返回的code</td>
+</tr>
+<tr>
+<td style="text-align: left;">iv</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>调用wx.getUserInfo</td>
+</tr>
+<tr>
+<td style="text-align: left;">encryptedData</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>调用wx.getUserInfo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+&quot;code&quot;:0,
+&quot;messages&quot;:&quot;注册并登录成功&quot;,
+&quot;data&quot;:
+{
+&quot;open_id&quot;:&quot;olaj54t5IFTh9w0dsuEfPSjl4Irg&quot;,
+&quot;app_key&quot;:&quot;eyJpdiI6IldsZjFnZk5rNTNhbThTc1dhQnE1aHc9PSIsInZhbHVlIjoiTTJqZXZ1OTczcmIzUWl4YzQzZVhwenZVVXRYelllaEtkQWRwTU5jMGRlRT0iLCJtYWMiOiI5YzlkODljZTYzYWY0YWY4ZjFmOTA0Nzk5Nzc2NjgzYWNmMmJkZjU5NWIxYTQ5ZTUzODgwYWI5MDFiYzI4Mzk0In0=&quot;
+}
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>-20.请绑定手机号;0.注册并登录成功;1.数据验证失败;2.该用户被禁用</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>open_id , app_key 用户凭证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>
+<p>第一次注册成功时候,会返回-20和app_key,用户接下来的绑定手机操作</p>
+</li>
+<li>如未绑定手机,登录也会返回-20和app_key</li>
+</ul></div><h2>5.2、获取短信验证码</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>获取短信验证码接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/smsCode</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">phone</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>手机号</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;短信验证码已发送至手机&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.短信验证码已发送至手机;1.手机号码不合法;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>5.3、绑定手机</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>绑定手机接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/bindPhone</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">phone</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>手机号</td>
+</tr>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>手机收到的验证码</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;绑定成功&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.绑定成功;1.验证码不正确;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>5.4、更改服务城市</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>更改服务城市接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/locationSet</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">city</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>服务城市列表返回的城市名(全称) 不支持简写(city_simple)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;更改服务城市成功&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.更改服务城市成功;1.该城市未开通服务;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>5.5、获取当前用户详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>获取当前用户详情接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/info</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;获取用户详情成功&quot;,
+    &quot;data&quot;:{
+        &quot;user_id&quot;:13,
+        &quot;openid&quot;:&quot;olaj54t5IFTh9w0dsuEfPSjl4Irg&quot;,
+        &quot;nick_name&quot;:&quot;Walker。&quot;,
+        &quot;avatar&quot;:&quot;https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJFzibBZNA5C2Qp9bZEq3566TqGJKJjK4IDobsFZ1ZibTvyW0SMXlAdY9PHHn9Xdp1DZxWOVFIUlP3g/0&quot;,
+        &quot;user_money&quot;:&quot;0.00&quot;,
+        &quot;freeze_money&quot;:&quot;0.00&quot;,
+        &quot;phone&quot;:&quot;18600982820&quot;,
+        &quot;location&quot;:&quot;杭州市&quot;,
+        &quot;is_disable&quot;:0,
+        &quot;create_time&quot;:&quot;2018-02-26 15:44:41&quot;,
+        &quot;location_simple&quot;:&quot;杭州&quot;,
+        &quot;release_count&quot;:9,
+        &quot;registration_count&quot;:0
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.获取用户详情成功;-10.请登录;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">user_id</td>
+<td style="text-align: left;">int</td>
+<td>用户id</td>
+</tr>
+<tr>
+<td style="text-align: left;">openid</td>
+<td style="text-align: left;">string</td>
+<td>微信openid</td>
+</tr>
+<tr>
+<td style="text-align: left;">nick_name</td>
+<td style="text-align: left;">string</td>
+<td>用户名</td>
+</tr>
+<tr>
+<td style="text-align: left;">user_money</td>
+<td style="text-align: left;">string</td>
+<td>用户余额</td>
+</tr>
+<tr>
+<td style="text-align: left;">freeze_money</td>
+<td style="text-align: left;">string</td>
+<td>提现中金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">phone</td>
+<td style="text-align: left;">string</td>
+<td>手机号</td>
+</tr>
+<tr>
+<td style="text-align: left;">location</td>
+<td style="text-align: left;">string</td>
+<td>当前定位城市名</td>
+</tr>
+<tr>
+<td style="text-align: left;">location_simple</td>
+<td style="text-align: left;">string</td>
+<td>当前定位城市名(简写)</td>
+</tr>
+<tr>
+<td style="text-align: left;">release_count</td>
+<td style="text-align: left;">string</td>
+<td>我发布的比赛数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">registration_count</td>
+<td style="text-align: left;">string</td>
+<td>我报名的比赛数量</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>5.6、用户提现(微信钱包)</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>用户提现(微信钱包)接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/withdraw/weChat</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">money</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>提现金额(整数)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;申请提现成功&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.申请提现成功;1.提现信息不完整;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>5.7、用户账户流水</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>用户账户流水接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/accountHistory</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;账户流水列表获取成功&quot;,
+    &quot;data&quot;:{
+        &quot;current_page&quot;:1,
+        &quot;data&quot;:[
+            {
+                &quot;log_id&quot;:4,
+                &quot;user_id&quot;:13,
+                &quot;type&quot;:30,
+                &quot;money&quot;:&quot;-20.00&quot;,
+                &quot;desc&quot;:&quot;&quot;,
+                &quot;create_time&quot;:&quot;2018-03-15 15:45:23&quot;,
+                &quot;type_text&quot;:&quot;提现&quot;
+            },
+            {
+                &quot;log_id&quot;:3,
+                &quot;user_id&quot;:13,
+                &quot;type&quot;:30,
+                &quot;money&quot;:&quot;-20.00&quot;,
+                &quot;desc&quot;:&quot;&quot;,
+                &quot;create_time&quot;:&quot;2018-03-15 15:45:19&quot;,
+                &quot;type_text&quot;:&quot;提现&quot;
+            }
+        ],
+        &quot;first_page_url&quot;:&quot;http://yxtx.gg/user/accountHistory?page=1&quot;,
+        &quot;from&quot;:1,
+        &quot;last_page&quot;:1,
+        &quot;last_page_url&quot;:&quot;http://yxtx.gg/user/accountHistory?page=1&quot;,
+        &quot;next_page_url&quot;:null,
+        &quot;path&quot;:&quot;http://yxtx.gg/user/accountHistory&quot;,
+        &quot;per_page&quot;:10,
+        &quot;prev_page_url&quot;:null,
+        &quot;to&quot;:2,
+        &quot;total&quot;:2
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.账户流水列表获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">分页参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">next_page_url</td>
+<td style="text-align: left;">string</td>
+<td>(重要) 下一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">current_page</td>
+<td style="text-align: left;">string</td>
+<td>当前第几页</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_page_url</td>
+<td style="text-align: left;">string</td>
+<td>第一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">from</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条开始</td>
+</tr>
+<tr>
+<td style="text-align: left;">to</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">total</td>
+<td style="text-align: left;">string</td>
+<td>全部页数据总条数</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">log_id</td>
+<td style="text-align: left;">string</td>
+<td>日志id</td>
+</tr>
+<tr>
+<td style="text-align: left;">type</td>
+<td style="text-align: left;">string</td>
+<td>交易类型</td>
+</tr>
+<tr>
+<td style="text-align: left;">type_text</td>
+<td style="text-align: left;">string</td>
+<td>交易类型名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">money</td>
+<td style="text-align: left;">string</td>
+<td>金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">create_time</td>
+<td style="text-align: left;">string</td>
+<td>时间</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>默认单次返回10条数据</li>
+</ul></div><h2>5.8、用户提现(银联)</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>用户提现(银联)接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/withdraw/unionPay</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">money</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>提现金额(整数)</td>
+</tr>
+<tr>
+<td style="text-align: left;">account</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>银行账号</td>
+</tr>
+<tr>
+<td style="text-align: left;">name</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>真实姓名</td>
+</tr>
+<tr>
+<td style="text-align: left;">bank</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>开户行</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;申请提现成功&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.申请提现成功;1.提现信息不完整;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div></div><h1>6、比赛相关</h1><div style="margin-left:20px;"><h2>6.1、比赛图片上传</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛图片上传接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/uploadPhoto</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">image</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">file</td>
+<td>multipart/form-data 的 文件资源</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛图片上传成功&quot;,
+    &quot;data&quot;:{
+&quot;file_path&quot;:&quot;match/201802/4/NonDIvZZYx3z9fZNWZkp1F4bNg8OT4GKxKNXpCoh.jpeg&quot;,    &quot;url_path&quot;:&quot;http://yxtx.gg/uploads/match/201802/4/NonDIvZZYx3z9fZNWZkp1F4bNg8OT4GKxKNXpCoh.jpeg&quot;
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛图片上传成功;1.图片格式不正确或大小超出限制;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>返回数据</td>
+</tr>
+<tr>
+<td style="text-align: left;">data.file_path</td>
+<td style="text-align: left;">string</td>
+<td>记录值</td>
+</tr>
+<tr>
+<td style="text-align: left;">data.url_path</td>
+<td style="text-align: left;">string</td>
+<td>可访问url路径</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>6.2、我发布的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>我发布的比赛接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/myMatch</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛列表获取成功&quot;,
+    &quot;data&quot;:{
+        &quot;current_page&quot;:1,
+        &quot;data&quot;:[
+            {
+                &quot;match_id&quot;:18,
+                &quot;title&quot;:&quot;平昌奥运会95&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;中国北京市北京市大兴区经海五路58号院&quot;,
+                &quot;match_start_time&quot;:&quot;2018-02-03 00:00:00&quot;,
+                &quot;match_end_time&quot;:&quot;2018-02-05 00:00:00&quot;,
+                &quot;match_sum_number&quot;:10,
+                &quot;fish_number&quot;:&quot;300条&quot;,
+                &quot;need_money&quot;:20,
+                &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/xxx.jpg&quot;
+            },
+            {
+                &quot;match_id&quot;:17,
+                &quot;title&quot;:&quot;平昌奥运会58&quot;,
+                &quot;status&quot;:0,
+                &quot;status_text&quot;:&quot;报名中&quot;,
+                &quot;address_name&quot;:&quot;中国北京市北京市大兴区经海五路58号院&quot;,
+                &quot;match_start_time&quot;:&quot;2018-02-03 00:00:00&quot;,
+                &quot;match_end_time&quot;:&quot;2018-02-05 00:00:00&quot;,
+                &quot;match_sum_number&quot;:10,
+                &quot;fish_number&quot;:&quot;300条&quot;,
+                &quot;need_money&quot;:20,
+                &quot;first_photo&quot;:null
+            }
+        ],
+        &quot;first_page_url&quot;:&quot;http://yxtx.gg/user/myMatch?page=1&quot;,
+        &quot;from&quot;:1,
+        &quot;last_page&quot;:1,
+        &quot;last_page_url&quot;:&quot;http://yxtx.gg/user/myMatch?page=1&quot;,
+        &quot;next_page_url&quot;:null,
+        &quot;path&quot;:&quot;http://yxtx.gg/user/myMatch&quot;,
+        &quot;per_page&quot;:10,
+        &quot;prev_page_url&quot;:null,
+        &quot;to&quot;:9,
+        &quot;total&quot;:9
+    }
+}
+</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛列表获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">分页参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">next_page_url</td>
+<td style="text-align: left;">string</td>
+<td>(重要) 下一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">current_page</td>
+<td style="text-align: left;">string</td>
+<td>当前第几页</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_page_url</td>
+<td style="text-align: left;">string</td>
+<td>第一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">from</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条开始</td>
+</tr>
+<tr>
+<td style="text-align: left;">to</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">total</td>
+<td style="text-align: left;">string</td>
+<td>全部页数据总条数</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td>比赛标题</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td>状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td>状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td>地址地点</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td>参赛总人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td>放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td>参赛金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_photo</td>
+<td style="text-align: left;">string</td>
+<td>图片URL地址</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>默认单次返回10条数据</li>
+</ul></div><h2>6.3、我报名的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>我报名的比赛接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>user/myRegistration</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;报名比赛列表获取成功&quot;,
+    &quot;data&quot;:{
+        &quot;current_page&quot;:1,
+        &quot;data&quot;:[
+            {
+                &quot;reg_id&quot;:2,
+                &quot;match_id&quot;:28,
+                &quot;user_id&quot;:13,
+                &quot;status&quot;:10,
+                &quot;match_number&quot;:null,
+                &quot;create_time&quot;:&quot;2018-02-28 20:15:21&quot;,
+                &quot;status_text&quot;:&quot;未抽号&quot;,
+                &quot;match_info&quot;:{
+                    &quot;match_id&quot;:28,
+                    &quot;title&quot;:&quot;789&quot;,
+                    &quot;status&quot;:0,
+                    &quot;status_text&quot;:&quot;报名中&quot;,
+                    &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+                    &quot;match_start_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                    &quot;match_end_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                    &quot;match_sum_number&quot;:2,
+                    &quot;fish_number&quot;:&quot;123&quot;,
+                    &quot;need_money&quot;:123,
+                    &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/match/201802/4/DlxbLL5O569lNcDbyULqmD9xpaWYpBDqqzHIsoiL.png&quot;
+                }
+            },
+            {
+                &quot;reg_id&quot;:1,
+                &quot;match_id&quot;:27,
+                &quot;user_id&quot;:13,
+                &quot;status&quot;:10,
+                &quot;match_number&quot;:null,
+                &quot;create_time&quot;:&quot;2018-02-27 20:14:09&quot;,
+                &quot;status_text&quot;:&quot;未抽号&quot;,
+                &quot;match_info&quot;:{
+                    &quot;match_id&quot;:27,
+                    &quot;title&quot;:&quot;123&quot;,
+                    &quot;status&quot;:0,
+                    &quot;status_text&quot;:&quot;报名中&quot;,
+                    &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+                    &quot;match_start_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                    &quot;match_end_time&quot;:&quot;2017-09-01 09:01:00&quot;,
+                    &quot;match_sum_number&quot;:2,
+                    &quot;fish_number&quot;:&quot;123&quot;,
+                    &quot;need_money&quot;:123,
+                    &quot;first_photo&quot;:&quot;http://yxtx.gg/uploads/match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+                }
+            }
+        ],
+        &quot;first_page_url&quot;:&quot;http://yxtx.gg/user/myRegistration?page=1&quot;,
+        &quot;from&quot;:1,
+        &quot;last_page&quot;:1,
+        &quot;last_page_url&quot;:&quot;http://yxtx.gg/user/myRegistration?page=1&quot;,
+        &quot;next_page_url&quot;:null,
+        &quot;path&quot;:&quot;http://yxtx.gg/user/myRegistration&quot;,
+        &quot;per_page&quot;:10,
+        &quot;prev_page_url&quot;:null,
+        &quot;to&quot;:2,
+        &quot;total&quot;:2
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛列表获取成功</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">分页参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">next_page_url</td>
+<td style="text-align: left;">string</td>
+<td>(重要) 下一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">current_page</td>
+<td style="text-align: left;">string</td>
+<td>当前第几页</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_page_url</td>
+<td style="text-align: left;">string</td>
+<td>第一页URL</td>
+</tr>
+<tr>
+<td style="text-align: left;">from</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条开始</td>
+</tr>
+<tr>
+<td style="text-align: left;">to</td>
+<td style="text-align: left;">string</td>
+<td>当前页数据从总条数第几条结束</td>
+</tr>
+<tr>
+<td style="text-align: left;">total</td>
+<td style="text-align: left;">string</td>
+<td>全部页数据总条数</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">reg_id</td>
+<td style="text-align: left;">string</td>
+<td>报名id</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td>报名状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td>报名状态名称</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data. match_info 参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td>比赛标题</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td>比赛状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td>比赛状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td>地址地点</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td>比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td>参赛总人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td>放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td>参赛金额</td>
+</tr>
+<tr>
+<td style="text-align: left;">first_photo</td>
+<td style="text-align: left;">string</td>
+<td>图片URL地址</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>默认单次返回10条数据</li>
+</ul></div><h2>6.4、比赛报名详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛报名详情接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/info/registrationDetail</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;获取比赛报名列表&quot;,
+    &quot;data&quot;:[
+        {
+            &quot;reg_id&quot;:164,
+            &quot;status&quot;:10,
+            &quot;status_text&quot;:&quot;未抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;missicon&quot;,
+                &quot;phone&quot;:&quot;13757369179&quot;
+            }
+        },
+        {
+            &quot;reg_id&quot;:165,
+            &quot;status&quot;:10,
+            &quot;status_text&quot;:&quot;未抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;乐&quot;,
+                &quot;phone&quot;:&quot;15158064113&quot;
+            }
+        },
+        {
+            &quot;reg_id&quot;:166,
+            &quot;status&quot;:10,
+            &quot;status_text&quot;:&quot;未抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;Walker。&quot;,
+                &quot;phone&quot;:&quot;18600982820&quot;
+            }
+        }
+    ]
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.获取比赛报名列表 1.比赛不存在</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">user_info</td>
+<td style="text-align: left;">string</td>
+<td>报名用户信息</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p></div><h2>6.5、比赛抽号详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛抽号详情接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/info/numberDetail</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;获取比赛抽号列表&quot;,
+    &quot;data&quot;:[
+        {
+            &quot;reg_id&quot;:164,
+            &quot;status&quot;:20,
+            &quot;status_text&quot;:&quot;已抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;match_number&quot;:18,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;missicon&quot;,
+                &quot;phone&quot;:&quot;13757369179&quot;
+            }
+        },
+        {
+            &quot;reg_id&quot;:165,
+            &quot;status&quot;:20,
+            &quot;status_text&quot;:&quot;已抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;match_number&quot;:2,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;乐&quot;,
+                &quot;phone&quot;:&quot;15158064113&quot;
+            }
+        },
+        {
+            &quot;reg_id&quot;:166,
+            &quot;status&quot;:20,
+            &quot;status_text&quot;:&quot;已抽号&quot;,
+            &quot;create_time&quot;:null,
+            &quot;match_number&quot;:66,
+            &quot;user_info&quot;:{
+                &quot;nick_name&quot;:&quot;Walker。&quot;,
+                &quot;phone&quot;:&quot;18600982820&quot;
+            }
+        }
+    ]
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.获取比赛抽号列表 1.比赛不存在</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">match_number</td>
+<td style="text-align: left;">string</td>
+<td>抽取的比赛号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">user_info</td>
+<td style="text-align: left;">string</td>
+<td>报名用户信息</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p></div><h2>6.6、比赛开启抽号</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛开启抽号接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/openNumber</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛开启抽号&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛开启抽号 1.比赛不存在</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p></div><h2>6.7、已报名抽取号码</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>已报名抽取号码接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/getNumber</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;抽取号码成功&quot;,
+    &quot;data&quot;:{
+        &quot;reg_id&quot;:166,
+        &quot;match_id&quot;:27,
+        &quot;user_id&quot;:13,
+        &quot;status&quot;:20,
+        &quot;match_number&quot;:59,
+        &quot;order_sn&quot;:null,
+        &quot;create_time&quot;:null
+    }
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.抽取号码成功 1.比赛不存在 2.未到抽号时间 3.网络繁忙</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">match_number</td>
+<td style="text-align: left;">string</td>
+<td>抽取的比赛号码</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p></div><h2>6.8、删除未报名比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>删除未报名比赛接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/delete</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛删除成功&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛删除成功 1.数据验证失败  2.该比赛已有人报名</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p></div></div><h1>7、交易相关</h1><div style="margin-left:20px;"><h2>7.1、报名参加比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>报名参加比赛接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/registration</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_id</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛id</td>
+</tr>
+<tr>
+<td style="text-align: left;">real_name</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>真实姓名</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;code&quot;:0,
+    &quot;messages&quot;:&quot;比赛报名成功&quot;,
+    &quot;data&quot;:{
+        &quot;wx_pay&quot;:{
+            &quot;appId&quot;:&quot;wx4fb1d591de1f9329&quot;,
+            &quot;nonceStr&quot;:&quot;5aa9cfe9188a3&quot;,
+            &quot;package&quot;:&quot;prepay_id=wx201803150944142e060183e90255196137&quot;,
+            &quot;signType&quot;:&quot;MD5&quot;,
+            &quot;paySign&quot;:&quot;7B386E509C2BFDEB650BB56732CF1D99&quot;,
+            &quot;timestamp&quot;:&quot;1521078249&quot;
+        },
+        &quot;match_info&quot;:{
+            &quot;match_id&quot;:27,
+            &quot;user_id&quot;:26,
+            &quot;status&quot;:0,
+            &quot;title&quot;:&quot;123&quot;,
+            &quot;need_money&quot;:123,
+            &quot;hotline&quot;:&quot;13123&quot;,
+            &quot;address_id&quot;:4,
+            &quot;address_name&quot;:&quot;浙江省杭州市&quot;,
+            &quot;address_coordinate&quot;:{
+                &quot;lat&quot;:30.25961,
+                &quot;lng&quot;:120.13026
+            },
+            &quot;match_start_time&quot;:&quot;2018-04-03 09:01:00&quot;,
+            &quot;match_end_time&quot;:&quot;2018-04-04 15:01:00&quot;,
+            &quot;match_start_number&quot;:56,
+            &quot;match_end_number&quot;:65,
+            &quot;match_sum_number&quot;:10,
+            &quot;match_content&quot;:&quot;123&quot;,
+            &quot;match_service&quot;:&quot;123&quot;,
+            &quot;match_photos&quot;:[
+                &quot;match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+            ],
+            &quot;fish_number&quot;:&quot;123&quot;,
+            &quot;is_delete&quot;:0,
+            &quot;create_time&quot;:&quot;2018-02-28 10:29:33&quot;,
+            &quot;status_text&quot;:&quot;报名中&quot;,
+            &quot;registration_sum_number&quot;:1,
+            &quot;address_info&quot;:{
+                &quot;address_id&quot;:4,
+                &quot;province&quot;:&quot;浙江省&quot;,
+                &quot;city&quot;:&quot;杭州市&quot;,
+                &quot;district&quot;:&quot;西湖区&quot;,
+                &quot;in_service&quot;:1,
+                &quot;create_time&quot;:null
+            },
+            &quot;url_photos&quot;:[
+                &quot;http://yxtx.gg/uploads/match/201802/4/skh2VENJ8Tu9PJpq5ICrCW6kbeyE8rOGCpJuaCNn.png&quot;
+            ]
+        }
+    }
+}
+
+©2014 JSON.cn All right</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛报名成功;1.该比赛已撤销或已过报名时间;2.报名人数已满;3.已经报名,等待抽号</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+<tr>
+<td style="text-align: left;">data</td>
+<td style="text-align: left;">json</td>
+<td>数据</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data.wx_pay参数名</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">appId</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">nonceStr</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">package</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">signType</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">paySign</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">timestamp</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">时间戳</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">data.match_info参数名</th>
+<th style="text-align: left;">类型</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">user_id</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛发布人id</td>
+</tr>
+<tr>
+<td style="text-align: left;">status</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">状态码</td>
+</tr>
+<tr>
+<td style="text-align: left;">status_text</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">状态名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛费用</td>
+</tr>
+<tr>
+<td style="text-align: left;">hotline</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛热线</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lat</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址坐标lat</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lng</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">地址坐标lng</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">钓台起始号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">钓台结束号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_content</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛介绍</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_service</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">服务协议</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">url_photos</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">图片相册</td>
+</tr>
+<tr>
+<td style="text-align: left;">registration_sum_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">已经报名的人数</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_sum_number</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">比赛总人数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div></div></body></html>
