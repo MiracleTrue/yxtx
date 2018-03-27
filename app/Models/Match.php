@@ -237,18 +237,33 @@ class Match extends Model
         $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
         if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
         {
-            if ($e_match_list->status == self::STATUS_SIGN_UP)
+            if ($e_match_list->registration_sum_number != 0)
             {
-                $code = 31;/*操作:开始抽号 , 报名详情*/
+                if ($e_match_list->status == self::STATUS_SIGN_UP)
+                {
+                    $code = 31;/*操作:开始抽号 , 报名详情*/
+                }
+                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                {
+                    $code = 32;/*操作:抽号详情 , 报名详情*/
+                }
             }
-            elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+            else
             {
-                $code = 32;/*操作:抽号详情 , 报名详情*/
+                if ($e_match_list->status == self::STATUS_SIGN_UP)
+                {
+                    $code = 33;/*操作:开始抽号 , 报名详情 , 删除*/
+                }
+                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                {
+                    $code = 34;/*操作:抽号详情 , 报名详情 , 删除*/
+                }
             }
+
         }
         elseif ($e_match_registration != null && $e_match_registration->user_id == $session_user->user_id)/*已报名访客*/
         {
-            if ($e_match_list->status == self::STATUS_SIGN_UP && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT)
+            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT)
             {
                 $code = 21;/*操作:支付*/
             }
@@ -267,7 +282,7 @@ class Match extends Model
         }
         else /*未报名访客*/
         {
-            if ($e_match_list->status == self::STATUS_SIGN_UP)
+            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_list->match_end_time > now())
             {
                 $code = 11;/*操作:报名*/
             }

@@ -28,6 +28,10 @@ class TestController extends Controller
 //
 //        dd(MyHelper::money_format(20.01));
 
+        $m = new Match();
+
+//        dd($m->matchDetailOptionButton());
+
 
         $user = new User();
         $session['openid'] = '';
