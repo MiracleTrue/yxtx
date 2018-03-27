@@ -37,7 +37,7 @@ class UserController extends Controller
 
         /*验证*/
         $rules = [
-            'money' => 'required|integer|between:1,' . Users::find($session_user->user_id)->user_money,
+            'money' => 'required|numeric|between:0.01,' . Users::find($session_user->user_id)->user_money,
             'account' => 'required',
             'name' => 'required',
             'bank' => 'required',
@@ -77,7 +77,7 @@ class UserController extends Controller
 
         /*验证*/
         $rules = [
-            'money' => 'required|integer|between:1,' . Users::find($session_user->user_id)->user_money,
+            'money' => 'required|numeric|between:0.01,' . Users::find($session_user->user_id)->user_money,
         ];
         $validator = Validator::make($request->all(), $rules);
 
