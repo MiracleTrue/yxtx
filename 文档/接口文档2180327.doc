@@ -1735,7 +1735,162 @@ FTP : 39.104.88.179 端口 21
 <p><strong>备注</strong></p>
 <ul>
 <li>无</li>
-</ul></div></div><h1>6、比赛相关</h1><div style="margin-left:20px;"><h2>6.1、比赛图片上传</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+</ul></div></div><h1>6、比赛相关</h1><div style="margin-left:20px;"><h2>6.1、比赛发布</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<ul>
+<li>比赛发布接口</li>
+</ul>
+<p><strong>请求URL：</strong></p>
+<ul>
+<li><code>match/release</code></li>
+</ul>
+<p><strong>请求方式：</strong></p>
+<ul>
+<li>POST</li>
+</ul>
+<p><strong>参数：</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">必选</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">app_key</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>用户凭证</td>
+</tr>
+<tr>
+<td style="text-align: left;">title</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛标题</td>
+</tr>
+<tr>
+<td style="text-align: left;">need_money</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛报名费用</td>
+</tr>
+<tr>
+<td style="text-align: left;">hotline</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>热线电话</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_name</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>地址名称</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lat</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>地图坐标lat</td>
+</tr>
+<tr>
+<td style="text-align: left;">address_coordinate_lng</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>地图坐标lng</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_time</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛开始时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_time</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛结束时间</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_start_number</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>抽号的开始号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_end_number</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>抽号的结束号码</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_content</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛介绍</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_service</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛服务协议</td>
+</tr>
+<tr>
+<td style="text-align: left;">fish_number</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>放鱼数量</td>
+</tr>
+<tr>
+<td style="text-align: left;">match_photos</td>
+<td style="text-align: left;">是</td>
+<td style="text-align: left;">string</td>
+<td>比赛相册</td>
+</tr>
+</tbody>
+</table>
+<p><strong>请求示例</strong></p>
+<table width='100%' class='codestyle'><pre><code>{
+    &quot;title&quot;: &quot;value&quot;,
+    &quot;need_money&quot;: &quot;value&quot;,
+    &quot;hotline&quot;: &quot;value&quot;,
+    &quot;address_name&quot;: &quot;value&quot;,
+    &quot;address_coordinate_lat&quot;: &quot;value&quot;,
+    &quot;address_coordinate_lng&quot;: &quot;value&quot;,
+    &quot;match_start_time&quot;: &quot;value&quot;,
+    &quot;match_end_time&quot;: &quot;value&quot;,
+    &quot;match_start_number&quot;: &quot;value&quot;,
+    &quot;match_end_number&quot;: &quot;value&quot;,
+    &quot;match_content&quot;: &quot;value&quot;,
+    &quot;match_service&quot;: &quot;value&quot;,
+    &quot;fish_number&quot;: &quot;value&quot;,
+    &quot;match_photos&quot;: &quot;xxx.jpg,aaa.jpg,uuu.jpg&quot;
+}</code></pre></table>
+<p><strong>返回参数说明</strong></p>
+<table>
+<thead><tr style='background-color: rgb(0, 136, 204); color: rgb(255, 255, 255);'>
+<th style="text-align: left;">参数名</th>
+<th style="text-align: left;">类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">code</td>
+<td style="text-align: left;">int</td>
+<td>0.比赛发布成功;1.数据验证失败;</td>
+</tr>
+<tr>
+<td style="text-align: left;">messages</td>
+<td style="text-align: left;">string</td>
+<td>文字说明</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注</strong></p>
+<ul>
+<li>无</li>
+</ul></div><h2>6.2、比赛图片上传</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>比赛图片上传接口</li>
 </ul>
@@ -1818,7 +1973,7 @@ FTP : 39.104.88.179 端口 21
 <p><strong>备注</strong></p>
 <ul>
 <li>无</li>
-</ul></div><h2>6.2、我发布的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+</ul></div><h2>6.3、我发布的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>我发布的比赛接口</li>
 </ul>
@@ -2024,7 +2179,7 @@ FTP : 39.104.88.179 端口 21
 <p><strong>备注</strong></p>
 <ul>
 <li>默认单次返回10条数据</li>
-</ul></div><h2>6.3、我报名的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+</ul></div><h2>6.4、我报名的比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>我报名的比赛接口</li>
 </ul>
@@ -2272,7 +2427,7 @@ FTP : 39.104.88.179 端口 21
 <p><strong>备注</strong></p>
 <ul>
 <li>默认单次返回10条数据</li>
-</ul></div><h2>6.4、比赛报名详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+</ul></div><h2>6.5、比赛报名详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>比赛报名详情接口</li>
 </ul>
@@ -2386,7 +2541,7 @@ FTP : 39.104.88.179 端口 21
 </tr>
 </tbody>
 </table>
-<p><strong>备注</strong></p></div><h2>6.5、比赛抽号详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<p><strong>备注</strong></p></div><h2>6.6、比赛抽号详情</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>比赛抽号详情接口</li>
 </ul>
@@ -2508,7 +2663,7 @@ FTP : 39.104.88.179 端口 21
 </tr>
 </tbody>
 </table>
-<p><strong>备注</strong></p></div><h2>6.6、比赛开启抽号</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<p><strong>备注</strong></p></div><h2>6.7、比赛开启抽号</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>比赛开启抽号接口</li>
 </ul>
@@ -2570,7 +2725,7 @@ FTP : 39.104.88.179 端口 21
 </tr>
 </tbody>
 </table>
-<p><strong>备注</strong></p></div><h2>6.7、已报名抽取号码</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<p><strong>备注</strong></p></div><h2>6.8、已报名抽取号码</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>已报名抽取号码接口</li>
 </ul>
@@ -2661,7 +2816,7 @@ FTP : 39.104.88.179 端口 21
 </tr>
 </tbody>
 </table>
-<p><strong>备注</strong></p></div><h2>6.8、删除未报名比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
+<p><strong>备注</strong></p></div><h2>6.9、删除未报名比赛</h2><div style="margin-left:20px;"><p><strong>简要描述：</strong></p>
 <ul>
 <li>删除未报名比赛接口</li>
 </ul>

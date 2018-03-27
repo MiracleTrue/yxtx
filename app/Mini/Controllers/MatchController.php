@@ -20,7 +20,11 @@ use Illuminate\Validation\Rule;
  */
 class MatchController extends Controller
 {
-    //删除未报名比赛
+    /**
+     * Api 删除未报名比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function delete(Request $request)
     {
         /*初始化*/
