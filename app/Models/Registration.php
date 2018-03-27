@@ -113,7 +113,7 @@ class Registration extends Model
         {
             DB::transaction(function () use ($match_id, $user_id, $real_name, &$return_entity)
             {
-                $e_match_list = MatchList::where('match_id', $match_id)->where('status', Match::STATUS_SIGN_UP)->where('match_end_time', '>', now())->lockForUpdate()->first();
+                $e_match_list = MatchList::where('match_id', $match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
                 $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
 
                 if ($e_match_list == null)
