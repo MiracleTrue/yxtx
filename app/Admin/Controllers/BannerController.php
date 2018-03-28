@@ -111,7 +111,7 @@ class BannerController extends Controller
 
             $form->display('banner_id', 'ID');
             $form->image('file_path', '图片')->uniqueName();
-            $form->file('video_path', '视频')->uniqueName();// 并设置上传文件类型
+            $form->file('video_path', '视频');// 并设置上传文件类型
 //            $form->file('video_path', '视频')->uniqueName()->rules('mimes:video/mp4');// 并设置上传文件类型
             $form->text('sort', '排序')->default(0);
 
