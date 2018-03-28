@@ -46,13 +46,14 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => public_path('uploads'),
-            'url'  => env('APP_URL').'/uploads',
+            'visibility' => 'public',
+            'url' => env('APP_URL') . '/uploads',
         ],
 
         'temp' => [
             'driver' => 'local',
             'root' => public_path('temp'),
-            'url'  => env('APP_URL').'/temp',
+            'url' => env('APP_URL') . '/temp',
         ],
 
 //        'public' => [
