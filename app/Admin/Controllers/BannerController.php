@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Entity\BannerList;
+use App\Models\MyFile;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -93,6 +94,17 @@ class BannerController extends Controller
 
             $grid->banner_id('ID');
             $grid->file_path('图片')->image('', 100);
+            $grid->video_path('视频')->display(function ($data)
+            {
+                if (!empty($data))
+                {
+                    return "<a target='_blank' href='" . MyFile::makeUrl($data) . "'>观看视频</a>";
+                }
+                else
+                {
+                    return '';
+                }
+            });
             $grid->sort('排序')->sortable();
             $grid->created_at('创建时间')->sortable();
             $grid->updated_at('更新时间')->sortable();
@@ -111,8 +123,7 @@ class BannerController extends Controller
 
             $form->display('banner_id', 'ID');
             $form->image('file_path', '图片')->uniqueName();
-            $form->file('video_path', '视频')->removable();// 并设置上传文件类型
-//            $form->file('video_path', '视频')->uniqueName()->rules('mimes:video/mp4');// 并设置上传文件类型
+            $form->file('video_path', '视频')->uniqueName()->rules('mimes:mp4')->removable();// 并设置上传文件类型
             $form->text('sort', '排序')->default(0);
 
         });
