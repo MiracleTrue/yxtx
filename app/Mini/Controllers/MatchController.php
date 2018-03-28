@@ -284,7 +284,7 @@ class MatchController extends Controller
             $list->transform(function ($item)
             {
                 $item->user_info = $item->user_info->only('nick_name', 'phone');
-                $item = $item->only('reg_id', 'status', 'status_text', 'create_time', 'user_info');
+                $item = $item->only('reg_id', 'status', 'status_text', 'real_name', 'create_time', 'user_info');
                 return $item;
             });
             $m3result->code = 0;
@@ -331,7 +331,7 @@ class MatchController extends Controller
             $list->transform(function ($item)
             {
                 $item->user_info = $item->user_info->only('nick_name', 'phone');
-                $item = $item->only('reg_id', 'status', 'status_text', 'create_time', 'match_number', 'user_info');
+                $item = $item->only('reg_id', 'status', 'status_text', 'real_name', 'create_time', 'match_number', 'user_info');
                 return $item;
             });
             $m3result->code = 0;
