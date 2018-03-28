@@ -70,15 +70,18 @@ class IndexController extends Controller
         $m3result = new M3Result();
         $e_banner_list = BannerList::orderBy('sort', 'desc')->get();
 
+        /*数据过滤*/
         $e_banner_list->transform(function ($item) use ($my_file)
         {
             $item->url_path = $my_file->makeUrl($item->file_path);
+            $item->video_path = !empty($item->video_path) ? $my_file->makeUrl($item->video_path) : '';
+            $item = $item->only('url_path', 'video_path');
             return $item;
         });
 
         $m3result->code = 0;
         $m3result->messages = 'Banner图获取成功';
-        $m3result->data = $e_banner_list->pluck('url_path');
+        $m3result->data = $e_banner_list;
 
         return $m3result->toJson();
     }
