@@ -212,6 +212,7 @@ class MatchController extends Controller
             $grid->disableRowSelector();
 
             $grid->match_id('ID');
+            $grid->title('标题');
             $grid->release_user()->nick_name('发布人')->display(function ($data)
             {
                 return "<a href='" . url('admin/match/user', $this->user_id) . "'>$data</a>";
