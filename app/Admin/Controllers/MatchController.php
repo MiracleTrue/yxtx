@@ -24,6 +24,11 @@ class MatchController extends Controller
     use ModelForm;
 
 
+    /**
+     * 比赛地图
+     * @param $match_id
+     * @return Content
+     */
     public function map($match_id)
     {
         return Admin::content(function (Content $content) use ($match_id)
