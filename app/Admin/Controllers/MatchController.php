@@ -311,7 +311,7 @@ class MatchController extends Controller
                 $text = '';
                 foreach ($data as $value)
                 {
-                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" . Users::find($value['user_id'])->nick_name . "($value[match_number])" . "</a>";
+                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" .$value['real_name'] . "($value[match_number])" . "</a>";
                 }
                 return $text;
             });
