@@ -22,7 +22,7 @@ class Location extends Model
      * @param $city_name
      * @return mixed
      */
-    public function CityToSimple($city_name)
+    public function cityToSimple($city_name)
     {
         $simple_name = str_replace('市', '', $city_name);
         return $simple_name;

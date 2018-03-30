@@ -24,7 +24,7 @@ class LocationController extends Controller
         /*数据过滤*/
         $e_match_address->transform(function ($item) use ($location)
         {
-            $item->city_simple = $location->CityToSimple($item->city);
+            $item->city_simple = $location->cityToSimple($item->city);
             $item = $item->only('province', 'city', 'city_simple');
             return $item;
         });

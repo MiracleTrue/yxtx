@@ -22,7 +22,7 @@ class User extends Model
     {
         $location = new Location();
         $e_users = Users::find($user_id);
-        $e_users->location_simple = $location->CityToSimple($e_users->location);
+        $e_users->location_simple = $location->cityToSimple($e_users->location);
 
         return $e_users;
     }
