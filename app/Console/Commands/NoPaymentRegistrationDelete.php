@@ -7,7 +7,7 @@ use App\Models\Registration;
 use Illuminate\Console\Command;
 
 /**
- * 未付款报名,15分钟后删除 (Artisan 计划任务)
+ * 未付款报名,X分钟后删除 (Artisan 计划任务)
  * Class HandleOverdueOffer
  * @package App\Console\Commands
  */
@@ -25,7 +25,7 @@ class NoPaymentRegistrationDelete extends Command
      *
      * @var string
      */
-    protected $description = '未付款报名,15分钟后删除 (Artisan 计划任务)';
+    protected $description = '未付款报名,X分钟后删除 (Artisan 计划任务)';
 
     /**
      * HandleOverdueOffer constructor.
@@ -43,6 +43,6 @@ class NoPaymentRegistrationDelete extends Command
     public function handle()
     {
         /*初始化*/
-        MatchRegistration::where('status', Registration::STATUS_WAIT_PAYMENT)->where('create_time', '<', now()->subMinute(15))->delete();
+        MatchRegistration::where('status', Registration::STATUS_WAIT_PAYMENT)->where('create_time', '<', now()->subMinute(10))->delete();
     }
 }
