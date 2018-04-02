@@ -1,6 +1,7 @@
 <?php
 
 use App\Admin\Extensions\Tencent_Map;
+use App\Admin\Extensions\WangEditor;
 
 /**
  * Laravel-admin - admin builder based on Laravel.
@@ -22,3 +23,4 @@ use App\Admin\Extensions\Tencent_Map;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 Encore\Admin\Form::extend('tencent_map', Tencent_Map::class);
+Encore\Admin\Form::extend('editor', WangEditor::class);

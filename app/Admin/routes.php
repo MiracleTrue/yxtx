@@ -5,6 +5,16 @@ use Illuminate\Routing\Router;
 
 Admin::registerAuthRoutes();
 
+/*扩展*/
+Route::group([
+    'prefix' => config('admin.route.prefix'),
+    'namespace' => config('admin.route.namespace'),
+], function (Router $router)
+{
+    $router->any('wangEditor/upload', 'WangEditorController@upload');/*WangEditor上传图片*/
+});
+
+/*后台基础*/
 Route::group([
     'prefix' => config('admin.route.prefix'),
     'namespace' => config('admin.route.namespace'),
@@ -33,5 +43,4 @@ Route::group([
     $router->post('withdrawDeposit/weChat', 'WithdrawDepositController@weChat');/*同意提现(微信钱包)*/
     $router->post('withdrawDeposit/unionPay', 'WithdrawDepositController@unionPay');/*同意提现(银联)*/
     $router->post('withdrawDeposit/deny', 'WithdrawDepositController@deny');/*拒绝提现*/
-
 });

@@ -21,7 +21,5 @@ class Controller extends BaseController
 
         /*全局创建时间统一*/
         $GLOBALS['create_time'] = now();
-
-
     }
 }
