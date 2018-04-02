@@ -41,7 +41,6 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     });
 });
 
-
 Route::any('wxPayment/registrationMatch', 'WeChatController@registrationMatchPaymentSuccess');
 
 

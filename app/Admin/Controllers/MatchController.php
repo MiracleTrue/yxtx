@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax_Delete;
+use App\Admin\Extensions\ExcelMatch;
 use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
 use App\Entity\Users;
@@ -184,6 +185,12 @@ class MatchController extends Controller
                     // 去掉默认的id过滤器
                     $filter->disableIdFilter();
 
+                    //比赛标题
+                    $filter->where(function ($query)
+                    {
+                        $query->where('title', 'like', "%{$this->input}%");
+                    }, '比赛标题');
+
                     //会员名称或者手机号
                     $filter->where(function ($query)
                     {
@@ -208,7 +215,10 @@ class MatchController extends Controller
             }
 
             //禁用导出数据按钮
-            $grid->disableExport();
+//            $grid->disableExport();
+
+            /*自定义导出表格*/
+            $grid->exporter(new ExcelMatch());
 
             //禁用创建按钮
             $grid->disableCreateButton();
@@ -317,7 +327,7 @@ class MatchController extends Controller
                 $text = '';
                 foreach ($data as $value)
                 {
-                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" .$value['real_name'] . "($value[match_number])" . "</a>";
+                    $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" . $value['real_name'] . "($value[match_number])" . "</a>";
                 }
                 return $text;
             });

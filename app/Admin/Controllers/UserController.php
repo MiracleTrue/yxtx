@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ExcelUser;
 use App\Entity\Users;
 use App\Models\User;
 use Encore\Admin\Form;
@@ -55,7 +56,10 @@ class UserController extends Controller
             });
 
             //禁用导出数据按钮
-            $grid->disableExport();
+//            $grid->disableExport();
+
+            /*自定义导出表格*/
+            $grid->exporter(new ExcelUser());
 
             //禁用创建按钮
             $grid->disableCreateButton();

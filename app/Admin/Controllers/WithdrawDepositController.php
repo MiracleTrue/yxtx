@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Extensions\Ajax_DIY;
 use App\Admin\Extensions\Ajax_DIY2;
 use App\Admin\Extensions\Ajax_DIY3;
+use App\Admin\Extensions\ExcelWithdrawDeposit;
 use App\Entity\WithdrawDeposit;
 use App\Models\Transaction;
 use App\Tools\M3Result;
@@ -58,7 +59,7 @@ class WithdrawDepositController extends Controller
         }
 
         return $m3result->toJson();
-     }
+    }
 
     /**
      * 同意提现(微信钱包)
@@ -179,11 +180,24 @@ class WithdrawDepositController extends Controller
                         $query->where('nick_name', 'like', "%{$this->input}%")->orWhere('phone', 'like', "%{$this->input}%");
                     });
                 }, '会员名称或者手机号');
+
+                //状态
+                $filter->equal('status', '状态')->select([
+                    Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT => Transaction::withdrawDepositStatusTransformText(Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT),
+                    Transaction::WITHDRAW_DEPOSIT_STATUS_AGREE => Transaction::withdrawDepositStatusTransformText(Transaction::WITHDRAW_DEPOSIT_STATUS_AGREE),
+                    Transaction::WITHDRAW_DEPOSIT_STATUS_DENY => Transaction::withdrawDepositStatusTransformText(Transaction::WITHDRAW_DEPOSIT_STATUS_DENY),
+                ]);
+
+                //申请时间
+                $filter->between('create_time', '申请时间')->datetime();
             });
 
 
             //禁用导出数据按钮
-            $grid->disableExport();
+//            $grid->disableExport();
+
+            /*自定义导出表格*/
+            $grid->exporter(new ExcelWithdrawDeposit());
 
             //禁用创建按钮
             $grid->disableCreateButton();

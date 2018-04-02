@@ -22,11 +22,6 @@ class WxAppKeyCheck
      */
     public function handle($request, Closure $next)
     {
-//        $arr = [
-//          'app_key'=>'eyJpdiI6IitYZ1dRRkdsUnluTWVrWkZwZE5saFE9PSIsInZhbHVlIjoiVGF0dFRJVk8ybWIyWW91bGJNcG1obW1YbDdzUkU4MXViS2sxdXduRmFDUT0iLCJtYWMiOiJkODEwZThkNzBmMzczZWEwNThiYWU4MTVhOWVmNTdmZGIyYjAwY2U0NDNjZDBiY2IzZTBiYTk4YzlmMGExMTNhIn0=',
-//        ];
-//        $request->merge($arr);
-
         $route = Route::current();/*当前路由对象*/
 
         /*不需要登录的请求*/
@@ -38,7 +33,6 @@ class WxAppKeyCheck
             url('index/search'),/*搜索比赛*/
             url('location/serviceCity'),/*获取服务开通城市*/
             url('match/info'),/*获取比赛详情*/
-
     );
 
         $m3result = new M3Result();
