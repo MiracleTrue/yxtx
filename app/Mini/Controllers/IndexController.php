@@ -75,7 +75,7 @@ class IndexController extends Controller
         {
             $item->url_path = $my_file->makeUrl($item->file_path);
             $item->video_path = !empty($item->video_path) ? $my_file->makeUrl($item->video_path) : '';
-            $item = $item->only('url_path', 'video_path');
+            $item = $item->only('url_path', 'video_path', 'content');
             return $item;
         });
 
