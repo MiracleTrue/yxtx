@@ -122,7 +122,7 @@ class BannerController extends Controller
         {
 
             $form->display('banner_id', 'ID');
-            $form->image('file_path', '图片')->uniqueName();
+            $form->image('file_path', '图片')->uniqueName()->help('上传图片最佳比例:  1 * 0.64  像素');
             $form->file('video_path', '视频')->uniqueName()->rules('mimes:mp4')->removable();// 并设置上传文件类型
             $form->text('sort', '排序')->default(0);
 
