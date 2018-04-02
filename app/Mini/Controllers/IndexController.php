@@ -59,7 +59,7 @@ class IndexController extends Controller
 
 
     /**
-     * Api 首页banner图
+     * Api 首页banner图列表
      * @param Request $request
      * @return \App\Tools\json
      */
@@ -75,12 +75,35 @@ class IndexController extends Controller
         {
             $item->url_path = $my_file->makeUrl($item->file_path);
             $item->video_path = !empty($item->video_path) ? $my_file->makeUrl($item->video_path) : '';
-            $item = $item->only('url_path', 'video_path', 'content');
+            $item = $item->only('banner_id', 'url_path', 'video_path');
             return $item;
         });
 
         $m3result->code = 0;
         $m3result->messages = 'Banner图获取成功';
+        $m3result->data = $e_banner_list;
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 首页banner图详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function bannerDetail(Request $request)
+    {
+        /*初始化*/
+        $my_file = new MyFile();
+        $m3result = new M3Result();
+        $e_banner_list = BannerList::findOrFail($request->input('banner_id'));
+
+        /*数据过滤*/
+        $e_banner_list->url_path = $my_file->makeUrl($e_banner_list->file_path);
+        $e_banner_list->video_path = !empty($e_banner_list->video_path) ? $my_file->makeUrl($e_banner_list->video_path) : '';
+
+        $m3result->code = 0;
+        $m3result->messages = '详情获取成功';
         $m3result->data = $e_banner_list;
 
         return $m3result->toJson();
