@@ -32,5 +32,6 @@ Route::group([
     $router->get('withdrawDeposit', 'WithdrawDepositController@index');/*列表*/
     $router->post('withdrawDeposit/weChat', 'WithdrawDepositController@weChat');/*同意提现(微信钱包)*/
     $router->post('withdrawDeposit/unionPay', 'WithdrawDepositController@unionPay');/*同意提现(银联)*/
+    $router->post('withdrawDeposit/deny', 'WithdrawDepositController@deny');/*拒绝提现*/
 
 });

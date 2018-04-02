@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Ajax_DIY;
 use App\Admin\Extensions\Ajax_DIY2;
+use App\Admin\Extensions\Ajax_DIY3;
 use App\Entity\WithdrawDeposit;
 use App\Models\Transaction;
 use App\Tools\M3Result;
@@ -19,6 +20,45 @@ use Illuminate\Validation\Rule;
 class WithdrawDepositController extends Controller
 {
     use ModelForm;
+
+    /**
+     * 拒绝提现
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function deny(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $transaction = new Transaction();
+
+        /*验证*/
+        $rules = [
+            'id' => [
+                'required',
+                'integer',
+                Rule::exists('withdraw_deposit', 'id')->where(function ($query)
+                {
+                    $query->where('status', Transaction::WITHDRAW_DEPOSIT_STATUS_WAIT);
+                }),
+            ]
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        /*处理并返回*/
+        if ($validator->passes() && $transaction->denyWithdraw($request->input('id')))
+        {   /*验证通过并且处理成功*/
+            $m3result->code = 0;
+            $m3result->messages = '拒绝提现申请';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = $transaction->messages()['messages'];
+        }
+
+        return $m3result->toJson();
+     }
 
     /**
      * 同意提现(微信钱包)
@@ -193,6 +233,7 @@ class WithdrawDepositController extends Controller
                     {
                         $actions->append(new Ajax_DIY2(url('admin/withdrawDeposit/unionPay'), array('id' => $actions->getKey()), '同意'));
                     }
+                    $actions->append(new Ajax_DIY3(url('admin/withdrawDeposit/deny'), array('id' => $actions->getKey()), '拒绝'));
                 }
             });
         });

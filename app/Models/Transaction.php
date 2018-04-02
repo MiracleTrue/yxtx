@@ -18,9 +18,10 @@ class Transaction extends Model
     const WITHDRAW_DEPOSIT_TYPE_WECHAT = 1;
     const WITHDRAW_DEPOSIT_TYPE_UNIONPAY = 2;
 
-    /*提现状态:  0.待审核  1.已通过*/
+    /*提现状态:  0.待审核  1.已通过  2.已拒绝*/
     const WITHDRAW_DEPOSIT_STATUS_WAIT = 0;
     const WITHDRAW_DEPOSIT_STATUS_AGREE = 1;
+    const WITHDRAW_DEPOSIT_STATUS_DENY = 2;
 
     /*账户日志类型:  10.报名付费  20.报名收入  30.提现*/
     const ACCOUNT_LOG_TYPE_REGISTRATION_FEE = 10;
@@ -258,6 +259,39 @@ class Transaction extends Model
     }
 
     /**
+     * 拒绝一个用户的提现申请
+     * @param $id
+     * @return bool
+     */
+    public function denyWithdraw($id)
+    {
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($id)
+            {
+                $e_withdraw_deposit = WithdrawDeposit::lockForUpdate()->where('id', $id)->where('status', self::WITHDRAW_DEPOSIT_STATUS_WAIT)->firstOrFail();
+
+                $e_withdraw_deposit->status = self::WITHDRAW_DEPOSIT_STATUS_DENY;
+                $e_withdraw_deposit->save();
+
+                Users::where('user_id', $e_withdraw_deposit->user_id)->update(
+                    [
+                        'freeze_money' => bcsub($e_withdraw_deposit->user_info->freeze_money, $e_withdraw_deposit->money, 2),
+                        'user_money' => bcadd($e_withdraw_deposit->user_info->user_money, $e_withdraw_deposit->money, 2),
+                    ]
+                );
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 同意一个用户的提现申请(微信钱包)
      * @param $id
      * @return bool
@@ -284,7 +318,7 @@ class Transaction extends Model
                     /*微信企业付款*/
                     $app = app('wechat.payment');
 
-                    $result  = $app->transfer->toBalance([
+                    $result = $app->transfer->toBalance([
                         'partner_trade_no' => $e_withdraw_deposit->info['order_sn'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
                         'openid' => $e_withdraw_deposit->user_info->openid,
                         'check_name' => 'NO_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
@@ -407,6 +441,9 @@ class Transaction extends Model
                 break;
             case self::WITHDRAW_DEPOSIT_STATUS_AGREE:
                 $text = '已通过';
+                break;
+            case self::WITHDRAW_DEPOSIT_STATUS_DENY:
+                $text = '已拒绝';
                 break;
         }
         return $text;
