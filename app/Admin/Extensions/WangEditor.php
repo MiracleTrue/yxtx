@@ -10,10 +10,12 @@ class WangEditor extends Field
 
     protected static $css = [
         '/vendor/wangEditor-3.1.0/release/wangEditor.min.css',
+        '/vendor/wangEditor-3.1.0/release/wangEditor-fullscreen-plugin.css',
     ];
 
     protected static $js = [
         '/vendor/wangEditor-3.1.0/release/wangEditor.min.js',
+        '/vendor/wangEditor-3.1.0/release/wangEditor-fullscreen-plugin.js',
     ];
 
     public function render()
@@ -25,7 +27,6 @@ class WangEditor extends Field
 var E = window.wangEditor
 var editor = new E('#{$this->id}');
 editor.customConfig.zIndex = 0;
-editor.customConfig.uploadImgShowBase64 = true;
 editor.customConfig.uploadImgServer = '/admin/wangEditor/upload';  // 上传图片到服务器
 editor.customConfig.uploadFileName = 'image';
 editor.customConfig.uploadImgMaxLength = 1;   // 限制一次最多上传 5 张图片
@@ -57,7 +58,8 @@ editor.customConfig.menus = [
 editor.customConfig.onchange = function (html) {
     $('input[name=$name]').val(html);
 }
-editor.create()
+editor.create();
+E.fullscreen.init('#{$this->id}');
 
 EOT;
         return parent::render();

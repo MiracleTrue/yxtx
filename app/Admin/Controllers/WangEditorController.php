@@ -4,17 +4,11 @@ namespace App\Admin\Controllers;
 
 use App\Models\MyFile;
 use App\Tools\M3Result;
-use Encore\Admin\Controllers\Dashboard;
-use Encore\Admin\Facades\Admin;
-use Encore\Admin\Layout\Column;
-use Encore\Admin\Layout\Content;
-use Encore\Admin\Layout\Row;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class WangEditorController extends Controller
 {
-
 
     public function upload(Request $request)
     {
@@ -22,18 +16,6 @@ class WangEditorController extends Controller
         $m3result = new M3Result();
         $my_file = new MyFile();
 
-//        {
-//            // errno 即错误代码，0 表示没有错误。
-//            //       如果有错误，errno != 0，可通过下文中的监听函数 fail 拿到该错误码进行自定义处理
-//            "errno": 0,
-//
-//    // data 是一个数组，返回若干图片的线上地址
-//    "data": [
-//            "图片1地址",
-//            "图片2地址",
-//            "……"
-//        ]
-//}
         /*验证*/
         $rules = [
             'image' => 'required|image|mimes:jpeg,gif,png',
