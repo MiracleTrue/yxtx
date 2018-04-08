@@ -79,9 +79,26 @@ class Match extends Model
     {
         /*初始化*/
         $e_match_list = MatchList::findOrFail($match_id);
+        $app = app('wechat.mini_program');
 
-        $e_match_list->status = self::STATUS_GET_NUMBER;
+//        $e_match_list->status = self::STATUS_GET_NUMBER;
         $e_match_list->save();
+
+        /*消息模板通知*/
+        $e_reg = $e_match_list->reg_list()->where('status', Registration::STATUS_WAIT_NUMBER);
+        info($e_reg);
+
+//        $app->template_message->send([
+//            'touser' => 'user-openid',
+//            'template_id' => 'template-id',
+//            'page' => 'index',
+//            'form_id' => 'form-id',
+//            'data' => [
+//                'keyword1' => 'VALUE',
+//                'keyword2' => 'VALUE2',
+//                // ...
+//            ],
+//        ]);
 
         return true;
     }
