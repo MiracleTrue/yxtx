@@ -79,26 +79,27 @@ class Match extends Model
     {
         /*初始化*/
         $e_match_list = MatchList::findOrFail($match_id);
+        $e_reg = $e_match_list->reg_list()->where('status', Registration::STATUS_WAIT_NUMBER)->with('user_info')->get();
         $app = app('wechat.mini_program');
 
-//        $e_match_list->status = self::STATUS_GET_NUMBER;
+        $e_match_list->status = self::STATUS_GET_NUMBER;
         $e_match_list->save();
 
         /*消息模板通知*/
-        $e_reg = $e_match_list->reg_list()->where('status', Registration::STATUS_WAIT_NUMBER);
-        info($e_reg);
-
-//        $app->template_message->send([
-//            'touser' => 'user-openid',
-//            'template_id' => 'template-id',
-//            'page' => 'index',
-//            'form_id' => 'form-id',
-//            'data' => [
-//                'keyword1' => 'VALUE',
-//                'keyword2' => 'VALUE2',
-//                // ...
-//            ],
-//        ]);
+        $e_reg->each(function ($item, $key) use ($app, $e_match_list)
+        {
+            $app->template_message->send([
+                'touser' => $item->user_info->openid,
+                'template_id' => '9bx6hKrkvQfD61jbZWNCsS_4-fOYj43gscSgvMSyuZ0',
+                'page' => '/pages/info/info?id=' . $item->match_id,
+                'form_id' => $item->form_id,
+                'data' => [
+                    'keyword1' => $e_match_list->title,
+                    'keyword2' => $e_match_list->match_start_time . ' - ' . $e_match_list->match_end_time,
+                    'keyword3' => '比赛已经开始抽号了,请前往小程序内抽取您的号码',
+                ],
+            ]);
+        });
 
         return true;
     }
