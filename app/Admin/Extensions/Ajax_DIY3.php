@@ -29,13 +29,8 @@ class Ajax_DIY3
         return <<<SCRIPT
 
 $('.grid-diy3-row').unbind('click').click(function() {
-    var data = {
-        _token:LA.token,
-    }
-    for(item in $(this).data())
-    {
-        eval("data."+item+"="+$(this).data(item));
-    }
+    var data = $(this).data();
+    data._token = LA.token;
 
     swal({
       title: "$submitConfirm",
