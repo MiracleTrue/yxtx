@@ -99,6 +99,8 @@ class Transaction extends Model
         {
             $prepayId = $result['prepay_id'];
             $config = $app->jssdk->sdkConfig($prepayId); // 返回数组
+            /*消息模板prepay_id*/
+            MatchRegistration::where('reg_id', $reg_id)->update(['form_id' => $prepayId]);
             return $config;
         }
         else
@@ -111,20 +113,18 @@ class Transaction extends Model
     /**
      * 报名付费成功,改变订单状态
      * @param $reg_id
-     * @param null $form_id
      * @return bool
      */
-    public function registrationMatchPaySuccess($reg_id, $form_id = null)
+    public function registrationMatchPaySuccess($reg_id)
     {
         /*事物*/
         try
         {
-            DB::transaction(function () use ($reg_id, $form_id)
+            DB::transaction(function () use ($reg_id)
             {
                 $e_match_registration = MatchRegistration::where('reg_id', $reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->firstOrFail();
 
                 $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
-                $e_match_registration->form_id = $form_id;
 
                 $e_match_registration->save();
 

@@ -27,7 +27,6 @@ class WeChatController extends Controller
         {
             $response = $app->handlePaidNotify(function ($message, $fail)
             {
-                info($message);
                 /*初始化*/
                 $transaction = new Transaction();
 
