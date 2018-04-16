@@ -101,7 +101,7 @@ class Match extends Model
                 ],
             ]);
 
-            Log::emergency($res);
+            info($res);
         });
 
         return true;
