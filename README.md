@@ -100,6 +100,7 @@ APP_ENV=                                      //开发: local    测试: testing
 APP_KEY=                                      //php artisan key:generate 生成
 APP_DEBUG=                                    //开启Debug:true   关闭Debug:false 生产环境必须关闭
 APP_LOG_LEVEL=                                //日志记录的等级默认记录全部 debug 生成环境应该为:error
+WECHAT_LOG_LEVEL=                             //微信日志记录的等级默认记录全部 debug 生成环境应该为:error
 APP_URL=                                      //项目的Url地址  http://www.xxx.com
 DEBUGBAR_DEBUG=                               //插件: 开启Debug显示框:true   关闭Debug显示框:false
 CONFIG_ADMIN_SECURE=                          //插件: Laravel-admin  是否启用Https 启用:true 不启用false
