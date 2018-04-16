@@ -6,6 +6,7 @@ use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
 use App\Tools\MyHelper;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Match 赛事相关模型
@@ -88,7 +89,7 @@ class Match extends Model
         /*消息模板通知*/
         $e_reg->each(function ($item, $key) use ($app, $e_match_list)
         {
-            $app->template_message->send([
+            $res = $app->template_message->send([
                 'touser' => $item->user_info->openid,
                 'template_id' => '9bx6hKrkvQfD61jbZWNCsS_4-fOYj43gscSgvMSyuZ0',
                 'page' => '/pages/info/info?id=' . $item->match_id,
@@ -99,6 +100,8 @@ class Match extends Model
                     'keyword3' => '比赛已经开始抽号了,请前往小程序内抽取您的号码',
                 ],
             ]);
+
+            Log::emergency($res);
         });
 
         return true;
