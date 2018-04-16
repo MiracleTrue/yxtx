@@ -92,7 +92,7 @@ class Match extends Model
             $res = $app->template_message->send([
                 'touser' => $item->user_info->openid,
                 'template_id' => '9bx6hKrkvQfD61jbZWNCsS_4-fOYj43gscSgvMSyuZ0',
-                'page' => '/pages/info/info?id=' . $item->match_id,
+                'page' => 'pages/info/info?id=' . $item->match_id,
                 'form_id' => $item->form_id,
                 'data' => [
                     'keyword1' => $e_match_list->title,
