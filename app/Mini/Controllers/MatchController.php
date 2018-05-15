@@ -97,7 +97,7 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->first();
+            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('type', Registration::TYPE_WECHAT)->where('match_id', $request->input('match_id'))->first();
             $match_info = $match->getMatchInfo($request->input('match_id'));
 
             /*未报名过*/

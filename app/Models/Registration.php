@@ -129,6 +129,7 @@ class Registration extends Model
                     $e_match_registration = new MatchRegistration();
                     $e_match_registration->user_id = $user_id;
                     $e_match_registration->match_id = $e_match_list->match_id;
+                    $e_match_registration->type = self::TYPE_WECHAT;
                     $e_match_registration->order_sn = $this->makeOrderSn();
                     $e_match_registration->status = self::STATUS_WAIT_PAYMENT;
                     $e_match_registration->real_name = $real_name;

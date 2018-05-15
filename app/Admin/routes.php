@@ -24,6 +24,10 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
 
+    /*设置*/
+    $router->get('config', 'ConfigController@index');/*详情*/
+    $router->post('config/submit', 'ConfigController@submit');/*提交*/
+
     /*banner图管理*/
     $router->resource('banner', BannerController::class);
 
