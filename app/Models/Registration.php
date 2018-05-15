@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
+use App\Entity\Users;
 use App\Exceptions\NetworkBusyException;
 use App\Tools\MyHelper;
 use Illuminate\Support\Facades\DB;
@@ -117,14 +118,14 @@ class Registration extends Model
             DB::transaction(function () use ($match_id, $user_id, $real_name, &$return_entity)
             {
                 $e_match_list = MatchList::where('match_id', $match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
-                $e_match_list->registration_sum_number = $e_match_list->reg_list()->count();
+                $registration_sum_number = $e_match_list->reg_list()->count();
 
                 if ($e_match_list == null)
                 {
                     throw new NetworkBusyException();
                 }
 
-                if ($e_match_list->registration_sum_number < $e_match_list->match_sum_number)
+                if ($registration_sum_number < $e_match_list->match_sum_number)
                 {
                     $e_match_registration = new MatchRegistration();
                     $e_match_registration->user_id = $user_id;
@@ -133,6 +134,62 @@ class Registration extends Model
                     $e_match_registration->order_sn = $this->makeOrderSn();
                     $e_match_registration->status = self::STATUS_WAIT_PAYMENT;
                     $e_match_registration->real_name = $real_name;
+                    $e_match_registration->real_phone = Users::find($user_id)->phone;
+                    $e_match_registration->match_number = null;
+                    $e_match_registration->create_time = now();
+                    $e_match_registration->save();
+
+                    $return_entity = $e_match_registration;
+                }
+                else
+                {
+                    throw new \Exception('该比赛报名人数已满');
+                }
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '该比赛报名人数已满';
+            return false;
+        }
+        return $return_entity;
+    }
+
+    /**
+     * 单个现金报名参加一场比赛
+     * @param $match_id
+     * @param string $real_name
+     * @param string $real_phone
+     * @return bool|null
+     */
+    public function cashRegistrationMatch($match_id, $real_name = '', $real_phone = '')
+    {
+        /*初始化*/
+        $return_entity = null;
+
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($match_id, $real_name, $real_phone, &$return_entity)
+            {
+                $e_match_list = MatchList::where('match_id', $match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
+                $registration_sum_number = $e_match_list->reg_list()->count();
+                $cash_registration_sum_number = $e_match_list->reg_list()->where('type', self::TYPE_CASH)->count();
+
+                if ($e_match_list == null)
+                {
+                    throw new NetworkBusyException();
+                }
+
+                //判断人数:   不超过总人数 || 不超过现金用户可报名人数百分比
+                if ($registration_sum_number < $e_match_list->match_sum_number && bcmul($e_match_list->match_sum_number, bcdiv($this->config('cash_reg_number'), 100, 2)) > $cash_registration_sum_number)
+                {
+                    $e_match_registration = new MatchRegistration();
+                    $e_match_registration->match_id = $e_match_list->match_id;
+                    $e_match_registration->type = self::TYPE_CASH;
+                    $e_match_registration->status = self::STATUS_WAIT_NUMBER;
+                    $e_match_registration->real_name = $real_name;
+                    $e_match_registration->real_phone = $real_phone;
                     $e_match_registration->match_number = null;
                     $e_match_registration->create_time = now();
                     $e_match_registration->save();

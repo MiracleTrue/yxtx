@@ -4,6 +4,7 @@ namespace App\Mini\Controllers;
 use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
 use App\Models\Match;
+use App\Models\Model;
 use App\Models\MyFile;
 use App\Models\Registration;
 use App\Models\Transaction;
@@ -135,6 +136,61 @@ class MatchController extends Controller
                     $m3result->code = 3;
                     $m3result->messages = '已经报名,等待抽号';
                 }
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '该比赛已撤销或已过报名时间';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 现金参加比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function cashRegistration(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
+                }),
+            ],
+            'real_name' => 'required',
+            'real_phone' => [
+                'required',
+                'numeric',
+                'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
+            ],
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $match_info = $match->getMatchInfo($request->input('match_id'));
+
+            if ($registration->cashRegistrationMatch($request->input('match_id'), $request->input('real_name'), $request->input('real_phone')))
+            {
+                $m3result->code = 0;
+                $m3result->messages = '现金报名成功';
+                $m3result->data['match_info'] = $match_info;
+            }
+            else
+            {
+                $m3result->code = 2;
+                $m3result->messages = '报名人数已满';
             }
         }
         else

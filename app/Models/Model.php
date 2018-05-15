@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Entity\Config;
 use App\Tools\M3Result;
 
 /**
@@ -24,6 +25,23 @@ class Model
         $time = date('YmdHis') + $time;
 
         return $time . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * 返回系统设置
+     * @param null $code
+     * @return mixed
+     */
+    public static function config($code = null)
+    {
+        if ($code == null)
+        {
+            return Config::where('parent_id', '!=', 0)->get();
+        }
+        else
+        {
+            return Config::where('name_code', $code)->first()->value;
+        }
     }
 
     /**
