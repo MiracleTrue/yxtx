@@ -283,8 +283,7 @@ class MatchController extends Controller
             /*数据过滤*/
             $list->transform(function ($item)
             {
-                $item->user_info = $item->user_info->only('nick_name', 'phone');
-                $item = $item->only('reg_id', 'status', 'status_text', 'real_name', 'create_time', 'user_info');
+                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time');
                 return $item;
             });
             $m3result->code = 0;
@@ -330,8 +329,7 @@ class MatchController extends Controller
             /*数据过滤*/
             $list->transform(function ($item)
             {
-                $item->user_info = $item->user_info->only('nick_name', 'phone');
-                $item = $item->only('reg_id', 'status', 'status_text', 'real_name', 'create_time', 'match_number', 'user_info');
+                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time');
                 return $item;
             });
             $m3result->code = 0;

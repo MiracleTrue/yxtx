@@ -19,6 +19,9 @@ class Registration extends Model
     const STATUS_WAIT_NUMBER = 10;
     const STATUS_ALREADY_NUMBER = 20;
 
+    /*报名方式: 10.微信支付  20.现金报名*/
+    const TYPE_WECHAT = 10;
+    const TYPE_CASH = 20;
 
     /**
      * 为一个报名比赛的用户,抽取比赛号码
@@ -164,7 +167,7 @@ class Registration extends Model
         $e_match_registration = new MatchRegistration();
 
         /*预加载ORM对象*/
-        $e_match_registration = $e_match_registration->where($where)->with('match_info', 'user_info');
+        $e_match_registration = $e_match_registration->where($where)->with('match_info');
         foreach ($orderBy as $value)
         {
             $e_match_registration->orderBy($value[0], $value[1]);
@@ -189,6 +192,7 @@ class Registration extends Model
         $e_match_registration->transform(function ($item)
         {
             $item->status_text = self::statusTransformText($item->status);
+            $item->type_text = self::typeTransformText($item->type);
             $item->match_info->need_money = MyHelper::money_format($item->match_info->need_money);
             $item->match_info->status_text = Match::statusTransformText($item->match_info->status);
             $item->match_info->first_photo = $item->match_info->match_photos[0] != null ? MyFile::makeUrl($item->match_info->match_photos[0]) : null;
@@ -213,6 +217,26 @@ class Registration extends Model
                 break;
             case self::STATUS_ALREADY_NUMBER:
                 $text = '已抽号';
+                break;
+        }
+        return $text;
+    }
+
+    /**
+     * 返回报名方式 的文本名称
+     * @param $type
+     * @return string
+     */
+    public static function typeTransformText($type)
+    {
+        $text = '';
+        switch ($type)
+        {
+            case self::TYPE_WECHAT:
+                $text = '微信支付';
+                break;
+            case self::TYPE_CASH:
+                $text = '现金报名';
                 break;
         }
         return $text;
