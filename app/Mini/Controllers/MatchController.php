@@ -202,6 +202,155 @@ class MatchController extends Controller
     }
 
     /**
+     * Api 现金报名详情
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function cashRegistrationDetail(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '!=', $registration::STATUS_WAIT_PAYMENT], ['type', $registration::TYPE_CASH]], [['match_registration.create_time', 'desc']], false);
+            /*数据过滤*/
+            $list->transform(function ($item)
+            {
+                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'match_number', 'create_time');
+                return $item;
+            });
+            $m3result->code = 0;
+            $m3result->messages = '获取现金报名列表';
+            $m3result->data = $list;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 现金报名抽取号码
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function cashGetNumber(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('status', Match::STATUS_GET_NUMBER)->where('user_id', $session_user->user_id);
+                }),
+            ],
+            'reg_id' => [
+                'required',
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($registration)
+                {
+                    $query->where('type', $registration::TYPE_CASH)->where('status', $registration::STATUS_WAIT_NUMBER);
+                }),
+            ]
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            if ($e_reg = $registration->getNumber($request->input('reg_id'), $request->input('match_id')))
+            {
+                $m3result->code = 0;
+                $m3result->messages = '抽取号码成功';
+                $m3result->data = $e_reg;
+            }
+            else
+            {
+                $m3result->code = 2;
+                $m3result->messages = '网络繁忙';
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '未开启抽号';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 现金报名一键抽号
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function cashAllNumber(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('status', Match::STATUS_GET_NUMBER)->where('user_id', $session_user->user_id);
+                }),
+            ]
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $wait_cash_reg_list = $registration->getRegistrationList(
+                [['match_id', $request->input('match_id')], ['status', $registration::STATUS_WAIT_NUMBER], ['type', $registration::TYPE_CASH]],
+                [['match_registration.create_time', 'asc']],
+                false);
+
+            $wait_cash_reg_list->each(function ($item) use ($registration, $request)
+            {
+                $registration->getNumber($item->reg_id, $request->input('match_id'));
+            });
+
+            $m3result->code = 0;
+            $m3result->messages = '现金报名一键抽号成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '未开启抽号';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
      * Api 已报名抽取号码
      * @param Request $request
      * @return \App\Tools\json
@@ -238,7 +387,7 @@ class MatchController extends Controller
             }
             elseif ($e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
             {
-                if ($e_reg = $registration->getNumber($session_user->user_id, $request->input('match_id')))
+                if ($e_reg = $registration->getNumber($e_match_registration->reg_id, $request->input('match_id')))
                 {
                     $m3result->code = 0;
                     $m3result->messages = '抽取号码成功';

@@ -25,12 +25,12 @@ class Registration extends Model
     const TYPE_CASH = 20;
 
     /**
-     * 为一个报名比赛的用户,抽取比赛号码
-     * @param $user_id
+     * 为一个报名名额,抽取比赛号码
+     * @param $reg_id
      * @param $match_id
      * @return bool|null
      */
-    public function getNumber($user_id, $match_id)
+    public function getNumber($reg_id, $match_id)
     {
         /*初始化*/
         $return_entity = null;
@@ -39,7 +39,7 @@ class Registration extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($match_id, $user_id, $arr, &$return_entity)
+            DB::transaction(function () use ($match_id, $reg_id, $arr, &$return_entity)
             {
                 $e_match_list = MatchList::where('match_id', $match_id)->where('status', Match::STATUS_GET_NUMBER)->lockForUpdate()->first();
 
@@ -57,7 +57,7 @@ class Registration extends Model
                 $rd_numbers = collect($arr)->diff($reg_numbers);/*可随机的号码*/
 
                 /*抽号*/
-                $e_match_registration = MatchRegistration::where('user_id', $user_id)->where('match_id', $match_id)->first();
+                $e_match_registration = MatchRegistration::where('reg_id', $reg_id)->where('match_id', $match_id)->first();
                 $e_match_registration->status = self::STATUS_ALREADY_NUMBER;
                 $e_match_registration->match_number = $rd_numbers->random();
                 $e_match_registration->save();

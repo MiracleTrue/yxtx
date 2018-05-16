@@ -18,9 +18,8 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 
     /*需要登录的请求*/
     Route::any('match/cash/registrationDetail', 'MatchController@cashRegistrationDetail');/*现金报名详情*/
-    Route::any('match/cash/numberDetail', 'MatchController@cashNumberDetail');/*现金抽号详情*/
     Route::any('match/cash/getNumber', 'MatchController@cashGetNumber');/*现金报名抽取号码*/
-    Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽取号码*/
+    Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽号*/
 
     Route::any('match/info/registrationDetail', 'MatchController@registrationDetail');/*比赛报名详情*/
     Route::any('match/info/numberDetail', 'MatchController@numberDetail');/*比赛抽号详情*/
