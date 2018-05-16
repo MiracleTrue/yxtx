@@ -266,7 +266,7 @@ class Match extends Model
                 }
                 elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
-                    $code = 32;/*操作:抽号详情 , 报名详情*/
+                    $code = 32;/*操作:抽号详情 , 报名详情 , 现金报名*/
                 }
             }
             else
@@ -277,7 +277,7 @@ class Match extends Model
                 }
                 elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
-                    $code = 34;/*操作:抽号详情 , 报名详情 , 删除*/
+                    $code = 34;/*操作:抽号详情 , 报名详情 , 现金报名 , 删除*/
                 }
             }
 
