@@ -534,7 +534,7 @@ class MatchController extends Controller
             /*数据过滤*/
             $list->transform(function ($item)
             {
-                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time');
+                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time', 'match_number');
                 return $item;
             });
             $m3result->code = 0;
