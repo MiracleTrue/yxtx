@@ -80,7 +80,7 @@ class Match extends Model
     {
         /*初始化*/
         $e_match_list = MatchList::findOrFail($match_id);
-        $e_reg = $e_match_list->reg_list()->where('status', Registration::STATUS_WAIT_NUMBER)->with('user_info')->get();
+        $e_reg = $e_match_list->reg_list()->where('type', Registration::TYPE_WECHAT)->where('status', Registration::STATUS_WAIT_NUMBER)->with('user_info')->get();
         $app = app('wechat.mini_program');
 
         $e_match_list->status = self::STATUS_GET_NUMBER;
