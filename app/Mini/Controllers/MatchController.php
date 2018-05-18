@@ -228,7 +228,7 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '!=', $registration::STATUS_WAIT_PAYMENT], ['type', $registration::TYPE_CASH]], [['match_registration.create_time', 'desc']], false);
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['type', $registration::TYPE_CASH]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
             $list->transform(function ($item)
             {
