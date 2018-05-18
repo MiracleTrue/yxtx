@@ -258,11 +258,11 @@ class Match extends Model
         $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
         if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
         {
-            if ($e_match_list->registration_sum_number != 0)
+            if ($e_match_list->registration_sum_number != 0) //已经有报名人数
             {
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
-                    $code = 31;/*操作:开始抽号 , 报名详情*/
+                    $code = 31;/*操作:开始抽号 , 报名详情 , 现金报名*/
                 }
                 elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
@@ -273,7 +273,7 @@ class Match extends Model
             {
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
-                    $code = 33;/*操作:开始抽号 , 报名详情 , 删除*/
+                    $code = 33;/*操作:开始抽号 , 报名详情  , 现金报名 , 删除*/
                 }
                 elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
