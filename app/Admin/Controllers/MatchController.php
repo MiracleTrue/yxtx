@@ -16,6 +16,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Controllers\ModelForm;
 use Encore\Admin\Widgets\Tab;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -56,7 +57,7 @@ class MatchController extends Controller
 
                     $lng = strval($match_info->address_coordinate['lng']);
 
-//                    dd($lat, $lng);
+                    //                    dd($lat, $lng);
 
                     $form->tencent_map($lat, $lng, '比赛地图');
                 })->view($match_id)
@@ -215,7 +216,7 @@ class MatchController extends Controller
             }
 
             //禁用导出数据按钮
-//            $grid->disableExport();
+            //            $grid->disableExport();
 
             /*自定义导出表格*/
             $grid->exporter(new ExcelMatch());
@@ -330,6 +331,19 @@ class MatchController extends Controller
                     $text .= "<a style='margin-right:20px;' href='" . url('admin/match/user', $value['user_id']) . "'>" . $value['real_name'] . "($value[match_number])" . "</a>";
                 }
                 return $text;
+            });
+
+            $form->display('last_ranking', '上场排名信息')->with(function ($data)
+            {
+                $headers = ['获奖人', '钓鱼数量', '奖品'];
+                $rows = array();
+                foreach ($data as $key => $value)
+                {
+                    $rows[$key] = array($value['name'], $value['fish'], $value['prize']);
+                }
+                $table = new Table($headers, $rows);
+
+                return $table->render();
             });
 
 

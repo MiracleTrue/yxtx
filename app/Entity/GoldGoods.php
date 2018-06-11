@@ -3,24 +3,24 @@
 namespace App\Entity;
 
 /**
- * Class BannerList
- * Table 首页banner图列表
+ * Class GoldGoods
+ * Table 金币商城表
  * @package App\Entity
  */
-class BannerList extends Entity
+class GoldGoods extends Entity
 {
     /**
      * 与模型关联的数据表
      *
      * @var string
      */
-    protected $table = 'banner_list';
+    protected $table = 'gold_goods';
 
     /**
      * 可以通过 $primaryKey 属性，重新定义主键字段
      * @var string
      */
-    protected $primaryKey = 'banner_id';
+    protected $primaryKey = 'id';
 
     /**
      * 默认情况下，Eloquent预计数据表中有 "created_at" & "updated_at" 字段。
@@ -36,6 +36,17 @@ class BannerList extends Entity
      */
     protected $dateFormat = "Y-m-d H:i:s";
 
+    public function setPhotosAttribute($field)
+    {
+        if (is_array($field)) {
+            $this->attributes['photos'] = json_encode($field);
+        }
+    }
+
+    public function getPhotosAttribute($field)
+    {
+        return json_decode($field, true);
+    }
 
 
 //    /**

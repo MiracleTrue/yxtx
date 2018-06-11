@@ -3,24 +3,24 @@
 namespace App\Entity;
 
 /**
- * Class BannerList
- * Table 首页banner图列表
+ * Class GoldExchange
+ * Table 金币兑换申请表
  * @package App\Entity
  */
-class BannerList extends Entity
+class GoldExchange extends Entity
 {
     /**
      * 与模型关联的数据表
      *
      * @var string
      */
-    protected $table = 'banner_list';
+    protected $table = 'gold_exchange';
 
     /**
      * 可以通过 $primaryKey 属性，重新定义主键字段
      * @var string
      */
-    protected $primaryKey = 'banner_id';
+    protected $primaryKey = 'id';
 
     /**
      * 默认情况下，Eloquent预计数据表中有 "created_at" & "updated_at" 字段。
@@ -37,6 +37,21 @@ class BannerList extends Entity
     protected $dateFormat = "Y-m-d H:i:s";
 
 
+    /**
+     * 一对一关联Users实体表
+     */
+    public function user_info()
+    {
+        return $this->hasOne(Users::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * 一对一关联GoldGoods实体表
+     */
+    public function goods_info()
+    {
+        return $this->hasOne(GoldGoods::class, 'id', 'goods_id');
+    }
 
 //    /**
 //     * 一对多关联ProductsCategoryManage实体表

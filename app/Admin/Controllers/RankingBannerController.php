@@ -2,7 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Entity\BannerList;
+
+use App\Entity\RankingBanner;
 use App\Models\MyFile;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -10,7 +11,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Controllers\ModelForm;
 
-class BannerController extends Controller
+class RankingBannerController extends Controller
 {
     use ModelForm;
 
@@ -24,9 +25,9 @@ class BannerController extends Controller
         return Admin::content(function (Content $content)
         {
 
-            $content->header('首页Banner图管理');
+            $content->header('排行Banner图管理');
             $content->breadcrumb(
-                ['text' => '首页Banner图管理']
+                ['text' => '排行Banner图管理']
             );
             $content->body($this->grid());
         });
@@ -43,10 +44,10 @@ class BannerController extends Controller
         return Admin::content(function (Content $content) use ($id)
         {
 
-            $content->header('首页Banner图编辑');
+            $content->header('排行Banner图编辑');
             $content->breadcrumb(
-                ['text' => '首页Banner图管理', 'url' => '/banner'],
-                ['text' => '首页Banner图编辑']
+                ['text' => '排行Banner图管理', 'url' => '/rankingBanner'],
+                ['text' => '排行Banner图编辑']
             );
 
             $content->body($this->form()->edit($id));
@@ -63,10 +64,10 @@ class BannerController extends Controller
         return Admin::content(function (Content $content)
         {
 
-            $content->header('首页Banner图添加');
+            $content->header('排行Banner图添加');
             $content->breadcrumb(
-                ['text' => '首页Banner图管理', 'url' => '/banner'],
-                ['text' => '首页Banner图添加']
+                ['text' => '排行Banner图管理', 'url' => '/rankingBanner'],
+                ['text' => '排行Banner图添加']
             );
 
             $content->body($this->form());
@@ -80,7 +81,7 @@ class BannerController extends Controller
      */
     protected function grid()
     {
-        return Admin::grid(BannerList::class, function (Grid $grid)
+        return Admin::grid(RankingBanner::class, function (Grid $grid)
         {
 
             //禁用导出数据按钮
@@ -118,7 +119,7 @@ class BannerController extends Controller
      */
     protected function form()
     {
-        return Admin::form(BannerList::class, function (Form $form)
+        return Admin::form(RankingBanner::class, function (Form $form)
         {
 
             $form->display('banner_id', 'ID');

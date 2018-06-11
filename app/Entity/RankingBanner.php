@@ -3,18 +3,18 @@
 namespace App\Entity;
 
 /**
- * Class BannerList
- * Table 首页banner图列表
+ * Class RankingBanner
+ * Table 排行banner图列表
  * @package App\Entity
  */
-class BannerList extends Entity
+class RankingBanner extends Entity
 {
     /**
      * 与模型关联的数据表
      *
      * @var string
      */
-    protected $table = 'banner_list';
+    protected $table = 'ranking_banner';
 
     /**
      * 可以通过 $primaryKey 属性，重新定义主键字段

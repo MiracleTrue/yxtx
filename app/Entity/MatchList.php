@@ -32,6 +32,40 @@ class MatchList extends Entity
         });
     }
 
+    /*修改器:上场排名信息json转换array*/
+    public function setLastRankingAttribute($rank)
+    {
+//        [
+//            {
+//                "name": "张三",
+//                "fish": 100,
+//                "prize": "鱼竿"
+//            },
+//            {
+//                "name": "李四",
+//                "fish": 80,
+//                "prize": "鱼饵"
+//            }
+//        ]
+        if (is_array($rank))
+        {
+            $this->attributes['last_ranking'] = json_encode($rank);
+        }
+    }
+
+    public function getLastRankingAttribute($rank)
+    {
+        $arr = json_decode($rank, true);
+        if (is_array($arr))
+        {
+            return $arr;
+        }
+        else
+        {
+            return array();
+        }
+    }
+
     /*修改器:相册json转换array*/
     public function setMatchPhotosAttribute($photos)
     {

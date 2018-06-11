@@ -93,7 +93,7 @@ class UserController extends Controller
             {
                 return count($data);
             });
-            $grid->user_money('余额');
+            $grid->user_money('余额')->sortable();
             $grid->is_disable('状态')->switch($is_disable_switch);
             $grid->create_time('创建时间')->sortable();
         });
