@@ -16,11 +16,22 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('location/serviceCity', 'LocationController@serviceCity');/*获取服务开通城市*/
     Route::any('match/info', 'MatchController@info');/*获取比赛详情*/
 
+
+    Route::any('ranking/banner', 'RankingController@banner');/*排行banner图列表*/
+    Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
+    Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
+    Route::any('ranking/pit', 'RankingController@pit');/*坑冠榜*/
+    Route::any('ranking/match', 'RankingController@match');/*钓场榜*/
+
+
+    Route::any('pit/info', 'RankingController@info');/*获取坑冠比赛详情*/
+    Route::any('pit/listFromUser', 'RankingController@pitListFromUser');/*获取用户坑冠比赛列表*/
+
+
     /*需要登录的请求*/
     Route::any('match/cash/registrationDetail', 'MatchController@cashRegistrationDetail');/*现金报名详情*/
     Route::any('match/cash/getNumber', 'MatchController@cashGetNumber');/*现金报名抽取号码*/
     Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽号*/
-
     Route::any('match/info/registrationDetail', 'MatchController@registrationDetail');/*比赛报名详情*/
     Route::any('match/info/numberDetail', 'MatchController@numberDetail');/*比赛抽号详情*/
     Route::any('match/getNumber', 'MatchController@getNumber');/*已报名抽取号码*/
@@ -39,14 +50,17 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     /*需要登录并绑定手机的请求*/
     Route::group(['middleware' => [UserBindPhoneCheck::class]], function ()
     {
-        Route::any('match/cash/registration', 'MatchController@cashRegistration');/*现金参加比赛*/
+        Route::any('pit/release', 'RankingController@release');/*坑冠比赛发布*/
 
+        Route::any('match/cash/registration', 'MatchController@cashRegistration');/*现金参加比赛*/
         Route::any('match/release', 'MatchController@release');/*比赛发布*/
         Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/
         Route::any('match/delete', 'MatchController@delete');/*删除未报名比赛*/
     });
 });
 
-Route::any('wxPayment/registrationMatch', 'WeChatController@registrationMatchPaymentSuccess');
+Route::any('wxPayment/registrationMatch', 'WeChatController@registrationMatchPaymentSuccess');/*微信支付回调*/
+Route::any('share/pitRemainNumber', 'RankingController@pitRemainNumber');/*分享成功增加坑冠发布次数回调*/
+
 
 

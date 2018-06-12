@@ -33,7 +33,9 @@ class WxAppKeyCheck
             url('index/search'),/*搜索比赛*/
             url('location/serviceCity'),/*获取服务开通城市*/
             url('match/info'),/*获取比赛详情*/
-    );
+            url('ranking/banner'),/*排行banner图列表*/
+            url('ranking/bannerDetail')/*排行banner图详情*/
+        );
 
         $m3result = new M3Result();
         $app_key = $request->input('app_key');
@@ -54,7 +56,7 @@ class WxAppKeyCheck
             }
             return $next($request);
         }
-        else if (!empty($app_key))
+        elseif (!empty($app_key))
         {
             $e_wx_appkey = WxAppkey::where('app_key', $app_key)->where('valid_time', '>', now())->first();
             if ($e_wx_appkey != null)

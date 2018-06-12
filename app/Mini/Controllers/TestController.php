@@ -4,6 +4,7 @@ namespace App\Mini\Controllers;
 use App\Entity\BannerList;
 use App\Models\Match;
 use App\Models\MyFile;
+use App\Models\Ranking;
 use App\Models\Registration;
 use App\Models\User;
 use App\Tools\M3Result;
@@ -17,6 +18,14 @@ class TestController extends Controller
 
     public function test()
     {
+
+        $r = new Ranking();
+
+        $a = $r->getOneUserPitRanking(5434334);
+
+        dd($a);
+
+
 //        $a = collect(['user_id'=>'78813','match_id'=>'156489']);
 //
 //        $b = Crypt::encryptString($a);

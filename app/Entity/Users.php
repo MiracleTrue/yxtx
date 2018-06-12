@@ -45,6 +45,30 @@ class Users extends Entity
     }
 
     /**
+     * 一对多关联PitRanking实体表
+     */
+    public function pit_list()
+    {
+        return $this->hasMany(PitRanking::class, 'user_id');
+    }
+
+    /**
+     * 一对多关联GoldExchange实体表
+     */
+    public function gold_exchange()
+    {
+        return $this->hasMany(GoldExchange::class, 'user_id');
+    }
+
+    /**
+     * 一对多关联SilverExchange实体表
+     */
+    public function silver_exchange()
+    {
+        return $this->hasMany(SilverExchange::class, 'user_id');
+    }
+
+    /**
      * 一对多关联MatchRegistration实体表
      */
     public function registration_list()

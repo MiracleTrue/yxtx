@@ -42,7 +42,6 @@ class User extends Model
         return $e_users;
     }
 
-
     /**
      * 生成短信验证码
      * @param $phone

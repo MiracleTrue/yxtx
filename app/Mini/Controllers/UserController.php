@@ -2,10 +2,13 @@
 
 namespace App\Mini\Controllers;
 
+use App\Entity\GoldGoods;
 use App\Entity\MatchRegistration;
+use App\Entity\SilverGoods;
 use App\Entity\Users;
 use App\Models\Match;
 use App\Models\MyFile;
+use App\Models\Ranking;
 use App\Models\Registration;
 use App\Models\Sms;
 use App\Models\Transaction;
@@ -187,12 +190,17 @@ class UserController extends Controller
         $session_user = session('User');
         $m3result = new M3Result();
         $user = new User();
+        $ranking = new Ranking();
 
         if ($session_user != null)
         {
             $e_users = $user->getUserInfo($session_user->user_id);
             $e_users->release_count = $e_users->match_list()->count();
             $e_users->registration_count = $e_users->registration_list()->count();
+            $e_users->gold_goods_count = GoldGoods::count();
+            $e_users->silver_goods_count = SilverGoods::count();
+            $e_users->pit_ranking = $ranking->getOneUserPitRanking($session_user->user_id);
+            $e_users->match_ranking = $ranking->getOneUserMatchRanking($session_user->user_id);
             $m3result->code = 0;
             $m3result->messages = '获取用户详情成功';
             $m3result->data = $e_users;

@@ -161,6 +161,7 @@ class Registration extends Model
      * @param string $real_name
      * @param string $real_phone
      * @return bool|null
+     * @throws \Throwable
      */
     public function cashRegistrationMatch($match_id, $real_name = '', $real_phone = '')
     {

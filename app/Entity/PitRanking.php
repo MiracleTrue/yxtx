@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Models\Match;
 use Illuminate\Database\Eloquent\Builder;
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mini\Controllers;
 
 use App\Entity\MatchList;
@@ -610,13 +611,47 @@ class MatchController extends Controller
             'match_service' => 'required',
             'fish_number' => 'required',
             'match_photos' => 'required',
+            'last_ranking' => 'json',
         ];
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->passes() && $match->releaseMatch($request->all()))
+        if ($validator->passes())
         {
-            $m3result->code = 0;
-            $m3result->messages = '比赛发布成功';
+            if (is_array($last_ranking_arr = json_decode($request->input('last_ranking'), true)))
+            {
+                $json_rules = [
+                    '*.name' => 'required',
+                    '*.fish' => 'required',
+                    '*.prize' => 'required',
+                ];
+
+                $validator_json = Validator::make($last_ranking_arr, $json_rules);
+                if ($validator_json->passes() && Validator::make($request->all(), ['last_ranking_time' => 'required|date'])->passes() && $match->releaseMatch($request->all()))
+                {
+                    $m3result->code = 0;
+                    $m3result->messages = '比赛发布成功';
+                }
+                else
+                {
+                    $m3result->code = 1;
+                    $m3result->messages = '上场排名验证失败';
+                    $m3result->data = $validator_json->messages();
+                }
+            }
+            else
+            {
+                if ($match->releaseMatch($request->all()))
+                {
+                    $m3result->code = 0;
+                    $m3result->messages = '比赛发布成功';
+                }
+                else
+                {
+                    $m3result->code = 1;
+                    $m3result->messages = '数据验证失败';
+                    $m3result->data = $validator->messages();
+                }
+            }
         }
         else
         {
