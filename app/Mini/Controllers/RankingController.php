@@ -45,11 +45,11 @@ class RankingController extends Controller
             {
                 $e_match_address = MatchAddress::find($request->input('address_id'));
 
-                $list = Users::with('pit_list','gold_exchange')->orderBy('pit_release_count', 'desc')->where('location', $e_match_address->city)->limit(100)->get();
+                $list = Users::with('pit_list', 'gold_exchange')->orderBy('pit_release_count', 'desc')->where('location', $e_match_address->city)->limit(100)->get();
             }
             else
             {
-                $list = Users::with('pit_list','gold_exchange')->orderBy('pit_release_count', 'desc')->limit(100)->get();
+                $list = Users::with('pit_list', 'gold_exchange')->orderBy('pit_release_count', 'desc')->limit(100)->get();
             }
 
             /*数据过滤*/
@@ -57,7 +57,7 @@ class RankingController extends Controller
             {
                 $item->fish_count = $item->pit_list->sum('fish_number');
                 $item->exchange_count = $item->gold_exchange->count();
-                $item = $item->only('user_id', 'nick_name', 'location','pit_release_count','fish_count','exchange_count');
+                $item = $item->only('user_id', 'avatar', 'nick_name', 'location', 'pit_release_count', 'fish_count', 'exchange_count');
                 return $item;
             });
             $m3result->code = 0;
@@ -105,7 +105,7 @@ class RankingController extends Controller
             $list->transform(function ($item)
             {
                 $item->exchange_count = $item->silver_exchange->count();
-                $item = $item->only('user_id', 'nick_name', 'location','match_release_count','exchange_count');
+                $item = $item->only('user_id', 'avatar', 'nick_name', 'location', 'match_release_count', 'exchange_count');
                 return $item;
             });
             $m3result->code = 0;
@@ -141,7 +141,7 @@ class RankingController extends Controller
         {
             $m3result->code = 0;
             $m3result->messages = '分享成功';
-            Users::where('openid',$request->input('openid'))->increment('pit_remain_number');
+            Users::where('openid', $request->input('openid'))->increment('pit_remain_number');
         }
         else
         {
