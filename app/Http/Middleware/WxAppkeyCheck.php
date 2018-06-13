@@ -27,6 +27,7 @@ class WxAppKeyCheck
         /*不需要登录的请求*/
         $filterable = array(
             url('login'),/*登录*/
+            url('register'),/*注册*/
             url('index/match'),/*首页比赛列表*/
             url('index/banner'),/*首页banner图*/
             url('index/bannerDetail'),/*首页banner图详情*/

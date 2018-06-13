@@ -9,6 +9,7 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 {
     /*不需要登录的请求*/
     Route::any('login', 'UserController@login');/*登录*/
+    Route::any('register', 'UserController@register');/*注册*/
     Route::any('index/banner', 'IndexController@banner');/*首页banner图列表*/
     Route::any('index/bannerDetail', 'IndexController@bannerDetail');/*首页banner图详情*/
     Route::any('index/match', 'IndexController@match');/*首页比赛列表*/
