@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
+use App\Entity\Users;
 use App\Tools\MyHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -181,9 +182,12 @@ class Match extends Model
                 $e_match_list->create_time = now();
                 $e_match_list->last_ranking_time = !empty($arr['last_ranking_time']) ? $arr['last_ranking_time'] : null;
                 $e_match_list->last_ranking = !empty($arr['last_ranking']) ? json_decode($arr['last_ranking'], true) : null;
-
-
                 $e_match_list->save();
+
+                $e_users = Users::find($session_user->user_id);
+                $e_users->silver_coin =bcadd($e_users->silver_coin, 1);
+                $e_users->match_release_count = bcadd($e_users->match_release_count, 1);
+                $e_users->save();
             });
         } catch (\Exception $e)
         {
