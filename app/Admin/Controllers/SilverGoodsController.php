@@ -137,7 +137,7 @@ class SilverGoodsController extends Controller
             $form->display('id', 'ID');
             $form->text('title', '标题')->rules('required');
             $form->text('point', '积分值')->rules('required');
-            $form->multipleImage('photos', '相册')->removable()->help('上传图片最佳比例:  1 * 0.37  像素');
+            $form->multipleImage('photos', '相册')->uniqueName()->removable()->help('上传图片最佳比例:  1 * 0.37  像素');
             $form->editor('content', '内容')->rules('required');
             $form->number('sort', '排序')->default(0)->rules('required');
         });

@@ -27,6 +27,10 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('gold/info', 'GoldController@info');/*金币商品详情*/
     Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
 
+    Route::any('silver/index', 'GoldController@index');/*银币商品列表*/
+    Route::any('silver/info', 'GoldController@info');/*银币商品详情*/
+    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
+
 
     /*需要登录的请求*/
     Route::any('ranking/pit', 'RankingController@pit');/*坑冠榜*/

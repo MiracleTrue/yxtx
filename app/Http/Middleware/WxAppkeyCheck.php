@@ -35,7 +35,11 @@ class WxAppKeyCheck
             url('location/serviceCity'),/*获取服务开通城市*/
             url('match/info'),/*获取比赛详情*/
             url('ranking/banner'),/*排行banner图列表*/
-            url('ranking/bannerDetail')/*排行banner图详情*/
+            url('ranking/bannerDetail'),/*排行banner图详情*/
+            url('gold/index'),/*金币商品列表*/
+            url('gold/info'),/*金币商品详情*/
+            url('silver/index'),/*银币商品列表*/
+            url('silver/info')/*银币商品详情*/
         );
 
         $m3result = new M3Result();
