@@ -25,7 +25,7 @@ class LocationController extends Controller
         $e_match_address->transform(function ($item) use ($location)
         {
             $item->city_simple = $location->cityToSimple($item->city);
-            $item = $item->only('province', 'city', 'city_simple');
+            $item = $item->only('address_id', 'province', 'city', 'city_simple');
             return $item;
         });
 
