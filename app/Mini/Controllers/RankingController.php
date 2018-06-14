@@ -32,6 +32,8 @@ class RankingController extends Controller
     {
         /*初始化*/
         $m3result = new M3Result();
+        $session_user = session('User');
+        $ranking = new Ranking();
 
         /*验证*/
         $rules = [
@@ -53,16 +55,30 @@ class RankingController extends Controller
             }
 
             /*数据过滤*/
-            $list->transform(function ($item)
+            $list->transform(function ($item, $key)
             {
+                $item->pit_ranking = bcadd($key, 1);
                 $item->fish_count = $item->pit_list->sum('fish_number');
                 $item->exchange_count = $item->gold_exchange->count();
-                $item = $item->only('user_id', 'avatar', 'nick_name', 'location', 'pit_release_count', 'fish_count', 'exchange_count');
+                $item = $item->only('pit_ranking', 'user_id', 'avatar', 'nick_name', 'location', 'pit_release_count', 'fish_count', 'exchange_count');
                 return $item;
             });
+
+            $extra = $list->where('user_id', $session_user->user_id)->first();
+
+            if ($extra == null)
+            {
+                $extra = Users::find($session_user->user_id);
+                $extra->fish_count = $extra->pit_list->sum('fish_number');
+                $extra->exchange_count = $extra->gold_exchange->count();
+                $extra->pit_ranking = $ranking->getOneUserPitRanking($extra->user_id);
+                $extra = $extra->only('user_id', 'avatar', 'nick_name', 'location', 'pit_release_count', 'fish_count', 'exchange_count', 'pit_ranking');
+            }
+
             $m3result->code = 0;
             $m3result->messages = '坑冠榜获取成功';
             $m3result->data = $list;
+            $m3result->extra = $extra;
         }
         else
         {
@@ -81,6 +97,8 @@ class RankingController extends Controller
     {
         /*初始化*/
         $m3result = new M3Result();
+        $session_user = session('User');
+        $ranking = new Ranking();
 
         /*验证*/
         $rules = [
@@ -102,15 +120,28 @@ class RankingController extends Controller
             }
 
             /*数据过滤*/
-            $list->transform(function ($item)
+            $list->transform(function ($item, $key)
             {
+                $item->match_ranking = bcadd($key, 1);
                 $item->exchange_count = $item->silver_exchange->count();
-                $item = $item->only('user_id', 'avatar', 'nick_name', 'location', 'match_release_count', 'exchange_count');
+                $item = $item->only('match_ranking', 'user_id', 'avatar', 'nick_name', 'location', 'match_release_count', 'exchange_count');
                 return $item;
             });
+
+            $extra = $list->where('user_id', $session_user->user_id)->first();
+
+            if ($extra == null)
+            {
+                $extra = Users::find($session_user->user_id);
+                $extra->exchange_count = $extra->silver_exchange->count();
+                $extra->match_ranking = $ranking->getOneUserMatchRanking($extra->user_id);
+                $extra = $extra->only('match_ranking', 'user_id', 'avatar', 'nick_name', 'location', 'match_release_count', 'exchange_count');
+            }
+
             $m3result->code = 0;
             $m3result->messages = '钓场榜获取成功';
             $m3result->data = $list;
+            $m3result->extra = $extra;
         }
         else
         {

@@ -38,11 +38,6 @@ class Controller extends BaseController
 //        AppID:wx4fb1d591de1f9329
 //        AppSecret:ea0d8d601e6c09f433b256e15fd18219
 
-
-        /*阿里大鱼*/
-        // 军民融合生活保障中心
-        // jmrh6666
-
         /*阿里key*/
         //Access Key ID      :  LTAInFbXqLFhptN0
         //Access Key Secret  :  G0kBm2WSwpRc7VlKkI9lTR5Uln6kMY
