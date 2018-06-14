@@ -692,7 +692,7 @@ class MatchController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '图片格式不正确或大小超出限制';
+            $m3result->messages = '图片或视频格式不正确或大小超出限制';
         }
 
         return $m3result->toJson();
