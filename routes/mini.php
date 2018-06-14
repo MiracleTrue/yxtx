@@ -16,28 +16,26 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('index/search', 'IndexController@search');/*比赛搜索列表*/
     Route::any('location/serviceCity', 'LocationController@serviceCity');/*获取服务开通城市*/
     Route::any('match/info', 'MatchController@info');/*获取比赛详情*/
-
-
-    Route::any('ranking/banner', 'RankingController@banner');/*排行banner图列表*/
-    Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
-    Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
-
-
     Route::any('gold/index', 'GoldController@index');/*金币商品列表*/
     Route::any('gold/info', 'GoldController@info');/*金币商品详情*/
-    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
-
     Route::any('silver/index', 'GoldController@index');/*银币商品列表*/
     Route::any('silver/info', 'GoldController@info');/*银币商品详情*/
-    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
+    Route::any('ranking/banner', 'RankingController@banner');/*排行banner图列表*/
+    Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
+
+
 
 
     /*需要登录的请求*/
+    Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
+    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
+    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
+
+
     Route::any('ranking/pit', 'RankingController@pit');/*坑冠榜*/
     Route::any('ranking/match', 'RankingController@match');/*钓场榜*/
     Route::any('pit/info', 'RankingController@info');/*获取坑冠比赛详情*/
     Route::any('pit/listFromUser', 'RankingController@pitListFromUser');/*获取用户坑冠比赛列表*/
-
     Route::any('match/cash/registrationDetail', 'MatchController@cashRegistrationDetail');/*现金报名详情*/
     Route::any('match/cash/getNumber', 'MatchController@cashGetNumber');/*现金报名抽取号码*/
     Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽号*/
