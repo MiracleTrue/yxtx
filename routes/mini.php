@@ -18,8 +18,8 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('match/info', 'MatchController@info');/*获取比赛详情*/
     Route::any('gold/index', 'GoldController@index');/*金币商品列表*/
     Route::any('gold/info', 'GoldController@info');/*金币商品详情*/
-    Route::any('silver/index', 'GoldController@index');/*银币商品列表*/
-    Route::any('silver/info', 'GoldController@info');/*银币商品详情*/
+    Route::any('silver/index', 'SilverController@index');/*银币商品列表*/
+    Route::any('silver/info', 'SilverController@info');/*银币商品详情*/
     Route::any('ranking/banner', 'RankingController@banner');/*排行banner图列表*/
     Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
 
