@@ -24,12 +24,12 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
 
 
-
-
     /*需要登录的请求*/
     Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
     Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
-    Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
+    Route::any('silver/exchange', 'SilverController@exchange');/*银币商品兑换*/
+    Route::any('user/goldHistory', 'UserController@goldHistory');/*金币账户流水*/
+    Route::any('user/silverHistory', 'UserController@silverHistory');/*银币账户流水*/
 
 
     Route::any('ranking/pit', 'RankingController@pit');/*坑冠榜*/
@@ -44,6 +44,7 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('match/getNumber', 'MatchController@getNumber');/*已报名抽取号码*/
     Route::any('match/openNumber', 'MatchController@openNumber');/*比赛开启抽号*/
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/
+    Route::any('match/uploadVideo', 'MatchController@uploadVideo');/*比赛小视频上传*/
     Route::any('user/bindPhone', 'UserController@bindPhone');/*绑定手机*/
     Route::any('user/smsCode', 'UserController@smsCode');/*获取短信验证码*/
     Route::any('user/locationSet', 'UserController@locationSet');/*更改服务城市*/

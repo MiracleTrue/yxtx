@@ -692,7 +692,42 @@ class MatchController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '图片或视频格式不正确或大小超出限制';
+            $m3result->messages = '图片或格式不正确或大小超出限制';
+        }
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 比赛小视频上传
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function uploadVideo(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $my_file = new MyFile();
+
+        /*验证*/
+        $rules = [
+            'video' => 'required|file|max:3072|mimes:mp4',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $path = $my_file->uploadMatch($request->file('video'));
+
+            $m3result->code = 0;
+            $m3result->messages = '比赛小视频上传成功';
+            $m3result->data['file_path'] = $path;
+            $m3result->data['url_path'] = $my_file->makeUrl($path);
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '视频格式限制(MP4)大小限制(3MB)';
         }
 
         return $m3result->toJson();
