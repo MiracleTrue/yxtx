@@ -2,6 +2,8 @@
 namespace App\Mini\Controllers;
 
 use App\Entity\BannerList;
+use App\Entity\GoldGoods;
+use App\Entity\SilverGoods;
 use App\Models\Match;
 use App\Models\MyFile;
 use App\Models\Ranking;
@@ -19,6 +21,9 @@ class TestController extends Controller
     public function test()
     {
 
+        dd(
+            GoldGoods::count(), SilverGoods::count()
+        );
         $r = new Ranking();
 
         $a = $r->getOneUserPitRanking(5434334);
