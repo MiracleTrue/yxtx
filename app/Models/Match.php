@@ -20,9 +20,9 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP    = 0;
+    const STATUS_SIGN_UP = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END        = 200;
+    const STATUS_END = 200;
 
     /**
      * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -185,9 +185,10 @@ class Match extends Model
                 $e_match_list->save();
 
                 $e_users = Users::find($session_user->user_id);
-                $e_users->silver_coin =bcadd($e_users->silver_coin, 1);
+                $e_users->silver_coin = bcadd($e_users->silver_coin, 1);
                 $e_users->match_release_count = bcadd($e_users->match_release_count, 1);
                 $e_users->save();
+                Transaction::silverLogChange($e_users->user_id, Transaction::SILVER_LOG_TYPE_RELEASE_MATCH, 1);
             });
         } catch (\Exception $e)
         {

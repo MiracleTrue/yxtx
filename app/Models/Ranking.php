@@ -146,7 +146,7 @@ class Ranking extends Model
                 $e_users = Users::findOrFail($session_user->user_id);
 
 
-                if (PitRanking::where('user_id',$session_user->user_id)->whereBetween('create_time',[Carbon::today(),Carbon::tomorrow()])->first() != null)
+                if (PitRanking::where('user_id', $session_user->user_id)->whereBetween('create_time', [Carbon::today(), Carbon::tomorrow()])->first() != null)
                 {
                     throw new \Exception('今日已发布比赛', 2);
                 }
@@ -173,8 +173,8 @@ class Ranking extends Model
                 $e_users->pit_release_count = bcadd($e_users->pit_release_count, 1);
                 $e_users->gold_coin = bcadd($e_users->gold_coin, 1);
                 $e_users->pit_remain_number = bcsub($e_users->pit_remain_number, 1);
-
                 $e_users->save();
+                Transaction::goldLogChange($e_users->user_id, Transaction::GOLD_LOG_TYPE_RELEASE_PIT, 1);
             });
         } catch (\Exception $e)
         {

@@ -121,6 +121,46 @@ class UserController extends Controller
     }
 
     /**
+     * Api 用户金币账户流水
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function goldHistory(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+        $transaction = new Transaction();
+
+        $list = $transaction->getGoldLog([['user_id', $session_user->user_id]]);
+        $m3result->code = 0;
+        $m3result->messages = '金币账户流水列表获取成功';
+        $m3result->data = $list;
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 用户银币账户流水
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function silverHistory(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+        $transaction = new Transaction();
+
+        $list = $transaction->getSilverLog([['user_id', $session_user->user_id]]);
+        $m3result->code = 0;
+        $m3result->messages = '银币账户流水列表获取成功';
+        $m3result->data = $list;
+
+        return $m3result->toJson();
+    }
+
+    /**
      * Api 我报名的比赛
      * @param Request $request
      * @return \App\Tools\json
@@ -161,7 +201,6 @@ class UserController extends Controller
         $my_file = new MyFile();
         $session_user = session('User');
         $m3result = new M3Result();
-
 
         $list = $match->getMatchList([['user_id', $session_user->user_id]]);
         /*数据过滤*/

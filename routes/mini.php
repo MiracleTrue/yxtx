@@ -28,8 +28,8 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
     Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
     Route::any('silver/exchange', 'SilverController@exchange');/*银币商品兑换*/
-    Route::any('user/goldHistory', 'UserController@goldHistory');/*金币账户流水*/
-    Route::any('user/silverHistory', 'UserController@silverHistory');/*银币账户流水*/
+    Route::any('user/goldHistory', 'UserController@goldHistory');/*用户金币账户流水*/
+    Route::any('user/silverHistory', 'UserController@silverHistory');/*用户银币账户流水*/
 
 
     Route::any('ranking/pit', 'RankingController@pit');/*坑冠榜*/

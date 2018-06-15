@@ -2,7 +2,9 @@
 namespace App\Models;
 
 use App\Entity\AccountLog;
+use App\Entity\GoldLog;
 use App\Entity\MatchRegistration;
+use App\Entity\SilverLog;
 use App\Entity\Users;
 use App\Entity\WithdrawDeposit;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +29,14 @@ class Transaction extends Model
     const ACCOUNT_LOG_TYPE_REGISTRATION_FEE = 10;
     const ACCOUNT_LOG_TYPE_REGISTRATION_INCOME = 20;
     const ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT = 30;
+
+    /*金币账户日志类型:  10.发布坑冠增加  110.兑换商品减少*/
+    const GOLD_LOG_TYPE_RELEASE_PIT = 10;
+    const GOLD_LOG_TYPE_EXCHANGE = 110;
+
+    /*银币账户日志类型:  10.发布比赛增加  110.兑换商品减少*/
+    const SILVER_LOG_TYPE_RELEASE_MATCH = 10;
+    const SILVER_LOG_TYPE_EXCHANGE = 110;
 
     /**
      * 获取所有账户日志列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -72,6 +82,98 @@ class Transaction extends Model
         });
 
         return $e_account_log;
+    }
+
+    /**
+     * 获取所有金币账户日志列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * @param array $where
+     * @param array $orderBy
+     * @param bool $is_paginate
+     * @param bool $is_whereIn
+     * @param null $whereIn
+     * @return AccountLog
+     */
+    public function getGoldLog($where = array(), $orderBy = array(['gold_log.created_at', 'desc']), $is_paginate = true, $is_whereIn = false, $whereIn = null)
+    {
+        /*初始化*/
+        $e_gold_log = new GoldLog();
+
+        /*预加载ORM对象*/
+        $e_gold_log = $e_gold_log->where($where);
+        foreach ($orderBy as $value)
+        {
+            $e_gold_log->orderBy($value[0], $value[1]);
+        }
+        /*是否使用whereIn*/
+        if ($is_whereIn === true)
+        {
+            $e_gold_log->whereIn($whereIn[0], $whereIn[1]);
+        }
+
+        /*是否需要分页*/
+        if ($is_paginate === true)
+        {
+            $e_gold_log = $e_gold_log->paginate($_COOKIE['PaginationSize']);
+        }
+        else
+        {
+            $e_gold_log = $e_gold_log->get();
+        }
+
+        /*数据过滤*/
+        $e_gold_log->transform(function ($item)
+        {
+            $item->type_text = self::goldLogTypeTransformText($item->type);
+            return $item;
+        });
+
+        return $e_gold_log;
+    }
+
+    /**
+     * 获取所有银币账户日志列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
+     * @param array $where
+     * @param array $orderBy
+     * @param bool $is_paginate
+     * @param bool $is_whereIn
+     * @param null $whereIn
+     * @return AccountLog
+     */
+    public function getSilverLog($where = array(), $orderBy = array(['silver_log.created_at', 'desc']), $is_paginate = true, $is_whereIn = false, $whereIn = null)
+    {
+        /*初始化*/
+        $e_silver_log = new SilverLog();
+
+        /*预加载ORM对象*/
+        $e_silver_log = $e_silver_log->where($where);
+        foreach ($orderBy as $value)
+        {
+            $e_silver_log->orderBy($value[0], $value[1]);
+        }
+        /*是否使用whereIn*/
+        if ($is_whereIn === true)
+        {
+            $e_silver_log->whereIn($whereIn[0], $whereIn[1]);
+        }
+
+        /*是否需要分页*/
+        if ($is_paginate === true)
+        {
+            $e_silver_log = $e_silver_log->paginate($_COOKIE['PaginationSize']);
+        }
+        else
+        {
+            $e_silver_log = $e_silver_log->get();
+        }
+
+        /*数据过滤*/
+        $e_silver_log->transform(function ($item)
+        {
+            $item->type_text = self::silverLogTypeTransformText($item->type);
+            return $item;
+        });
+
+        return $e_silver_log;
     }
 
     /**
@@ -155,7 +257,7 @@ class Transaction extends Model
      * @return bool
      * @throws \Exception
      */
-    public function accountLogChange($user_id, $type, $money, $desc = '')
+    public static function accountLogChange($user_id, $type, $money, $desc = '')
     {
         if (in_array($type, [self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE, self::ACCOUNT_LOG_TYPE_REGISTRATION_INCOME, self::ACCOUNT_LOG_TYPE_WITHDRAW_DEPOSIT]))
         {
@@ -171,6 +273,60 @@ class Transaction extends Model
         else
         {
             throw new \Exception('账户日志类型不正确');
+        }
+    }
+
+    /**
+     * 用户金币账户日志 生成
+     * @param $user_id
+     * @param $type
+     * @param $point
+     * @param string $desc
+     * @return bool
+     * @throws \Exception
+     */
+    public static function goldLogChange($user_id, $type, $point, $desc = '')
+    {
+        if (in_array($type, [self::GOLD_LOG_TYPE_EXCHANGE, self::GOLD_LOG_TYPE_RELEASE_PIT]))
+        {
+            $e_gold_log = new GoldLog();
+            $e_gold_log->user_id = $user_id;
+            $e_gold_log->type = $type;
+            $e_gold_log->point = $point;
+            $e_gold_log->desc = $desc;
+            $e_gold_log->save();
+            return true;
+        }
+        else
+        {
+            throw new \Exception('金币账户日志类型不正确');
+        }
+    }
+
+    /**
+     * 用户银币账户日志 生成
+     * @param $user_id
+     * @param $type
+     * @param $point
+     * @param string $desc
+     * @return bool
+     * @throws \Exception
+     */
+    public static function silverLogChange($user_id, $type, $point, $desc = '')
+    {
+        if (in_array($type, [self::SILVER_LOG_TYPE_EXCHANGE, self::SILVER_LOG_TYPE_RELEASE_MATCH]))
+        {
+            $e_gold_log = new GoldLog();
+            $e_gold_log->user_id = $user_id;
+            $e_gold_log->type = $type;
+            $e_gold_log->point = $point;
+            $e_gold_log->desc = $desc;
+            $e_gold_log->save();
+            return true;
+        }
+        else
+        {
+            throw new \Exception('银币账户日志类型不正确');
         }
     }
 
@@ -402,6 +558,46 @@ class Transaction extends Model
                 break;
             case self::ACCOUNT_LOG_TYPE_REGISTRATION_FEE:
                 $text = '报名付费';
+                break;
+        }
+        return $text;
+    }
+
+    /**
+     * 返回金币账户日志类型 的文本名称
+     * @param $type
+     * @return string
+     */
+    public static function goldLogTypeTransformText($type)
+    {
+        $text = '';
+        switch ($type)
+        {
+            case self::GOLD_LOG_TYPE_RELEASE_PIT:
+                $text = '发布坑冠增加';
+                break;
+            case self::GOLD_LOG_TYPE_EXCHANGE:
+                $text = '兑换商品减少';
+                break;
+        }
+        return $text;
+    }
+
+    /**
+     * 返回银币账户日志类型 的文本名称
+     * @param $type
+     * @return string
+     */
+    public static function silverLogTypeTransformText($type)
+    {
+        $text = '';
+        switch ($type)
+        {
+            case self::SILVER_LOG_TYPE_RELEASE_MATCH:
+                $text = '发布比赛增加';
+                break;
+            case self::SILVER_LOG_TYPE_EXCHANGE:
+                $text = '兑换商品减少';
                 break;
         }
         return $text;
