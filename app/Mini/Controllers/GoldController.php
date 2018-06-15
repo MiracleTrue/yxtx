@@ -1,5 +1,6 @@
 <?php
 namespace App\Mini\Controllers;
+
 use App\Models\Gold;
 use App\Tools\M3Result;
 use Illuminate\Http\Request;
@@ -69,6 +70,52 @@ class GoldController extends Controller
         {
             $m3result->code = 1;
             $m3result->messages = '商品不存在';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * 金币商品兑换
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function exchange(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $gold = new Gold();
+
+        /*验证*/
+        $rules = [
+            'id' => 'required|exists:gold_goods,id',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => [
+                'required',
+                'numeric',
+                'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
+            ],
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes() && $gold->exchangeGoods($request->input('id'), $request->input('name'), $request->input('phone'), $request->input('address')))
+        {
+            $m3result->code = 0;
+            $m3result->messages = '商品兑换成功';
+        }
+        else
+        {
+            if ($gold->messages()['code'] != 0)
+            {
+                $m3result->code = $gold->messages()['code'];
+                $m3result->messages = $gold->messages()['messages'];
+            }
+            else
+            {
+                $m3result->code = 1;
+                $m3result->messages = '数据验证失败';
+                $m3result->data = $validator->messages();
+            }
         }
         return $m3result->toJson();
     }

@@ -316,12 +316,12 @@ class Transaction extends Model
     {
         if (in_array($type, [self::SILVER_LOG_TYPE_EXCHANGE, self::SILVER_LOG_TYPE_RELEASE_MATCH]))
         {
-            $e_gold_log = new GoldLog();
-            $e_gold_log->user_id = $user_id;
-            $e_gold_log->type = $type;
-            $e_gold_log->point = $point;
-            $e_gold_log->desc = $desc;
-            $e_gold_log->save();
+            $e_silver_log = new SilverLog();
+            $e_silver_log->user_id = $user_id;
+            $e_silver_log->type = $type;
+            $e_silver_log->point = $point;
+            $e_silver_log->desc = $desc;
+            $e_silver_log->save();
             return true;
         }
         else

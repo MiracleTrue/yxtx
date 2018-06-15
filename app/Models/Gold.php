@@ -3,6 +3,7 @@ namespace App\Models;
 
 use App\Entity\GoldExchange;
 use App\Entity\GoldGoods;
+use App\Entity\Users;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -79,6 +80,54 @@ class Gold extends Model
         }
         $e_gold_goods->url_photos = $url_photos;
         return $e_gold_goods;
+    }
+
+    /**
+     * 用户兑换一件积分商品
+     * @param $goods_id
+     * @param $name
+     * @param $phone
+     * @param $address
+     * @return bool
+     */
+    public function exchangeGoods($goods_id, $name, $phone, $address)
+    {
+        $session_user = session('User');
+
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($session_user, $goods_id, $name, $phone, $address)
+            {
+                $e_users = Users::findOrFail($session_user->user_id);
+                $e_gold_goods = GoldGoods::findOrFail($goods_id);
+
+                if ($e_users->gold_coin < $e_gold_goods->point)
+                {
+                    throw new \Exception('用户金币不足', 10);
+                }
+
+                $gold_exchange = new GoldExchange();
+                $gold_exchange->user_id = $e_users->user_id;
+                $gold_exchange->goods_id = $e_gold_goods->id;
+                $gold_exchange->status = self::EXCHANGE_STATUS_WAIT;
+                $gold_exchange->name = $name;
+                $gold_exchange->phone = $phone;
+                $gold_exchange->address = $address;
+                $gold_exchange->save();
+
+                $e_users->gold_coin = bcsub($e_users->gold_coin, $e_gold_goods->point);
+                $e_users->save();
+
+                Transaction::goldLogChange($e_users->user_id, Transaction::GOLD_LOG_TYPE_EXCHANGE, bcsub(0, $e_gold_goods->point));
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = $e->getCode();
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
     }
 
     /**

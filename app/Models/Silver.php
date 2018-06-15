@@ -3,6 +3,7 @@ namespace App\Models;
 
 use App\Entity\SilverExchange;
 use App\Entity\SilverGoods;
+use App\Entity\Users;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -79,6 +80,54 @@ class Silver extends Model
         }
         $e_silver_goods->url_photos = $url_photos;
         return $e_silver_goods;
+    }
+
+    /**
+     * 用户兑换一件积分商品
+     * @param $goods_id
+     * @param $name
+     * @param $phone
+     * @param $address
+     * @return bool
+     */
+    public function exchangeGoods($goods_id, $name, $phone, $address)
+    {
+        $session_user = session('User');
+
+        /*事物*/
+        try
+        {
+            DB::transaction(function () use ($session_user, $goods_id, $name, $phone, $address)
+            {
+                $e_users = Users::findOrFail($session_user->user_id);
+                $e_silver_goods = SilverGoods::findOrFail($goods_id);
+
+                if ($e_users->silver_coin < $e_silver_goods->point)
+                {
+                    throw new \Exception('用户银币不足', 10);
+                }
+
+                $silver_exchange = new SilverExchange();
+                $silver_exchange->user_id = $e_users->user_id;
+                $silver_exchange->goods_id = $e_silver_goods->id;
+                $silver_exchange->status = self::EXCHANGE_STATUS_WAIT;
+                $silver_exchange->name = $name;
+                $silver_exchange->phone = $phone;
+                $silver_exchange->address = $address;
+                $silver_exchange->save();
+
+                $e_users->silver_coin = bcsub($e_users->silver_coin, $e_silver_goods->point);
+                $e_users->save();
+
+                Transaction::silverLogChange($e_users->user_id, Transaction::SILVER_LOG_TYPE_EXCHANGE, bcsub(0, $e_silver_goods->point));
+            });
+        } catch (\Exception $e)
+        {
+            $this->errors['code'] = $e->getCode();
+            $this->errors['messages'] = $e->getMessage();
+            return false;
+        }
+        return true;
     }
 
     /**
