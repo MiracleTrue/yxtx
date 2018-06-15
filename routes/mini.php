@@ -36,6 +36,7 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('ranking/match', 'RankingController@match');/*钓场榜*/
     Route::any('pit/info', 'RankingController@info');/*获取坑冠比赛详情*/
     Route::any('pit/listFromUser', 'RankingController@pitListFromUser');/*获取用户坑冠比赛列表*/
+    Route::any('match/listFromUser', 'RankingController@matchListFromUser');/*获取用户比赛列表*/
     Route::any('match/cash/registrationDetail', 'MatchController@cashRegistrationDetail');/*现金报名详情*/
     Route::any('match/cash/getNumber', 'MatchController@cashGetNumber');/*现金报名抽取号码*/
     Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽号*/

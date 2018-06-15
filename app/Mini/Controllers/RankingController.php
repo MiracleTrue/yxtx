@@ -9,6 +9,7 @@ use App\Entity\PitRanking;
 use App\Entity\RankingBanner;
 use App\Entity\Users;
 use App\Models\Location;
+use App\Models\Match;
 use App\Models\MyFile;
 use App\Models\Ranking;
 use App\Tools\M3Result;
@@ -273,6 +274,38 @@ class RankingController extends Controller
             $list = $ranking->getPitList([['user_id', $request->input('user_id')]]);
             $m3result->code = 0;
             $m3result->messages = '坑冠列表获取成功';
+            $m3result->data = $list;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '用户不存在';
+        }
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 获取用户比赛列表
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function matchListFromUser(Request $request)
+    {
+        /*初始化*/
+        $match = new Match();
+        $m3result = new M3Result();
+
+        /*验证*/
+        $rules = [
+            'user_id' => 'required|exists:users,user_id',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $list = $match->getMatchList([['user_id', $request->input('user_id')]]);
+            $m3result->code = 0;
+            $m3result->messages = '比赛列表获取成功';
             $m3result->data = $list;
         }
         else
