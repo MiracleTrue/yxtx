@@ -397,6 +397,7 @@ class UserController extends Controller
             }
         } catch (\Exception $e)
         {
+            Log::emergency($e);
             $m3result->code = 1;
             $m3result->messages = 'Code已使用,参数缺少';
         }
