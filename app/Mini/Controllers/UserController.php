@@ -372,7 +372,7 @@ class UserController extends Controller
                 throw new \Exception('数据验证失败');
             }
             $session = $app->auth->session($request->input('jsCode'));
-            Log::emergency($session);
+            //Log::emergency($session);
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
             if (!$user_info = $user->wxCheckOpenid($session['openid']))

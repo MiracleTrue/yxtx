@@ -113,6 +113,7 @@ class User extends Model
      */
     public function wxRegister($decryptData)
     {
+        \Log::emergency($decryptData);
         /*事物*/
         try
         {
