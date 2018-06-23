@@ -9,6 +9,7 @@ namespace App\Entity;
  */
 class Users extends Entity
 {
+    protected $connection = 'mysql_utf8mb4';
     /**
      * 与模型关联的数据表
      *
