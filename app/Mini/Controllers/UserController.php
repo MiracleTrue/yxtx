@@ -376,7 +376,6 @@ class UserController extends Controller
 
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
-            Log::emergency($decryptData);
             if (!$user_info = $user->wxCheckOpenid($session['openid']))
             {
                 /*注册*/
