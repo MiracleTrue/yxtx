@@ -370,12 +370,13 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails())
             {
-                throw new \Exception('数据验证失败',1);
+                throw new \Exception('数据验证失败', 1);
             }
             $session = $app->auth->session($request->input('jsCode'));
-            //Log::emergency($session);
+
             $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
 
+            Log::emergency($decryptData);
             if (!$user_info = $user->wxCheckOpenid($session['openid']))
             {
                 /*注册*/
@@ -398,7 +399,56 @@ class UserController extends Controller
             }
         } catch (\Exception $e)
         {
-            if($e->getCode() != 1)
+            if ($e->getCode() != 1)
+            {
+                Log::emergency($e);
+            }
+            $m3result->code = 1;
+            $m3result->messages = 'Code已使用,参数缺少';
+        }
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 更新当前用户信息
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function update(Request $request)
+    {
+        /*初始化*/
+        $app = app('wechat.mini_program');
+        $m3result = new M3Result();
+        $session_user = session('User');
+
+        try
+        {
+            /*验证*/
+            $rules = [
+                'jsCode' => 'required',
+                'iv' => 'required',
+                'encryptedData' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails())
+            {
+                throw new \Exception('数据验证失败', 1);
+            }
+            $session = $app->auth->session($request->input('jsCode'));
+            $decryptData = $app->encryptor->decryptData($session['session_key'], $request->input('iv'), $request->input('encryptedData'));
+
+            $e_users = Users::find($session_user->user_id);
+            $e_users->nick_name = $decryptData['nickName'];
+            $e_users->avatar = $decryptData['avatarUrl'];
+            $e_users->save();
+
+            $m3result->code = 0;
+            $m3result->messages = '用户更新成功';
+
+        } catch (\Exception $e)
+        {
+            if ($e->getCode() != 1)
             {
                 Log::emergency($e);
             }

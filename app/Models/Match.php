@@ -20,9 +20,9 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP = 0;
+    const STATUS_SIGN_UP    = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END = 200;
+    const STATUS_END        = 200;
 
     /**
      * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -292,7 +292,7 @@ class Match extends Model
         }
         elseif ($e_match_registration != null && $e_match_registration->user_id == $session_user->user_id)/*已报名访客*/
         {
-            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT)
+            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT && $e_match_registration->type = Registration::TYPE_WECHAT)
             {
                 $code = 21;/*操作:支付*/
             }
@@ -313,7 +313,7 @@ class Match extends Model
         {
             if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_list->match_end_time > now())
             {
-                $code = 11;/*操作:报名*/
+                $code = 11;/*操作:报名 , 会员报名*/
             }
         }
         return $code;

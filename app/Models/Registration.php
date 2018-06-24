@@ -16,13 +16,14 @@ use Illuminate\Support\Facades\DB;
 class Registration extends Model
 {
     /*报名状态: 0.待支付  10.未抽号  20.已抽号*/
-    const STATUS_WAIT_PAYMENT = 0;
-    const STATUS_WAIT_NUMBER = 10;
+    const STATUS_WAIT_PAYMENT   = 0;
+    const STATUS_WAIT_NUMBER    = 10;
     const STATUS_ALREADY_NUMBER = 20;
 
-    /*报名方式: 10.微信支付  20.现金报名*/
+    /*报名方式: 10.微信支付  20.现金报名  30.会员报名*/
     const TYPE_WECHAT = 10;
-    const TYPE_CASH = 20;
+    const TYPE_CASH   = 20;
+    const TYPE_MEMBER = 30;
 
     /**
      * 为一个报名名额,抽取比赛号码
@@ -296,6 +297,9 @@ class Registration extends Model
                 break;
             case self::TYPE_CASH:
                 $text = '现金报名';
+                break;
+            case self::TYPE_MEMBER:
+                $text = '会员报名';
                 break;
         }
         return $text;

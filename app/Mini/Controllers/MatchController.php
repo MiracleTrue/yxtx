@@ -22,10 +22,101 @@ use Illuminate\Validation\Rule;
  */
 class MatchController extends Controller
 {
+
+    public function memberConfirm(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
+            'reg_id' => [
+                'required',
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('type', Registration::TYPE_MEMBER)->where('status', Registration::STATUS_WAIT_PAYMENT);
+                }),
+            ]
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $e_reg = MatchRegistration::find($request->input('reg_id'));
+            $e_reg->status = Registration::STATUS_WAIT_NUMBER;
+            $e_reg->save();
+            $m3result->code = 0;
+            $m3result->messages = '会员确认无误';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '数据验证失败';
+        }
+
+        return $m3result->toJson();
+    }
+
+    /**
+     * Api 会员报名删除
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function memberDelete(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
+            'reg_id' => [
+                'required',
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('type', Registration::TYPE_MEMBER);
+                }),
+            ]
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            MatchRegistration::find($request->input('reg_id'))->delete();
+            $m3result->code = 0;
+            $m3result->messages = '会员删除成功';
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '数据验证失败';
+        }
+
+        return $m3result->toJson();
+    }
+
     /**
      * Api 删除未报名比赛
      * @param Request $request
      * @return \App\Tools\json
+     * @throws \Throwable
      */
     public function delete(Request $request)
     {
@@ -99,7 +190,7 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('type', Registration::TYPE_WECHAT)->where('match_id', $request->input('match_id'))->first();
+            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT, Registration::TYPE_MEMBER])->where('match_id', $request->input('match_id'))->first();
             $match_info = $match->getMatchInfo($request->input('match_id'));
 
             /*未报名过*/
@@ -120,7 +211,7 @@ class MatchController extends Controller
             }
             else
             {
-                if ($is_registration->status == Registration::STATUS_WAIT_PAYMENT)
+                if ($is_registration->status == Registration::STATUS_WAIT_PAYMENT && $is_registration->type == Registration::TYPE_WECHAT)
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛报名成功';
@@ -148,9 +239,102 @@ class MatchController extends Controller
     }
 
     /**
+     * Api 会员参加比赛
+     * @param Request $request
+     * @return \App\Tools\json
+     * @throws \Throwable
+     */
+    public function memberRegistration(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $match = new Match();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', '!=', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
+                }),
+            ],
+            'real_name' => 'required'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT, Registration::TYPE_MEMBER])->where('match_id', $request->input('match_id'))->first();
+
+            /*未报名过*/
+            if ($is_registration == null)
+            {
+                try
+                {
+                    DB::transaction(function () use ($match, $request, $session_user, $m3result)
+                    {
+                        $e_match_list = MatchList::where('match_id', $request->input('match_id'))->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
+                        $registration_sum_number = $e_match_list->reg_list()->count();
+
+                        if ($e_match_list == null)
+                        {
+                            throw new \Exception('网络繁忙');
+                        }
+
+                        if ($registration_sum_number < $e_match_list->match_sum_number)
+                        {
+                            $e_match_registration = new MatchRegistration();
+                            $e_match_registration->user_id = $session_user->user_id;
+                            $e_match_registration->match_id = $e_match_list->match_id;
+                            $e_match_registration->type = Registration::TYPE_MEMBER;
+                            $e_match_registration->order_sn = null;
+                            $e_match_registration->status = Registration::STATUS_WAIT_PAYMENT;
+                            $e_match_registration->real_name = $request->input('real_name');
+                            $e_match_registration->real_phone = $session_user->phone;
+                            $e_match_registration->match_number = null;
+                            $e_match_registration->create_time = now();
+                            $e_match_registration->save();
+
+                            $m3result->code = 0;
+                            $m3result->messages = '比赛报名成功';
+                            $m3result->data['match_info'] = $match->getMatchInfo($request->input('match_id'));
+                        }
+                        else
+                        {
+                            throw new \Exception('报名人数已满');
+                        }
+
+                    });
+                } catch (\Exception $e)
+                {
+                    $m3result->code = 2;
+                    $m3result->messages = '报名人数已满';
+                }
+            }
+            else
+            {
+                $m3result->code = 3;
+                $m3result->messages = '已经报名,等待抽号';
+
+            }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '该比赛已撤销或已过报名时间';
+            $m3result->data = $validator->errors();
+        }
+        return $m3result->toJson();
+    }
+
+
+    /**
      * Api 现金参加比赛
      * @param Request $request
      * @return \App\Tools\json
+     * @throws \Throwable
      */
     public function cashRegistration(Request $request)
     {
@@ -485,7 +669,7 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '!=', $registration::STATUS_WAIT_PAYMENT]], [['match_registration.create_time', 'desc']], false);
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
             $list->transform(function ($item)
             {

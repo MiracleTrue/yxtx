@@ -24,7 +24,11 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('ranking/bannerDetail', 'RankingController@bannerDetail');/*排行banner图详情*/
 
 
+
     /*需要登录的请求*/
+    Route::any('user/update', 'UserController@update');/*更新当前用户信息*/
+
+
     Route::any('ranking/index', 'RankingController@index');/*排行首页信息*/
     Route::any('gold/exchange', 'GoldController@exchange');/*金币商品兑换*/
     Route::any('silver/exchange', 'SilverController@exchange');/*银币商品兑换*/
@@ -59,8 +63,11 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     /*需要登录并绑定手机的请求*/
     Route::group(['middleware' => [UserBindPhoneCheck::class]], function ()
     {
-        Route::any('pit/release', 'RankingController@release');/*坑冠比赛发布*/
+        Route::any('match/member/registration', 'MatchController@memberRegistration');/*会员参加比赛*/
+        Route::any('match/member/confirm', 'MatchController@memberConfirm');/*会员报名确认*/
+        Route::any('match/member/delete', 'MatchController@memberDelete');/*会员报名删除*/
 
+        Route::any('pit/release', 'RankingController@release');/*坑冠比赛发布*/
         Route::any('match/cash/registration', 'MatchController@cashRegistration');/*现金参加比赛*/
         Route::any('match/release', 'MatchController@release');/*比赛发布*/
         Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/

@@ -43,6 +43,6 @@ class NoPaymentRegistrationDelete extends Command
     public function handle()
     {
         /*初始化*/
-        MatchRegistration::where('status', Registration::STATUS_WAIT_PAYMENT)->where('create_time', '<', now()->subMinute(10))->delete();
+        MatchRegistration::where('type', Registration::TYPE_WECHAT)->where('status', Registration::STATUS_WAIT_PAYMENT)->where('create_time', '<', now()->subMinute(10))->delete();
     }
 }
