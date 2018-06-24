@@ -350,6 +350,7 @@ class UserController extends Controller
      * Api 注册请求
      * @param Request $request
      * @return \App\Tools\json
+     * @throws \Throwable
      */
     public function register(Request $request)
     {
@@ -369,7 +370,7 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails())
             {
-                throw new \Exception('数据验证失败');
+                throw new \Exception('数据验证失败',1);
             }
             $session = $app->auth->session($request->input('jsCode'));
             //Log::emergency($session);
@@ -397,7 +398,10 @@ class UserController extends Controller
             }
         } catch (\Exception $e)
         {
-            Log::emergency($e);
+            if($e->getCode() != 1)
+            {
+                Log::emergency($e);
+            }
             $m3result->code = 1;
             $m3result->messages = 'Code已使用,参数缺少';
         }

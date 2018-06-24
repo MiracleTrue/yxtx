@@ -106,10 +106,12 @@ class User extends Model
         }
     }
 
+
     /**
      * 微信用户注册
      * @param $decryptData
      * @return bool
+     * @throws \Throwable
      */
     public function wxRegister($decryptData)
     {
@@ -131,7 +133,6 @@ class User extends Model
             });
         } catch (\Exception $e)
         {
-            \Log::emergency($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = '注册失败';
             return false;
