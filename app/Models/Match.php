@@ -192,6 +192,7 @@ class Match extends Model
             });
         } catch (\Exception $e)
         {
+            Log::error($e);
             $this->errors['code'] = 1;
             $this->errors['messages'] = '比赛发布失败';
             return false;
