@@ -185,10 +185,10 @@ class Match extends Model
                 $e_match_list->save();
 
                 $e_users = Users::findOrFail($session_user->user_id);
-                $e_users->silver_coin = bcadd($e_users->silver_coin, 1);
+                $e_users->silver_coin = intval(bcadd($e_users->silver_coin, 1));
                 $e_users->match_release_count = bcadd($e_users->match_release_count, 1);
                 $e_users->save();
-                Transaction::silverLogChange($e_users->user_id, Transaction::SILVER_LOG_TYPE_RELEASE_MATCH, 1);
+                Transaction::silverLogChange($session_user->user_id, Transaction::SILVER_LOG_TYPE_RELEASE_MATCH, 1);
             });
         } catch (\Exception $e)
         {
