@@ -293,7 +293,9 @@ class Match extends Model
         }
         elseif ($e_match_registration != null && $e_match_registration->user_id == $session_user->user_id)/*已报名访客*/
         {
-            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT && $e_match_registration->type = Registration::TYPE_WECHAT)
+            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT && $e_match_registration->type
+                == Registration::TYPE_WECHAT
+            )
             {
                 $code = 21;/*操作:支付*/
             }
