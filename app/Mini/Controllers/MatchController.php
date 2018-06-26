@@ -23,6 +23,11 @@ use Illuminate\Validation\Rule;
 class MatchController extends Controller
 {
 
+    /**
+     * Api 会员报名确认
+     * @param Request $request
+     * @return \App\Tools\json
+     */
     public function memberConfirm(Request $request)
     {
         /*初始化*/
