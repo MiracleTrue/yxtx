@@ -16,7 +16,7 @@ class Model
      * 生成唯一订单号
      * @return string
      */
-    public function makeOrderSn()
+    public static function makeOrderSn()
     {
         $time = explode(" ", microtime());
         $time = $time[1] . ($time[0] * 1000);

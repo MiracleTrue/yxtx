@@ -102,61 +102,6 @@ class Registration extends Model
     }
 
     /**
-     * 单个用户报名参加一场比赛
-     * @param $user_id
-     * @param $match_id
-     * @param $real_name
-     * @return bool|null
-     */
-    public function registrationMatch($user_id, $match_id, $real_name = '')
-    {
-        /*初始化*/
-        $return_entity = null;
-
-        /*事物*/
-        try
-        {
-            DB::transaction(function () use ($match_id, $user_id, $real_name, &$return_entity)
-            {
-                $e_match_list = MatchList::where('match_id', $match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
-                $registration_sum_number = $e_match_list->reg_list()->count();
-
-                if ($e_match_list == null)
-                {
-                    throw new NetworkBusyException();
-                }
-
-                if ($registration_sum_number < $e_match_list->match_sum_number)
-                {
-                    $e_match_registration = new MatchRegistration();
-                    $e_match_registration->user_id = $user_id;
-                    $e_match_registration->match_id = $e_match_list->match_id;
-                    $e_match_registration->type = self::TYPE_WECHAT;
-                    $e_match_registration->order_sn = $this->makeOrderSn();
-                    $e_match_registration->status = self::STATUS_WAIT_PAYMENT;
-                    $e_match_registration->real_name = $real_name;
-                    $e_match_registration->real_phone = Users::find($user_id)->phone;
-                    $e_match_registration->match_number = null;
-                    $e_match_registration->create_time = now();
-                    $e_match_registration->save();
-
-                    $return_entity = $e_match_registration;
-                }
-                else
-                {
-                    throw new \Exception('该比赛报名人数已满');
-                }
-            });
-        } catch (\Exception $e)
-        {
-            $this->errors['code'] = 1;
-            $this->errors['messages'] = '该比赛报名人数已满';
-            return false;
-        }
-        return $return_entity;
-    }
-
-    /**
      * 单个现金报名参加一场比赛
      * @param $match_id
      * @param string $real_name

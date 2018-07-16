@@ -4,6 +4,7 @@ namespace App\Mini\Controllers;
 
 use App\Entity\MatchList;
 use App\Entity\MatchRegistration;
+use App\Exceptions\NetworkBusyException;
 use App\Models\Match;
 use App\Models\Model;
 use App\Models\MyFile;
@@ -161,15 +162,14 @@ class MatchController extends Controller
      * Api 报名参加比赛
      * @param Request $request
      * @return \App\Tools\json
+     * @throws \Throwable
      */
     public function registration(Request $request)
     {
         /*初始化*/
         $m3result = new M3Result();
         $match = new Match();
-        $registration = new Registration();
         $session_user = session('User');
-        $transaction = new Transaction();
 
         /*验证*/
         $rules = [
@@ -179,52 +179,160 @@ class MatchController extends Controller
                     $query->where('user_id', '!=', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
                 }),
             ],
-            'real_name' => 'required'
+            'registration' => ['required', 'json', function ($key, $json, $fail) {
+
+                $val = json_decode($json, true);
+
+                if (empty($val))
+                {
+                    $fail('报名JSON 不能为空');
+                }
+
+                if (is_array($val))
+                {
+                    $vl = Validator::make($val, [
+                        '*.phone' => [
+                            'required',
+                            'numeric',
+                            'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
+                        ],
+                        '*.name' => ['required', 'string'],
+                    ]);
+
+                    if ($vl->fails() == true)
+                    {
+                        $fail('报名JSON 验证失败');
+                    }
+                } else
+                {
+                    $fail('报名JSON 不能为空');
+                }
+
+            }]
         ];
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->passes())
         {
-            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT, Registration::TYPE_MEMBER])->where('match_id', $request->input('match_id'))->first();
+            $registration_arr = json_decode($request->input('registration'), true);
             $match_info = $match->getMatchInfo($request->input('match_id'));
 
-            /*未报名过*/
-            if ($is_registration == null)
-            {
-                if ($e_reg = $registration->registrationMatch($session_user->user_id, $request->input('match_id'), $request->input('real_name')))
-                {
-                    $m3result->code = 0;
-                    $m3result->messages = '比赛报名成功';
-                    $m3result->data['wx_pay'] = $transaction->registrationMatchWxPayStart($e_reg->reg_id);
-                    $m3result->data['match_info'] = $match_info;
-                } else
-                {
-                    $m3result->code = 2;
-                    $m3result->messages = '报名人数已满';
-                }
-            } else
-            {
-                if ($is_registration->status == Registration::STATUS_WAIT_PAYMENT && $is_registration->type == Registration::TYPE_WECHAT)
-                {
-                    $m3result->code = 0;
-                    $m3result->messages = '比赛报名成功';
-                    //更换订单号及真实姓名
-                    $is_registration->order_sn = $registration->makeOrderSn();
-                    $is_registration->real_name = $request->input('real_name');
-                    $is_registration->save();
 
-                    $m3result->data['wx_pay'] = $transaction->registrationMatchWxPayStart($is_registration->reg_id);
-                    $m3result->data['match_info'] = $match_info;
-                } else
-                {
-                    $m3result->code = 3;
-                    $m3result->messages = '已经报名,等待抽号';
-                }
+            $reg_vli = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT])
+                ->where('status', '!=', Registration::STATUS_WAIT_PAYMENT)->where('match_id', $request->input('match_id'))->get()->isNotEmpty();
+            if ($reg_vli)
+            {
+                $m3result->code = 2;
+                $m3result->messages = '已经报名,等待抽号';
+                return $m3result->toJson();
             }
+
+
+            /*报名开始*/
+            try
+            {
+                DB::transaction(function () use ($match_info, $registration_arr, $session_user, $request, $m3result) {
+
+                    /*删除之前报名*/
+                    MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT])
+                        ->where('match_id', $request->input('match_id'))->delete();
+
+                    /*验证手机号*/
+                    $base_phones = MatchRegistration::select('real_phone')->where('match_id', $request->input('match_id'))
+                        ->get()->pluck('real_phone')->toArray();
+                    foreach ($registration_arr as $key => $phone)
+                    {
+                        $self_flag = in_array($phone['phone'], collect(array_except($registration_arr, $key))->pluck('phone')->toArray());
+                        $base_flag = in_array($phone['phone'], $base_phones);
+
+                        if ($self_flag || $base_flag)
+                        {
+                            $m3result->code = 3;
+                            $m3result->messages = '手机号已经报名';
+                            $m3result->data = $phone['phone'];
+                            return $m3result->toJson();
+                        }
+                    }
+
+                    $e_match_list = MatchList::where('match_id', $match_info->match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
+                    $registration_sum_number = $e_match_list->reg_list()->count();
+                    $registration_arr_count = count($registration_arr);
+
+                    if ($e_match_list == null)
+                    {
+                        throw new NetworkBusyException();
+                    }
+
+                    if (bcadd($registration_sum_number, $registration_arr_count) < $e_match_list->match_sum_number)
+                    {
+                        foreach ($registration_arr as $item)
+                        {
+                            $e_match_registration = new MatchRegistration();
+                            $e_match_registration->user_id = $session_user->user_id;
+                            $e_match_registration->match_id = $e_match_list->match_id;
+                            $e_match_registration->type = Registration::TYPE_WECHAT;
+                            $e_match_registration->status = Registration::STATUS_WAIT_PAYMENT;
+                            $e_match_registration->real_name = $item['name'];
+                            $e_match_registration->real_phone = $item['phone'];
+                            $e_match_registration->match_number = null;
+                            $e_match_registration->create_time = now();
+                            $e_match_registration->save();
+                        }
+
+                        $first_reg = MatchRegistration::where('match_id', $e_match_list->match_id)->where('user_id', $session_user->user_id)
+                            ->where('type', Registration::TYPE_WECHAT)->first();
+
+                        $first_reg->order_sn = Model::makeOrderSn();
+                        $first_reg->save();
+
+                        $app = app('wechat.payment');
+
+                        $result = $app->order->unify([
+                            'body' => $e_match_list->title,
+                            'out_trade_no' => $first_reg->order_sn,
+                            'total_fee' => bcmul(bcmul($e_match_list->need_money, $registration_arr_count, 2), 100),
+                            'notify_url' => url('wxPayment/registrationMatch'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                            'trade_type' => 'JSAPI',
+                            'openid' => $session_user->openid,
+                        ]);
+
+                        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS')
+                        {
+                            $prepayId = $result['prepay_id'];
+                            $config = $app->jssdk->sdkConfig($prepayId); // 返回数组
+                            /*消息模板prepay_id*/
+                            MatchRegistration::where('match_id', $e_match_list->match_id)->where('user_id', $session_user->user_id)
+                                ->where('type', Registration::TYPE_WECHAT)->update(['form_id' => $prepayId]);
+
+                            $m3result->code = 0;
+                            $m3result->messages = '比赛报名成功';
+                            $m3result->data['wx_pay'] = $config;
+                            $m3result->data['match_info'] = $e_match_list;
+
+                        } else
+                        {
+                            $m3result->code = 5;
+                            $m3result->messages = '微信支付失败';
+                        }
+
+
+                    } else
+                    {
+                        throw new \Exception('该比赛报名人数已满');
+                    }
+                });
+            } catch (\Exception $e)
+            {
+                $m3result->code = 4;
+                $m3result->messages = '报名人数已满';
+            }
+
+
         } else
         {
             $m3result->code = 1;
-            $m3result->messages = '该比赛已撤销或已过报名时间';
+            $m3result->messages = '数据验证失败';
+            $m3result->data = $validator->messages();
         }
         return $m3result->toJson();
     }
@@ -257,7 +365,8 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT, Registration::TYPE_MEMBER])->where('match_id', $request->input('match_id'))->first();
+            $is_registration = MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_MEMBER])
+                ->where('match_id', $request->input('match_id'))->first();
 
             /*未报名过*/
             if ($is_registration == null)

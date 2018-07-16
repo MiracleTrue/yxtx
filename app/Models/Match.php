@@ -259,7 +259,9 @@ class Match extends Model
             return $code;
         }
 
-        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->first();
+        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->get();
+
+
         if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
         {
             if ($e_match_list->registration_sum_number != 0) //已经有报名人数
@@ -282,22 +284,26 @@ class Match extends Model
                 }
             }
 
-        } elseif ($e_match_registration != null && $e_match_registration->user_id == $session_user->user_id)/*已报名访客*/
+        } elseif ($e_match_registration != null)/*已报名访客*/
         {
-            if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_registration->status == Registration::STATUS_WAIT_PAYMENT && $e_match_registration->type
-                == Registration::TYPE_WECHAT
+            /*已有全部方式报名*/
+            if (
+                $e_match_registration->where('type', Registration::TYPE_WECHAT)
+                    ->where('status', '!=', Registration::STATUS_WAIT_PAYMENT)->isNotEmpty() &&
+                $e_match_registration->where('type', Registration::TYPE_MEMBER)->isNotEmpty()
             )
             {
-                $code = 21;/*操作:支付*/
-            } elseif ($e_match_list->status == self::STATUS_SIGN_UP && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+                $code = 21;/*操作:抽号*/
+            } /*已有会员报名*/
+            elseif ($e_match_registration->where('type', Registration::TYPE_MEMBER)->isNotEmpty())
             {
-                $code = 22;/*操作:等待抽号*/
-            } elseif ($e_match_list->status == self::STATUS_GET_NUMBER && $e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+                $code = 22;/*操作:报名 , 抽号*/
+            } /*已有支付报名*/
+            elseif ($e_match_registration->where('type', Registration::TYPE_WECHAT)
+                ->where('status', '!=', Registration::STATUS_WAIT_PAYMENT)->isNotEmpty()
+            )
             {
-                $code = 23;/*操作:抽号*/
-            } elseif ($e_match_list->status == self::STATUS_GET_NUMBER && $e_match_registration->status == Registration::STATUS_ALREADY_NUMBER)
-            {
-                $code = 24;/*操作:查看抽号结果*/
+                $code = 23;/*操作:会员报名 , 抽号*/
             }
         } else /*未报名访客*/
         {
