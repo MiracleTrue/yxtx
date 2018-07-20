@@ -253,10 +253,11 @@ class Match extends Model
     public function matchDetailOptionButton(MatchList $e_match_list)
     {
         $session_user = session('User');
+
         $code = 0;/*无操作*/
         if ($session_user == null)
         {
-            return $code;
+            return 11;
         }
 
         $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->get();
@@ -284,7 +285,7 @@ class Match extends Model
                 }
             }
 
-        } elseif ($e_match_registration != null)/*已报名访客*/
+        } elseif ($e_match_registration->isNotEmpty())/*已报名访客*/
         {
             /*已有全部方式报名*/
             if (
