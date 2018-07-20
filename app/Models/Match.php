@@ -20,9 +20,9 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP = 0;
+    const STATUS_SIGN_UP    = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END = 200;
+    const STATUS_END        = 200;
 
     /**
      * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -54,13 +54,15 @@ class Match extends Model
         if ($is_paginate === true)
         {
             $match_list = $e_match_list->paginate($_COOKIE['PaginationSize']);
-        } else
+        }
+        else
         {
             $match_list = $e_match_list->get();
         }
 
         /*数据过滤*/
-        $match_list->transform(function ($item) {
+        $match_list->transform(function ($item)
+        {
             $item->first_photo = $item->match_photos[0] != null ? MyFile::makeUrl($item->match_photos[0]) : null;
             $item->need_money = MyHelper::money_format($item->need_money);
             $item->status_text = self::statusTransformText($item->status);
@@ -86,7 +88,8 @@ class Match extends Model
         $e_match_list->save();
 
         /*消息模板通知*/
-        $e_reg->each(function ($item, $key) use ($app, $e_match_list) {
+        $e_reg->each(function ($item, $key) use ($app, $e_match_list)
+        {
             $res = $app->template_message->send([
                 'touser' => $item->user_info->openid,
                 'template_id' => '9bx6hKrkvQfD61jbZWNCsS_4-fOYj43gscSgvMSyuZ0',
@@ -144,7 +147,8 @@ class Match extends Model
             $address = new Location();
             $address_res = $address->tencent_coordinateAddressResolution($arr['address_coordinate_lat'], $arr['address_coordinate_lng']);
 
-            DB::transaction(function () use ($arr, $address, $address_res) {
+            DB::transaction(function () use ($arr, $address, $address_res)
+            {
                 /*初始化*/
                 $session_user = session('User');
                 $e_match_list = new MatchList();
@@ -207,7 +211,8 @@ class Match extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($id) {
+            DB::transaction(function () use ($id)
+            {
                 $e_match_list = MatchList::lockForUpdate()->find($id);
                 /*伪删除*/
                 $e_match_list->is_delete = self::IS_DELETE;
@@ -260,7 +265,7 @@ class Match extends Model
             return 11;
         }
 
-        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $e_match_list->match_id)->get();
+        $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('status', '!=', 0)->where('match_id', $e_match_list->match_id)->get();
 
 
         if ($session_user->user_id == $e_match_list->user_id)/*订单所有者*/
@@ -270,22 +275,26 @@ class Match extends Model
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
                     $code = 31;/*操作:开始抽号 , 报名详情 , 现金报名*/
-                } elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                }
+                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
                     $code = 32;/*操作:抽号详情 , 报名详情 , 现金报名*/
                 }
-            } else
+            }
+            else
             {
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
                     $code = 33;/*操作:开始抽号 , 报名详情  , 现金报名 , 删除*/
-                } elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                }
+                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
                     $code = 34;/*操作:抽号详情 , 报名详情 , 现金报名 , 删除*/
                 }
             }
 
-        } elseif ($e_match_registration->isNotEmpty())/*已报名访客*/
+        }
+        elseif ($e_match_registration->isNotEmpty())/*已报名访客*/
         {
             /*已有全部方式报名*/
             if (
@@ -306,7 +315,8 @@ class Match extends Model
             {
                 $code = 23;/*操作:会员报名 , 抽号*/
             }
-        } else /*未报名访客*/
+        }
+        else /*未报名访客*/
         {
             if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_list->match_end_time > now())
             {
