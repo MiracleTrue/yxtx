@@ -45,6 +45,12 @@ class WxAppKeyCheck
         $m3result = new M3Result();
         $app_key = $request->input('app_key');
 
+        if (in_array(url($route->uri), [url('match/registration')]))
+        {
+
+            $app_key = json_decode($request->getContent(),true)['app_key'];
+        }
+
         if (in_array(url($route->uri), $filterable))
         {
             if (!empty($app_key))
