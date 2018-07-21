@@ -242,7 +242,7 @@ class MatchController extends Controller
             /*报名开始*/
             try
             {
-                DB::transaction(function () use ($request_arr,$match_info, $registration_arr, $session_user, $request, $m3result)
+                DB::transaction(function () use ($request_arr, $match_info, $registration_arr, $session_user, $request, $m3result)
                 {
 
                     /*删除之前报名*/
@@ -953,6 +953,54 @@ class MatchController extends Controller
                     $m3result->data = $validator->messages();
                 }
             }
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '数据验证失败';
+            $m3result->data = $validator->messages();
+        }
+
+        return $m3result->toJson();
+    }
+
+
+    /**
+     * Api 比赛修改
+     * @param Request $request
+     * @return \App\Tools\json
+     * @throws \Throwable
+     */
+    public function edit(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
+            'match_content' => 'required',
+            'match_photos' => 'required',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $e_match_list = MatchList::find($request->input('match_id'));
+
+            $e_match_list->match_photos = explode(',', $request->input('match_photos'));
+            $e_match_list->match_content = $request->input('match_content');
+            $e_match_list->save();
+
+            $m3result->code = 0;
+            $m3result->messages = '比赛修改成功';
         }
         else
         {

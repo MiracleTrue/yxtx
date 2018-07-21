@@ -69,7 +69,10 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
 
         Route::any('pit/release', 'RankingController@release');/*坑冠比赛发布*/
         Route::any('match/cash/registration', 'MatchController@cashRegistration');/*现金参加比赛*/
+
         Route::any('match/release', 'MatchController@release');/*比赛发布*/
+        Route::any('match/edit', 'MatchController@edit');/*比赛修改*/
+
         Route::any('match/registration', 'MatchController@registration');/*报名参加比赛*/
         Route::any('match/delete', 'MatchController@delete');/*删除未报名比赛*/
     });
