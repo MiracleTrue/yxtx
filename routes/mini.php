@@ -46,6 +46,10 @@ Route::group(['middleware' => [WxAppKeyCheck::class]], function ()
     Route::any('match/cash/allNumber', 'MatchController@cashAllNumber');/*现金报名一键抽号*/
     Route::any('match/info/registrationDetail', 'MatchController@registrationDetail');/*比赛报名详情*/
     Route::any('match/info/numberDetail', 'MatchController@numberDetail');/*比赛抽号详情*/
+
+    Route::any('match/info/numberList', 'MatchController@numberList');/*比赛抽号列表*/
+
+
     Route::any('match/getNumber', 'MatchController@getNumber');/*已报名抽取号码*/
     Route::any('match/openNumber', 'MatchController@openNumber');/*比赛开启抽号*/
     Route::any('match/uploadPhoto', 'MatchController@uploadPhoto');/*比赛图片上传*/

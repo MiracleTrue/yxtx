@@ -673,21 +673,23 @@ class MatchController extends Controller
                     $query->where('status', Match::STATUS_GET_NUMBER);
                 }),
             ],
+            'reg_id' => [
+                'required',
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
+                {
+                    $query->where('user_id', $session_user->user_id);
+                }),
+            ],
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->passes())
         {
-            $e_match_registration = MatchRegistration::where('user_id', $session_user->user_id)->where('match_id', $request->input('match_id'))->first();
+            $e_match_registration = MatchRegistration::find($request->input('reg_id'));
 
 
-            if ($e_match_registration == null)
-            {
-                $m3result->code = 1;
-                $m3result->messages = '比赛不存在';
-            }
-            elseif ($e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
+            if ($e_match_registration->status == Registration::STATUS_WAIT_NUMBER)
             {
                 if ($e_reg = $registration->getNumber($e_match_registration->reg_id, $request->input('match_id')))
                 {
@@ -716,7 +718,7 @@ class MatchController extends Controller
         else
         {
             $m3result->code = 1;
-            $m3result->messages = '比赛不存在';
+            $m3result->messages = '未到抽号时间';
         }
         return $m3result->toJson();
     }
@@ -833,6 +835,53 @@ class MatchController extends Controller
         if ($validator->passes())
         {
             $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', $registration::STATUS_ALREADY_NUMBER]], [['match_registration.create_time', 'desc']], false);
+            /*数据过滤*/
+            $list->transform(function ($item)
+            {
+                $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time', 'match_number');
+                return $item;
+            });
+            $m3result->code = 0;
+            $m3result->messages = '获取比赛抽号列表';
+            $m3result->data = $list;
+        }
+        else
+        {
+            $m3result->code = 1;
+            $m3result->messages = '比赛不存在';
+        }
+        return $m3result->toJson();
+    }
+
+
+    /**
+     * Api 比赛抽号列表
+     * @param Request $request
+     * @return \App\Tools\json
+     */
+    public function numberList(Request $request)
+    {
+        /*初始化*/
+        $m3result = new M3Result();
+        $registration = new Registration();
+        $session_user = session('User');
+
+        /*验证*/
+        $rules = [
+            'match_id' => [
+                'required',
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
+                {
+                    //                    $query->whereIn('status', [Match::STATUS_GET_NUMBER, Match::STATUS_END]);
+                }),
+            ],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->passes())
+        {
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '>', 0]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
             $list->transform(function ($item)
             {
