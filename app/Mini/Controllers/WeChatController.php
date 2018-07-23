@@ -94,6 +94,7 @@ class WeChatController extends Controller
             return $response->send(); // return $response;
         } catch (\Exception $e)
         {
+            Log::error($e);
             return '请传入xml';
         }
     }
