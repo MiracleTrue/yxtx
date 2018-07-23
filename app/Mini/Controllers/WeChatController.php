@@ -35,6 +35,12 @@ class WeChatController extends Controller
                 // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
                 $sn_registration = MatchRegistration::where('order_sn', $message['out_trade_no'])->first();
 
+                if($sn_registration == null)
+                {
+                    //订单不存在 
+                    return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+                }
+
                 if ($sn_registration->status != Registration::STATUS_WAIT_PAYMENT)
                 { // 如果订单不存在 或者 订单已经支付过了
                     return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
