@@ -59,8 +59,8 @@ class WeChatController extends Controller
                         {
                             DB::transaction(function () use ($all_registration, $transaction) {
 
-                                $all_registration->each(function () use ($all_registration, $transaction) {
-                                    $e_match_registration = MatchRegistration::where('reg_id', $all_registration->reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->firstOrFail();
+                                $all_registration->each(function ($item) use ($transaction) {
+                                    $e_match_registration = MatchRegistration::where('reg_id', $item->reg_id)->where('status', Registration::STATUS_WAIT_PAYMENT)->firstOrFail();
                                     $e_match_registration->status = Registration::STATUS_WAIT_NUMBER;
                                     $e_match_registration->save();
 
