@@ -77,16 +77,23 @@ class WeChatController extends Controller
                             });
                         } catch (\Exception $e)
                         {
+                            Log::error('订单处理异常');
+                            Log::error($e);
+
                             return $fail('订单处理异常');
                         }
                         return true;// 返回处理完成
                     } // 用户支付失败
                     else
                     {
+                        Log::error('订单金额或状态异常');
+
                         return $fail('订单金额或状态异常');
                     }
                 } else
                 {
+                    Log::error('通信失败，请稍后再通知我');
+
                     return $fail('通信失败，请稍后再通知我');
                 }
             });
