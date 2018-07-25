@@ -39,15 +39,13 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
             'reg_id' => [
                 'required',
-                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user) {
                     $query->where('type', Registration::TYPE_MEMBER)->where('status', Registration::STATUS_WAIT_PAYMENT);
                 }),
             ]
@@ -62,8 +60,7 @@ class MatchController extends Controller
             $e_reg->save();
             $m3result->code = 0;
             $m3result->messages = '会员确认无误';
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -87,15 +84,13 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
             'reg_id' => [
                 'required',
-                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user) {
                     $query->where('type', Registration::TYPE_MEMBER);
                 }),
             ]
@@ -108,8 +103,7 @@ class MatchController extends Controller
             MatchRegistration::find($request->input('reg_id'))->delete();
             $m3result->code = 0;
             $m3result->messages = '会员删除成功';
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -135,8 +129,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id)->where('is_delete', Match::NO_DELETE);
                 }),
             ],
@@ -151,14 +144,12 @@ class MatchController extends Controller
                 $match->deleteMatch($request->input('match_id'));
                 $m3result->code = 0;
                 $m3result->messages = '比赛删除成功';
-            }
-            else
+            } else
             {
                 $m3result->code = 2;
                 $m3result->messages = '该比赛已有人报名';
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -184,13 +175,11 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', '!=', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
                 }),
             ],
-            'registration' => ['required', function ($key, $val, $fail)
-            {
+            'registration' => ['required', function ($key, $val, $fail) {
 
                 if (empty($val))
                 {
@@ -212,8 +201,7 @@ class MatchController extends Controller
                     {
                         $fail('报名JSON 验证失败');
                     }
-                }
-                else
+                } else
                 {
                     $fail('报名JSON 不能为空');
                 }
@@ -242,8 +230,7 @@ class MatchController extends Controller
             /*报名开始*/
             try
             {
-                DB::transaction(function () use ($request_arr, $match_info, $registration_arr, $session_user, $request, $m3result)
-                {
+                DB::transaction(function () use ($request_arr, $match_info, $registration_arr, $session_user, $request, $m3result) {
 
                     /*删除之前报名*/
                     MatchRegistration::where('user_id', $session_user->user_id)->whereIn('type', [Registration::TYPE_WECHAT])
@@ -321,16 +308,14 @@ class MatchController extends Controller
                             $m3result->data['wx_pay'] = $config;
                             $m3result->data['match_info'] = $e_match_list;
 
-                        }
-                        else
+                        } else
                         {
                             $m3result->code = 5;
                             $m3result->messages = '微信支付失败';
                         }
 
 
-                    }
-                    else
+                    } else
                     {
                         throw new \Exception('该比赛报名人数已满');
                     }
@@ -342,8 +327,7 @@ class MatchController extends Controller
             }
 
 
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -369,8 +353,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', '!=', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
                 }),
             ],
@@ -389,8 +372,7 @@ class MatchController extends Controller
             {
                 try
                 {
-                    DB::transaction(function () use ($match, $request, $session_user, $m3result)
-                    {
+                    DB::transaction(function () use ($match, $request, $session_user, $m3result) {
                         $e_match_list = MatchList::where('match_id', $request->input('match_id'))->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
                         $registration_sum_number = $e_match_list->reg_list()->count();
 
@@ -417,8 +399,7 @@ class MatchController extends Controller
                             $m3result->code = 0;
                             $m3result->messages = '比赛报名成功';
                             $m3result->data['match_info'] = $match->getMatchInfo($request->input('match_id'));
-                        }
-                        else
+                        } else
                         {
                             throw new \Exception('报名人数已满');
                         }
@@ -429,15 +410,13 @@ class MatchController extends Controller
                     $m3result->code = 2;
                     $m3result->messages = '报名人数已满';
                 }
-            }
-            else
+            } else
             {
                 $m3result->code = 3;
                 $m3result->messages = '已经报名,等待抽号';
 
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '该比赛已撤销或已过报名时间';
@@ -465,17 +444,11 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now());
                 }),
             ],
             'real_name' => 'required',
-            'real_phone' => [
-                'required',
-                'numeric',
-                'regex:/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/',
-            ],
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -483,19 +456,17 @@ class MatchController extends Controller
         {
             $match_info = $match->getMatchInfo($request->input('match_id'));
 
-            if ($registration->cashRegistrationMatch($request->input('match_id'), $request->input('real_name'), $request->input('real_phone')))
+            if ($registration->cashRegistrationMatch($request->input('match_id'), $request->input('real_name')))
             {
                 $m3result->code = 0;
                 $m3result->messages = '现金报名成功';
                 $m3result->data['match_info'] = $match_info;
-            }
-            else
+            } else
             {
                 $m3result->code = 2;
                 $m3result->messages = '报名人数已满';
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '该比赛已撤销或已过报名时间';
@@ -519,8 +490,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
@@ -532,16 +502,14 @@ class MatchController extends Controller
         {
             $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['type', $registration::TYPE_CASH]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
-            $list->transform(function ($item)
-            {
+            $list->transform(function ($item) {
                 $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'match_number', 'create_time');
                 return $item;
             });
             $m3result->code = 0;
             $m3result->messages = '获取现金报名列表';
             $m3result->data = $list;
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -566,15 +534,13 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('status', Match::STATUS_GET_NUMBER)->where('user_id', $session_user->user_id);
                 }),
             ],
             'reg_id' => [
                 'required',
-                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($registration)
-                {
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($registration) {
                     $query->where('type', $registration::TYPE_CASH)->where('status', $registration::STATUS_WAIT_NUMBER);
                 }),
             ]
@@ -589,14 +555,12 @@ class MatchController extends Controller
                 $m3result->code = 0;
                 $m3result->messages = '抽取号码成功';
                 $m3result->data = $e_reg;
-            }
-            else
+            } else
             {
                 $m3result->code = 2;
                 $m3result->messages = '网络繁忙';
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '未开启抽号';
@@ -620,8 +584,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('status', Match::STATUS_GET_NUMBER)->where('user_id', $session_user->user_id);
                 }),
             ]
@@ -636,15 +599,13 @@ class MatchController extends Controller
                 [['match_registration.create_time', 'asc']],
                 false);
 
-            $wait_cash_reg_list->each(function ($item) use ($registration, $request)
-            {
+            $wait_cash_reg_list->each(function ($item) use ($registration, $request) {
                 $registration->getNumber($item->reg_id, $request->input('match_id'));
             });
 
             $m3result->code = 0;
             $m3result->messages = '现金报名一键抽号成功';
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '未开启抽号';
@@ -668,15 +629,13 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('status', Match::STATUS_GET_NUMBER);
                 }),
             ],
             'reg_id' => [
                 'required',
-                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_registration', 'reg_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
@@ -696,26 +655,22 @@ class MatchController extends Controller
                     $m3result->code = 0;
                     $m3result->messages = '抽取号码成功';
                     $m3result->data = $e_reg;
-                }
-                else
+                } else
                 {
                     $m3result->code = 3;
                     $m3result->messages = '网络繁忙';
                 }
-            }
-            elseif ($e_match_registration->status == Registration::STATUS_ALREADY_NUMBER)
+            } elseif ($e_match_registration->status == Registration::STATUS_ALREADY_NUMBER)
             {
                 $m3result->code = 0;
                 $m3result->messages = '抽取号码成功';
                 $m3result->data = $e_match_registration;
-            }
-            else
+            } else
             {
                 $m3result->code = 2;
                 $m3result->messages = '未支付';
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '未到抽号时间';
@@ -739,8 +694,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id)->where('status', Match::STATUS_SIGN_UP);
                 }),
             ],
@@ -752,8 +706,7 @@ class MatchController extends Controller
         {
             $m3result->code = 0;
             $m3result->messages = '比赛开启抽号';
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -777,8 +730,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
@@ -790,16 +742,14 @@ class MatchController extends Controller
         {
             $list = $registration->getRegistrationList([['match_id', $request->input('match_id')]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
-            $list->transform(function ($item)
-            {
+            $list->transform(function ($item) {
                 $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time');
                 return $item;
             });
             $m3result->code = 0;
             $m3result->messages = '获取比赛报名列表';
             $m3result->data = $list;
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -823,8 +773,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id)->whereIn('status', [Match::STATUS_GET_NUMBER, Match::STATUS_END]);
                 }),
             ],
@@ -836,16 +785,14 @@ class MatchController extends Controller
         {
             $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', $registration::STATUS_ALREADY_NUMBER]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
-            $list->transform(function ($item)
-            {
+            $list->transform(function ($item) {
                 $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time', 'match_number');
                 return $item;
             });
             $m3result->code = 0;
             $m3result->messages = '获取比赛抽号列表';
             $m3result->data = $list;
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -870,8 +817,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     //                    $query->whereIn('status', [Match::STATUS_GET_NUMBER, Match::STATUS_END]);
                 }),
             ],
@@ -883,16 +829,14 @@ class MatchController extends Controller
         {
             $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '>', 0]], [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
-            $list->transform(function ($item)
-            {
+            $list->transform(function ($item) {
                 $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time', 'match_number');
                 return $item;
             });
             $m3result->code = 0;
             $m3result->messages = '获取比赛抽号列表';
             $m3result->data = $list;
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -924,8 +868,7 @@ class MatchController extends Controller
             $m3result->code = 0;
             $m3result->messages = '获取比赛详情成功';
             $m3result->data = $info;
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '比赛不存在';
@@ -980,30 +923,26 @@ class MatchController extends Controller
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛发布成功';
-                }
-                else
+                } else
                 {
                     $m3result->code = 1;
                     $m3result->messages = '上场排名验证失败';
                     $m3result->data = $validator_json->messages();
                 }
-            }
-            else
+            } else
             {
                 if ($match->releaseMatch($request->all()))
                 {
                     $m3result->code = 0;
                     $m3result->messages = '比赛发布成功';
-                }
-                else
+                } else
                 {
                     $m3result->code = 1;
                     $m3result->messages = '数据验证失败';
                     $m3result->data = $validator->messages();
                 }
             }
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -1030,8 +969,7 @@ class MatchController extends Controller
         $rules = [
             'match_id' => [
                 'required',
-                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user)
-                {
+                Rule::exists('match_list', 'match_id')->where(function ($query) use ($session_user) {
                     $query->where('user_id', $session_user->user_id);
                 }),
             ],
@@ -1050,8 +988,7 @@ class MatchController extends Controller
 
             $m3result->code = 0;
             $m3result->messages = '比赛修改成功';
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '数据验证失败';
@@ -1086,8 +1023,7 @@ class MatchController extends Controller
             $m3result->messages = '比赛图片上传成功';
             $m3result->data['file_path'] = $path;
             $m3result->data['url_path'] = $my_file->makeUrl($path);
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '图片或格式不正确或大小超出限制';
@@ -1121,8 +1057,7 @@ class MatchController extends Controller
             $m3result->messages = '比赛小视频上传成功';
             $m3result->data['file_path'] = $path;
             $m3result->data['url_path'] = $my_file->makeUrl($path);
-        }
-        else
+        } else
         {
             $m3result->code = 1;
             $m3result->messages = '视频格式限制(MP4)大小限制(3MB)';

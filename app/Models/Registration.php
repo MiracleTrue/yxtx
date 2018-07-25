@@ -105,11 +105,10 @@ class Registration extends Model
      * 单个现金报名参加一场比赛
      * @param $match_id
      * @param string $real_name
-     * @param string $real_phone
      * @return bool|null
      * @throws \Throwable
      */
-    public function cashRegistrationMatch($match_id, $real_name = '', $real_phone = '')
+    public function cashRegistrationMatch($match_id, $real_name = '')
     {
         /*初始化*/
         $return_entity = null;
@@ -117,7 +116,7 @@ class Registration extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($match_id, $real_name, $real_phone, &$return_entity)
+            DB::transaction(function () use ($match_id, $real_name,&$return_entity)
             {
                 $e_match_list = MatchList::where('match_id', $match_id)->whereIn('status', [Match::STATUS_SIGN_UP, Match::STATUS_GET_NUMBER])->where('match_end_time', '>', now())->lockForUpdate()->first();
                 $registration_sum_number = $e_match_list->reg_list()->count();
@@ -136,7 +135,6 @@ class Registration extends Model
                     $e_match_registration->type = self::TYPE_CASH;
                     $e_match_registration->status = self::STATUS_WAIT_NUMBER;
                     $e_match_registration->real_name = $real_name;
-                    $e_match_registration->real_phone = $real_phone;
                     $e_match_registration->match_number = null;
                     $e_match_registration->create_time = now();
                     $e_match_registration->save();
