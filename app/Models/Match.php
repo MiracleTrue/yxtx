@@ -20,9 +20,9 @@ class Match extends Model
     const NO_DELETE = 0;
 
     /*赛事状态:  0.报名中  100.抽号中  200.已结束*/
-    const STATUS_SIGN_UP    = 0;
+    const STATUS_SIGN_UP = 0;
     const STATUS_GET_NUMBER = 100;
-    const STATUS_END        = 200;
+    const STATUS_END = 200;
 
     /**
      * 获取所有比赛列表 (如有where 则加入新的sql条件) "分页" | 默认排序:创建时间
@@ -54,15 +54,13 @@ class Match extends Model
         if ($is_paginate === true)
         {
             $match_list = $e_match_list->paginate($_COOKIE['PaginationSize']);
-        }
-        else
+        } else
         {
             $match_list = $e_match_list->get();
         }
 
         /*数据过滤*/
-        $match_list->transform(function ($item)
-        {
+        $match_list->transform(function ($item) {
             $item->first_photo = $item->match_photos[0] != null ? MyFile::makeUrl($item->match_photos[0]) : null;
             $item->need_money = MyHelper::money_format($item->need_money);
             $item->status_text = self::statusTransformText($item->status);
@@ -88,8 +86,7 @@ class Match extends Model
         $e_match_list->save();
 
         /*消息模板通知*/
-        $e_reg->each(function ($item, $key) use ($app, $e_match_list)
-        {
+        $e_reg->each(function ($item, $key) use ($app, $e_match_list) {
             $res = $app->template_message->send([
                 'touser' => $item->user_info->openid,
                 'template_id' => '9bx6hKrkvQfD61jbZWNCsS_4-fOYj43gscSgvMSyuZ0',
@@ -134,6 +131,55 @@ class Match extends Model
     }
 
     /**
+     * 编辑一场比赛
+     * @param $match_id
+     * @param $arr
+     * @return bool
+     * @throws \Throwable
+     */
+    public function editMatch($match_id, $arr)
+    {
+        /*事物*/
+        try
+        {
+            $address = new Location();
+            $address_res = $address->tencent_coordinateAddressResolution($arr['address_coordinate_lat'], $arr['address_coordinate_lng']);
+
+            DB::transaction(function () use ($match_id, $arr, $address, $address_res) {
+                /*初始化*/
+                $e_match_list = MatchList::find($match_id);
+                $e_match_address = $address->getMatchAddressFromCity($address_res['result']['address_component']['city']);
+
+                /*如地址不存在新增地址*/
+                if ($e_match_address == null)
+                {
+                    $e_match_address = $address->addMatchAddress($address_res['result']['address_component']['province'], $address_res['result']['address_component']['city'], $address_res['result']['address_component']['district']);
+                }
+
+                $e_match_list->hotline = $arr['hotline'];
+                $e_match_list->match_photos = explode(',', $arr['match_photos']);
+                $e_match_list->match_content = $arr['match_content'];
+                $e_match_list->fish_number = $arr['fish_number'];
+
+
+                $e_match_list->address_coordinate = ['lat' => $arr['address_coordinate_lat'], 'lng' => $arr['address_coordinate_lng']];
+                $e_match_list->address_name = $arr['address_name'];
+                $e_match_list->address_id = $e_match_address->address_id;
+
+                $e_match_list->save();
+
+            });
+        } catch (\Exception $e)
+        {
+            Log::error($e);
+            $this->errors['code'] = 1;
+            $this->errors['messages'] = '比赛编辑失败';
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 发布一场比赛
      * @param $arr
      * @return bool
@@ -147,8 +193,7 @@ class Match extends Model
             $address = new Location();
             $address_res = $address->tencent_coordinateAddressResolution($arr['address_coordinate_lat'], $arr['address_coordinate_lng']);
 
-            DB::transaction(function () use ($arr, $address, $address_res)
-            {
+            DB::transaction(function () use ($arr, $address, $address_res) {
                 /*初始化*/
                 $session_user = session('User');
                 $e_match_list = new MatchList();
@@ -211,8 +256,7 @@ class Match extends Model
         /*事物*/
         try
         {
-            DB::transaction(function () use ($id)
-            {
+            DB::transaction(function () use ($id) {
                 $e_match_list = MatchList::lockForUpdate()->find($id);
                 /*伪删除*/
                 $e_match_list->is_delete = self::IS_DELETE;
@@ -275,26 +319,22 @@ class Match extends Model
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
                     $code = 31;/*操作:开始抽号 , 报名详情 , 现金报名*/
-                }
-                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                } elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
                     $code = 32;/*操作:抽号详情 , 报名详情 , 现金报名*/
                 }
-            }
-            else
+            } else
             {
                 if ($e_match_list->status == self::STATUS_SIGN_UP)
                 {
                     $code = 33;/*操作:开始抽号 , 报名详情  , 现金报名 , 删除*/
-                }
-                elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
+                } elseif (in_array($e_match_list->status, [self::STATUS_GET_NUMBER, self::STATUS_END]))
                 {
                     $code = 34;/*操作:抽号详情 , 报名详情 , 现金报名 , 删除*/
                 }
             }
 
-        }
-        elseif ($e_match_registration->isNotEmpty())/*已报名访客*/
+        } elseif ($e_match_registration->isNotEmpty())/*已报名访客*/
         {
             /*已有全部方式报名*/
             if (
@@ -315,8 +355,7 @@ class Match extends Model
             {
                 $code = 23;/*操作:会员报名 , 抽号*/
             }
-        }
-        else /*未报名访客*/
+        } else /*未报名访客*/
         {
             if (in_array($e_match_list->status, [self::STATUS_SIGN_UP, self::STATUS_GET_NUMBER]) && $e_match_list->match_end_time > now())
             {

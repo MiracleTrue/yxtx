@@ -963,6 +963,7 @@ class MatchController extends Controller
     {
         /*初始化*/
         $m3result = new M3Result();
+        $match = new Match();
         $session_user = session('User');
 
         /*验证*/
@@ -975,17 +976,18 @@ class MatchController extends Controller
             ],
             'match_content' => 'required',
             'match_photos' => 'required',
+
+            'hotline' => 'required',
+            'address_name' => 'required',
+            'address_coordinate_lat' => 'required|numeric',
+            'address_coordinate_lng' => 'required|numeric',
+            'fish_number' => 'required',
+
         ];
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->passes())
+        if ($validator->passes() && $match->editMatch($request->input('match_id'),$request->all()))
         {
-            $e_match_list = MatchList::find($request->input('match_id'));
-
-            $e_match_list->match_photos = explode(',', $request->input('match_photos'));
-            $e_match_list->match_content = $request->input('match_content');
-            $e_match_list->save();
-
             $m3result->code = 0;
             $m3result->messages = '比赛修改成功';
         } else
