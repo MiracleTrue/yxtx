@@ -827,7 +827,8 @@ class MatchController extends Controller
 
         if ($validator->passes())
         {
-            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '>', 0]], [['match_registration.create_time', 'desc']], false);
+            $list = $registration->getRegistrationList([['match_id', $request->input('match_id')], ['status', '>', 0], ['user_id', $session_user->user_id]],
+                [['match_registration.create_time', 'desc']], false);
             /*数据过滤*/
             $list->transform(function ($item) {
                 $item = $item->only('reg_id', 'match_id', 'user_id', 'type', 'type_text', 'status', 'status_text', 'real_name', 'real_phone', 'create_time', 'match_number');
@@ -986,7 +987,7 @@ class MatchController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->passes() && $match->editMatch($request->input('match_id'),$request->all()))
+        if ($validator->passes() && $match->editMatch($request->input('match_id'), $request->all()))
         {
             $m3result->code = 0;
             $m3result->messages = '比赛修改成功';
